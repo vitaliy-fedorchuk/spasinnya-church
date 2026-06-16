@@ -1,0 +1,45 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 100;
+  padding: 65px 80px 0px 80px;
+}
+
+.navbar_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  justify-content: space-between;
+}
+
+.navbar_inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.navbar_menu-btn {
+  justify-self: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 190px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-family: Arkhip, sans-serif;
+  font-size: 16px;
+  padding: 8px;
+}
+
+.button_wrapper {
+  justify-self: end;
+  min-width: 190px;
+}

@@ -1,0 +1,53 @@
+@font-face {
+  font-family: Arkhip;
+  src: url("../public/fonts/Arkhip.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/Gilroy-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/Gilroy-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../public/fonts/Gilroy-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Gilroy, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  font-family: Arkhip, sans-serif;
+  font-size: 50px;
+  font-weight: normal;
+  line-height: 110%;
+  margin: 0;
+  color: #ffffff;
+}
+
+p {
+  font-size: 18px;
+  line-height: 130%;
+  margin: 0;
+  color: #ffffff;
+}
