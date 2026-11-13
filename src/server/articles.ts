@@ -74,7 +74,7 @@ export const toArticle = (row: ArticleRow): Article => {
     date: isoDate(date),
     dateLabel: dateLabel(date),
     readTime: readTimeLabel(blocks),
-    author: { name: row.author.name, role: row.author.role, photo: row.author.photo },
+    author: { name: row.author.name, role: row.author.role, bio: row.author.bio, photo: row.author.photo },
     cover: { src: row.coverSrc, alt: row.coverAlt },
     blocks,
   };

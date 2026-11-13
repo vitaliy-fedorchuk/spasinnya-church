@@ -184,6 +184,8 @@ export type BlockType = ArticleBlock["type"];
 export interface Author {
   name: string;
   role: string;
+  /** Регалії / коротко про автора — картка «Про автора» в кінці статті */
+  bio: string;
   photo: string;
 }
 

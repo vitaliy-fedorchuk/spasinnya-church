@@ -84,7 +84,7 @@
   &__select {
     width: auto;
     height: em(42);
-    padding: 0 em(32) 0 em(14);
+    padding-left: em(18);
     border-radius: em(100);
 
     @include mobile {

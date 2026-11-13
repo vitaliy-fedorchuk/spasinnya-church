@@ -19,8 +19,11 @@ enum ArticleStatus {
 model Author {
   id        String    @id @default(cuid())
   name      String
+  /// Підпис під іменем: «Старший пастор»
   role      String
-  /// Адреса фото (/uploads/...). На етапі 5 — звʼязок із медіатекою.
+  /// Регалії / коротко про автора — картка «Про автора» в кінці статті
+  bio       String    @default("")
+  /// Адреса фото з медіатеки (/uploads/…-1600.webp); "" — без фото
   photo     String
   articles  Article[]
   createdAt DateTime  @default(now())

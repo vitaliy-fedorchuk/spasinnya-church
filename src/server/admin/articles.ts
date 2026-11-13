@@ -35,6 +35,7 @@ export interface ArticleListQuery {
   q?: string;
   year?: number;
   tag?: string;
+  authorId?: string;
   sort?: ArticleSort;
   page?: number;
 }
@@ -48,6 +49,7 @@ export const listAdminArticles = async ({
   q = "",
   year,
   tag,
+  authorId,
   sort = "updated",
   page = 1,
 }: ArticleListQuery) => {
@@ -58,6 +60,7 @@ export const listAdminArticles = async ({
   const base: Prisma.ArticleWhereInput[] = [];
   if (q) base.push({ title: { contains: q, mode: "insensitive" } });
   if (tag) base.push({ tags: { has: tag } });
+  if (authorId) base.push({ authorId });
   if (year) {
     const from = new Date(year, 0, 1);
     const to = new Date(year + 1, 0, 1);
@@ -77,7 +80,7 @@ export const listAdminArticles = async ({
         ? [{ publishedAt: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }]
         : [{ updatedAt: "desc" }];
 
-  const [total, rows, counts, years, tags] = await Promise.all([
+  const [total, rows, counts, years, tags, authors] = await Promise.all([
     db.article.count({ where }),
     db.article.findMany({
       where,
@@ -108,6 +111,7 @@ export const listAdminArticles = async ({
       SELECT DISTINCT EXTRACT(YEAR FROM COALESCE("publishedAt", "createdAt"))::int AS y
       FROM "Article" ORDER BY y DESC`,
     db.$queryRaw<{ t: string }[]>`SELECT DISTINCT unnest(tags) AS t FROM "Article" ORDER BY t`,
+    db.author.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
   ]);
 
   return {
@@ -117,6 +121,7 @@ export const listAdminArticles = async ({
     pages: Math.max(1, Math.ceil(total / ADMIN_PAGE_SIZE)),
     years: years.map((r) => r.y),
     tags: tags.map((r) => r.t),
+    authors,
   };
 };
 

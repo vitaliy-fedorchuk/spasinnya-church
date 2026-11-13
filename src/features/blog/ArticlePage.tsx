@@ -62,6 +62,20 @@ const ArticlePage = ({ article }: { article: Article }) => {
       <div className="container article__body">
         <ArticleBlocks blocks={article.blocks} />
 
+        {article.author.bio && (
+          <aside className="article__about" aria-label="Про автора">
+            {article.author.photo && (
+              <img className="article__about-photo" src={variantOf(article.author.photo, 480)} alt="" loading="lazy" />
+            )}
+            <div>
+              <p className="article__about-label">Про автора</p>
+              <p className="article__about-name">{article.author.name}</p>
+              {article.author.role && <p className="article__about-role">{article.author.role}</p>}
+              <p className="article__about-bio">{article.author.bio}</p>
+            </div>
+          </aside>
+        )}
+
         <footer className="article__footer">
           <ul className="article__tags" aria-label="Теги">
             {article.tags.map((tag) => (

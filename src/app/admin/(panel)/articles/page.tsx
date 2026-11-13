@@ -71,16 +71,25 @@ export default async function ArticlesPage({ searchParams }: Props) {
   const sort = pick(params.sort, ["updated", "published", "title"] as const, "updated");
   const q = (params.q ?? "").trim().slice(0, 100);
   const tag = (params.tag ?? "").slice(0, 40);
+  const author = (params.author ?? "").slice(0, 40);
   const year = Number(params.year) || undefined;
   const page = Math.max(1, Number(params.page) || 1);
   const savedView = (await cookies()).get(VIEW_COOKIE)?.value;
   const view = pick(params.view ?? savedView, ["list", "grid"] as const, "list");
 
-  const { articles, counts, total, pages, years, tags } = await listAdminArticles({ filter, q, year, tag, sort, page });
+  const { articles, counts, total, pages, years, tags, authors } = await listAdminArticles({
+    filter,
+    q,
+    year,
+    tag,
+    authorId: author || undefined,
+    sort,
+    page,
+  });
 
   /** Адреса з поточними параметрами + змінами (сторінка скидається, якщо міняють фільтр) */
   const hrefWith = (change: Record<string, string | number | undefined>) => {
-    const next: Record<string, string | number | undefined> = { filter, q, year, tag, sort, view, page, ...change };
+    const next: Record<string, string | number | undefined> = { filter, q, year, tag, author, sort, view, page, ...change };
     if (!("page" in change)) next.page = undefined;
     const defaults: Record<string, unknown> = { filter: "all", sort: "updated", view: "list", page: 1 };
     const sp = new URLSearchParams();
@@ -101,7 +110,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
     else groups.push({ label, items: [a] });
   }
 
-  const hasFilters = !!(q || tag || year);
+  const hasFilters = !!(q || tag || year || author);
 
   return (
     <>
@@ -158,6 +167,15 @@ export default async function ArticlesPage({ searchParams }: Props) {
           ))}
         </AutoSelect>
 
+        <AutoSelect name="author" value={author} label="Автор">
+          <option value="">Усі автори</option>
+          {authors.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
+            </option>
+          ))}
+        </AutoSelect>
+
         <AutoSelect name="sort" value={sort} label="Сортування">
           {SORTS.map((s) => (
             <option key={s.sort} value={s.sort}>
@@ -172,7 +190,10 @@ export default async function ArticlesPage({ searchParams }: Props) {
       {hasFilters && (
         <p className="articles__found">
           Знайдено: {total}
-          <Link href={hrefWith({ q: undefined, tag: undefined, year: undefined })} className="articles__reset">
+          <Link
+            href={hrefWith({ q: undefined, tag: undefined, year: undefined, author: undefined })}
+            className="articles__reset"
+          >
             Скинути фільтри
           </Link>
         </p>

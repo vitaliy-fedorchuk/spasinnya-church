@@ -32,6 +32,8 @@ interface Props {
   initialArticle: EditorArticle;
   initialHistory: HistoryEntry[];
   authors: { id: string; name: string; role: string }[];
+  /** Наявні теги — підказки, щоб не плодити «Молодь» і «молодь» */
+  allTags: string[];
 }
 
 const AUTOSAVE_MS = 1500;
@@ -64,7 +66,7 @@ const formatWhen = (iso: string) =>
     new Date(iso),
   );
 
-const ArticleEditor = ({ id, initialStatus, initialArticle, initialHistory, authors }: Props) => {
+const ArticleEditor = ({ id, initialStatus, initialArticle, initialHistory, authors, allTags }: Props) => {
   const [article, setArticle] = useState<EditorArticle>(() => ({
     ...initialArticle,
     blocks: initialArticle.blocks.map(normalizeBlock),
@@ -437,7 +439,7 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, initialHistory, auth
               </select>
             </Field>
 
-            <Field label="Теги" hint="Enter або кома — додати тег">
+            <Field label="Теги" hint="Enter або кома — додати тег. Керувати тегами — у розділі «Теги».">
               <div className="ed-tags">
                 {article.tags.map((t) => (
                   <span key={t} className="ed-tags__tag">
@@ -451,7 +453,15 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, initialHistory, auth
                     </button>
                   </span>
                 ))}
+                <datalist id="article-tags">
+                  {allTags
+                    .filter((t) => !article.tags.includes(t))
+                    .map((t) => (
+                      <option key={t} value={t} />
+                    ))}
+                </datalist>
                 <input
+                  list="article-tags"
                   className="ed-tags__input"
                   value={tagDraft}
                   placeholder={article.tags.length ? "" : "Події, Молодь…"}

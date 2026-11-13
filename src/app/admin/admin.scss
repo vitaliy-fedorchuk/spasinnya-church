@@ -207,3 +207,90 @@ a {
 .visually-hidden {
   @include visually-hidden;
 }
+
+// ---------- Випадні списки (select) ----------
+// Стрілка — своя, з відступом від краю. Сам список, що розкривається, —
+// у стилі адмінки (заокруглення, тінь, коричнева позначка вибраного):
+// `appearance: base-select` (Chrome/Edge 135+). В інших браузерах —
+// звичайний системний список, але стрілка теж на своєму місці.
+select.a-input,
+select.ed-input {
+  padding-right: em(42);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2377777c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right em(16) center;
+  background-size: em(16);
+}
+
+@supports (appearance: base-select) {
+  select.a-input,
+  select.ed-input {
+    display: inline-flex;
+    align-items: center;
+    padding-right: em(16);
+    appearance: base-select;
+    background-image: none;
+
+    // Стрілка
+    &::picker-icon {
+      width: em(16);
+      height: em(16);
+      margin-left: em(10);
+      color: var(--a-muted);
+      content: "";
+      background: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+      transition: transform 0.2s ease;
+    }
+
+    &:open::picker-icon {
+      transform: rotate(180deg);
+    }
+
+    // Список, що розкривається
+    &::picker(select) {
+      min-width: anchor-size(width);
+      max-height: em(320);
+      margin-top: em(6);
+      padding: em(6);
+      color: var(--a-text);
+      background-color: var(--a-surface);
+      border: 1px solid var(--a-line);
+      border-radius: em(14);
+      box-shadow: 0 em(14) em(40) rgba(17, 17, 20, 0.16);
+      appearance: base-select;
+    }
+
+    option {
+      display: flex;
+      align-items: center;
+      gap: em(8);
+      padding: em(9) em(12);
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      border-radius: em(9);
+      transition: background-color 0.12s ease;
+
+      &:hover,
+      &:focus-visible {
+        background-color: rgba(144, 129, 106, 0.12);
+        outline: none;
+      }
+
+      &:checked {
+        font-weight: 700;
+        color: var(--a-accent-dark);
+      }
+
+      // Позначка вибраного — справа
+      &::checkmark {
+        order: 1;
+        margin-left: auto;
+        color: var(--a-accent);
+      }
+    }
+  }
+}

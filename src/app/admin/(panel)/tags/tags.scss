@@ -1,0 +1,194 @@
+@use "../../../../styles/tools" as *;
+
+.tags {
+  &__intro {
+    max-width: em(640);
+    margin-top: em(8);
+    color: var(--a-muted);
+  }
+
+  &__hint {
+    display: flex;
+    align-items: flex-start;
+    gap: em(10, 14);
+    margin-bottom: em(16, 14);
+    padding: em(12, 14) em(16, 14);
+    font-size: em(14);
+    color: var(--a-warning);
+    background-color: rgba(162, 112, 28, 0.08);
+    border-radius: em(12, 14);
+
+    .a-icon {
+      margin-top: em(1, 14);
+    }
+  }
+
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: em(12);
+    margin-bottom: em(16);
+  }
+
+  &__count {
+    font-size: em(14);
+    color: var(--a-muted);
+  }
+
+  &__msg {
+    margin-bottom: em(12, 14);
+    font-size: em(14);
+    font-weight: 600;
+    color: var(--a-success);
+
+    &.is-error {
+      color: var(--a-danger);
+    }
+  }
+
+  // Панель обʼєднання (коли вибрано 2+ теги)
+  &__merge {
+    position: sticky;
+    top: em(12);
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: em(10) em(20);
+    margin-bottom: em(14);
+    padding: em(12) em(16);
+    color: #ffffff;
+    background-color: var(--a-sidebar);
+    border-radius: em(14);
+    box-shadow: 0 em(10) em(30) rgba(17, 17, 20, 0.2);
+
+    b {
+      color: #c9b89c;
+    }
+
+    .ed-link-btn {
+      color: rgba(255, 255, 255, 0.75);
+    }
+  }
+
+  &__merge-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: em(8);
+
+    .a-input {
+      width: em(200);
+      height: em(40);
+      color: var(--a-text);
+    }
+
+    .a-btn--primary {
+      color: var(--a-text);
+      background-color: #ffffff;
+    }
+  }
+
+  &__list {
+    overflow: hidden;
+    list-style: none;
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(18);
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: em(24) minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: em(16);
+    min-height: em(60);
+    padding: em(8) em(20);
+
+    & + & {
+      border-top: 1px solid var(--a-line);
+    }
+
+    &.is-selected {
+      background-color: rgba(144, 129, 106, 0.07);
+    }
+
+    @include mobile {
+      grid-template-columns: em(24) minmax(0, 1fr) auto;
+      padding: em(10) em(14);
+
+      .tags__usage {
+        grid-column: 2;
+        grid-row: 2;
+      }
+    }
+  }
+
+  &__check {
+    width: em(18);
+    height: em(18);
+    accent-color: var(--a-text);
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__rename {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: em(8);
+    grid-column: span 2;
+
+    .a-input {
+      width: em(240);
+      height: em(40);
+    }
+
+    .a-btn {
+      height: em(40);
+    }
+  }
+
+  &__usage {
+    font-size: em(14);
+    color: var(--a-muted);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--a-accent-dark);
+      text-decoration: underline;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: em(2);
+
+    button {
+      display: grid;
+      place-items: center;
+      width: em(36);
+      height: em(36);
+      color: var(--a-muted);
+      cursor: pointer;
+      background: none;
+      border: 0;
+      border-radius: em(8);
+
+      &:hover {
+        color: var(--a-text);
+        background-color: rgba(17, 17, 20, 0.06);
+      }
+    }
+  }
+
+  &__delete:hover {
+    color: var(--a-danger) !important;
+  }
+}

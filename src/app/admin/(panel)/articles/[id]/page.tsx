@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getArticleForEditor, listAuthors } from "@/server/admin/articles";
+import { listTagNames } from "@/server/admin/tags";
 import ArticleEditor from "./ArticleEditor";
 import "./editor.scss";
 
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function EditArticlePage({ params }: Props) {
   const { id } = await params;
-  const [found, authors] = await Promise.all([getArticleForEditor(id), listAuthors()]);
+  const [found, authors, allTags] = await Promise.all([getArticleForEditor(id), listAuthors(), listTagNames()]);
   if (!found) notFound();
 
   return (
@@ -27,6 +28,7 @@ export default async function EditArticlePage({ params }: Props) {
       initialArticle={found.article}
       initialHistory={found.history}
       authors={authors}
+      allTags={allTags}
     />
   );
 }
