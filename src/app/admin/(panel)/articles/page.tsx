@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { articleHref } from "@/features/blog";
 import { listAdminArticles, type ArticleFilter, type ArticleState } from "@/server/admin/articles";
+import { createArticle } from "@/server/admin/article-actions";
 import "./articles.scss";
 
 export const metadata: Metadata = { title: "Статті" };
@@ -53,7 +54,11 @@ export default async function ArticlesPage({ searchParams }: Props) {
     <>
       <header className="a-page-head">
         <h1 className="a-page-head__title">Статті</h1>
-        {/* Кнопка «Нова стаття» зʼявиться разом із редактором (етап 4) */}
+        <form action={createArticle}>
+          <button type="submit" className="a-btn a-btn--primary">
+            + Нова стаття
+          </button>
+        </form>
       </header>
 
       <div className="articles__toolbar">
@@ -98,7 +103,9 @@ export default async function ArticlesPage({ searchParams }: Props) {
               <img className="articles__cover" src={a.coverSrc} alt="" loading="lazy" />
 
               <div className="articles__main">
-                <p className="articles__title">{a.title}</p>
+                <Link className="articles__title" href={`/admin/articles/${a.id}`}>
+                  {a.title || "Без назви"}
+                </Link>
                 <p className="articles__meta">
                   /blog/{a.slug} · {a.author.name}
                 </p>
@@ -118,6 +125,9 @@ export default async function ArticlesPage({ searchParams }: Props) {
               </dl>
 
               <div className="articles__actions">
+                <Link className="articles__action" href={`/admin/articles/${a.id}`}>
+                  Редагувати
+                </Link>
                 {a.state === "published" && (
                   <a className="articles__action" href={articleHref(a.slug)} target="_blank" rel="noreferrer">
                     На сайті ↗

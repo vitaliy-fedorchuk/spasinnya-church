@@ -7,7 +7,7 @@ import { articleBlockSchema, type Article, type ArticleBlock } from "../features
 const TIME_ZONE = "Europe/Kyiv";
 const WORDS_PER_MINUTE = 200;
 
-const articleInclude = { author: true } satisfies Prisma.ArticleInclude;
+export const articleInclude = { author: true } satisfies Prisma.ArticleInclude;
 type ArticleRow = Prisma.ArticleGetPayload<{ include: typeof articleInclude }>;
 
 /** Лише опубліковані й не з майбутнього (запланована публікація) */
@@ -64,7 +64,7 @@ const dateLabel = (d: Date) =>
 // ISO-дата за київським часом: 2026-01-12
 const isoDate = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE }).format(d);
 
-const toArticle = (row: ArticleRow): Article => {
+export const toArticle = (row: ArticleRow): Article => {
   const blocks = parseBlocks(row.blocks, row.slug);
   const date = row.publishedAt ?? row.createdAt;
   return {

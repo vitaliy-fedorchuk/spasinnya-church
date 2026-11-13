@@ -1,0 +1,36 @@
+@use "../../../../styles/tools" as *;
+
+// Плашка внизу екрана: це не справжня сторінка, а перегляд з адмінки
+.preview-bar {
+  position: fixed;
+  bottom: em(16);
+  left: 50%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: em(16);
+  max-width: calc(100% - #{em(32)});
+  padding: em(10) em(20);
+  font-size: em(15);
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  background: rgba(38, 38, 38, 0.92);
+  border-radius: em(100);
+  transform: translateX(-50%);
+  backdrop-filter: blur(8px);
+
+  @include mobile {
+    flex-direction: column;
+    gap: em(4);
+    font-size: em(13);
+    white-space: normal;
+    text-align: center;
+    border-radius: em(16);
+  }
+
+  a {
+    color: #c9b89c;
+    text-decoration: none;
+  }
+}

@@ -1,0 +1,713 @@
+@use "../../../../../styles/tools" as *;
+
+// ---------- Верхня панель (липка) ----------
+.ed-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: em(10) em(16);
+  margin: em(-40) em(-48) em(24);
+  padding: em(14) em(48);
+  background-color: rgba(245, 245, 245, 0.92);
+  border-bottom: 1px solid var(--a-line);
+  backdrop-filter: blur(10px);
+
+  @include tablet {
+    // На планшеті й телефоні зверху вже є панель адмінки — не липнемо
+    position: static;
+    margin: em(-28) em(-24) em(20);
+    padding: em(12) em(24);
+  }
+
+  @include mobile {
+    margin: em(-20) em(-16) em(16);
+    padding: em(12) em(16);
+  }
+
+  &__back {
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--a-accent-dark);
+    }
+  }
+
+  &__save {
+    font-size: em(13);
+    color: var(--a-muted);
+
+    &--dirty {
+      color: var(--a-warning);
+    }
+
+    &--error {
+      color: var(--a-danger);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(8);
+    margin-left: auto;
+
+    @include mobile {
+      width: 100%;
+      margin-left: 0;
+
+      .a-btn {
+        flex: 1 1 auto;
+      }
+    }
+  }
+}
+
+// ---------- Помилки перед публікацією ----------
+.ed-issues {
+  margin-bottom: em(20);
+  padding: em(16) em(20);
+  color: var(--a-danger);
+  background-color: rgba(180, 56, 43, 0.06);
+  border: 1px solid rgba(180, 56, 43, 0.25);
+  border-radius: em(14);
+
+  &__title {
+    font-weight: 700;
+  }
+
+  ul {
+    margin-top: em(6);
+    padding-left: em(20);
+  }
+
+  li + li {
+    margin-top: em(2);
+  }
+}
+
+// ---------- Розкладка ----------
+.ed-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) em(340);
+  align-items: start;
+  gap: em(32);
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ed-main {
+  min-width: 0;
+}
+
+.ed-side {
+  position: sticky;
+  top: em(90);
+  display: flex;
+  flex-direction: column;
+  gap: em(16);
+
+  @include tablet {
+    position: static;
+  }
+}
+
+// ---------- Назва ----------
+.ed-title {
+  margin-bottom: em(8);
+
+  &__input {
+    display: block;
+    width: 100%;
+    min-height: 1.2em;
+    padding: 0;
+    font-family: Arkhip, sans-serif;
+    font-size: em(40);
+    font-weight: 400;
+    line-height: 1.15;
+    resize: none;
+    background: none;
+    border: 0;
+    outline: none;
+    field-sizing: content;
+
+    &::placeholder {
+      color: rgba(17, 17, 20, 0.25);
+    }
+
+    @include mobile {
+      font-size: em(28);
+    }
+  }
+
+  &.has-error &__input::placeholder {
+    color: rgba(180, 56, 43, 0.45);
+  }
+}
+
+// ---------- Поля ----------
+.ed-field {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+  min-width: 0;
+
+  &__label {
+    font-size: em(13);
+    font-weight: 600;
+  }
+
+  &__hint,
+  &__error {
+    font-size: em(12);
+    line-height: 1.35;
+  }
+
+  &__hint {
+    color: var(--a-muted);
+  }
+
+  &__error {
+    color: var(--a-danger);
+  }
+
+  &--error .ed-input {
+    border-color: var(--a-danger);
+  }
+}
+
+.ed-input {
+  width: 100%;
+  min-height: em(40);
+  padding: em(8) em(12);
+  background-color: var(--a-surface);
+  border: 1px solid rgba(17, 17, 20, 0.16);
+  border-radius: em(10);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(17, 17, 20, 0.3);
+  }
+
+  &:focus {
+    border-color: var(--a-accent);
+    outline: none;
+    box-shadow: 0 0 0 em(3) rgba(144, 129, 106, 0.18);
+  }
+
+  &--small {
+    min-height: em(34);
+    font-size: em(14);
+  }
+}
+
+.ed-textarea {
+  line-height: 1.5;
+  resize: vertical;
+  field-sizing: content;
+  min-height: em(84);
+
+  &--large {
+    font-size: em(18);
+  }
+}
+
+// Текст із кнопками форматування
+.ed-rich {
+  overflow: hidden;
+  background-color: var(--a-surface);
+  border: 1px solid rgba(17, 17, 20, 0.16);
+  border-radius: em(10);
+
+  &:focus-within {
+    border-color: var(--a-accent);
+    box-shadow: 0 0 0 em(3) rgba(144, 129, 106, 0.18);
+  }
+
+  &__toolbar {
+    display: flex;
+    gap: em(2);
+    padding: em(4);
+    border-bottom: 1px solid var(--a-line);
+  }
+
+  &__btn {
+    width: em(32);
+    height: em(28);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: em(6);
+
+    &:hover {
+      background-color: rgba(17, 17, 20, 0.06);
+    }
+  }
+
+  .ed-textarea {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+.ed-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: em(12);
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ed-check {
+  display: inline-flex;
+  align-items: center;
+  gap: em(8);
+  font-size: em(14);
+  cursor: pointer;
+
+  input {
+    width: em(18, 14);
+    height: em(18, 14);
+    accent-color: var(--a-text);
+  }
+}
+
+.ed-image {
+  display: grid;
+  grid-template-columns: em(104) minmax(0, 1fr);
+  gap: em(12);
+
+  @include mobile {
+    grid-template-columns: em(72) minmax(0, 1fr);
+  }
+
+  &__preview {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    font-size: em(11);
+    color: var(--a-muted);
+    text-align: center;
+    background-color: rgba(17, 17, 20, 0.05);
+    border-radius: em(10, 11);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: em(6);
+    min-width: 0;
+  }
+
+  &--error &__preview {
+    outline: 1px solid var(--a-danger);
+  }
+}
+
+.ed-gallery-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: em(4);
+
+  > .ed-image {
+    width: 100%;
+  }
+}
+
+.ed-link-btn {
+  width: fit-content;
+  padding: 0;
+  font-size: em(14);
+  font-weight: 600;
+  color: var(--a-accent-dark);
+  cursor: pointer;
+  background: none;
+  border: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &--danger {
+    color: var(--a-danger);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.ed-muted {
+  font-size: em(14);
+  color: var(--a-muted);
+}
+
+// ---------- Блоки ----------
+.ed-blocks {
+  display: flex;
+  flex-direction: column;
+
+  &__empty {
+    padding: em(32) em(20);
+    color: var(--a-muted);
+    text-align: center;
+    border: 1px dashed rgba(17, 17, 20, 0.15);
+    border-radius: em(16);
+  }
+}
+
+.ed-block {
+  position: relative;
+  background-color: var(--a-surface);
+  border: 1px solid var(--a-line);
+  border-radius: em(16);
+
+  &.is-dragging {
+    z-index: 5;
+    box-shadow: 0 em(16) em(40) rgba(17, 17, 20, 0.15);
+    opacity: 0.95;
+  }
+
+  &.has-error {
+    border-color: var(--a-danger);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: em(8);
+    padding: em(8) em(10) em(8) em(6);
+    border-bottom: 1px solid var(--a-line);
+  }
+
+  &__handle {
+    display: grid;
+    place-items: center;
+    width: em(28);
+    height: em(32);
+    cursor: grab;
+    touch-action: none;
+    background: none;
+    border: 0;
+    border-radius: em(6);
+
+    &:hover {
+      background-color: rgba(17, 17, 20, 0.06);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    svg {
+      width: em(10);
+      height: em(18);
+      fill: var(--a-muted);
+    }
+  }
+
+  &__type {
+    font-size: em(13);
+    font-weight: 700;
+    color: var(--a-accent-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__actions {
+    display: flex;
+    gap: em(2);
+    margin-left: auto;
+
+    button {
+      width: em(32);
+      height: em(32);
+      color: var(--a-muted);
+      cursor: pointer;
+      background: none;
+      border: 0;
+      border-radius: em(8);
+
+      &:hover:not(:disabled) {
+        color: var(--a-text);
+        background-color: rgba(17, 17, 20, 0.06);
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.3;
+      }
+    }
+  }
+
+  &__remove:hover:not(:disabled) {
+    color: var(--a-danger) !important;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: em(12);
+    padding: em(16);
+
+    @include mobile {
+      padding: em(14) em(12);
+    }
+  }
+
+  &__error {
+    font-size: em(13);
+    font-weight: 600;
+    color: var(--a-danger);
+  }
+}
+
+// «+» між блоками
+.ed-inserter {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: em(28);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 1px;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+  }
+
+  &__toggle {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    width: em(24);
+    height: em(24);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--a-muted);
+    cursor: pointer;
+    background-color: var(--a-bg);
+    border: 1px solid rgba(17, 17, 20, 0.15);
+    border-radius: 50%;
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      color 0.2s ease;
+  }
+
+  &:hover::before,
+  &.is-open::before {
+    background-color: rgba(144, 129, 106, 0.4);
+  }
+
+  &:hover &__toggle,
+  &.is-open &__toggle,
+  &__toggle:focus-visible {
+    color: var(--a-text);
+    opacity: 1;
+  }
+
+  // На сенсорних екранах наведення немає — «+» видно завжди
+  @media (hover: none) {
+    &__toggle {
+      opacity: 0.7;
+    }
+  }
+
+  &--prominent {
+    height: auto;
+    margin-top: em(16);
+
+    &::before {
+      display: none;
+    }
+  }
+
+  &--prominent &__toggle {
+    width: 100%;
+    height: em(52);
+    font-weight: 600;
+    border-style: dashed;
+    border-radius: em(14);
+    opacity: 1;
+
+    &:hover {
+      border-color: var(--a-accent);
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% - #{em(4)});
+    left: 50%;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: em(2);
+    width: min(em(520), calc(100vw - #{em(32)}));
+    padding: em(6);
+    list-style: none;
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(14);
+    box-shadow: 0 em(16) em(40) rgba(17, 17, 20, 0.14);
+    transform: translateX(-50%);
+
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+  }
+
+  // Меню «Додати блок» внизу відкривається вгору, щоб не ховатись за краєм
+  &--prominent &__menu {
+    top: auto;
+    bottom: calc(100% + #{em(6)});
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: em(2);
+    width: 100%;
+    padding: em(8) em(10);
+    text-align: left;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: em(8);
+
+    &:hover,
+    &:focus-visible {
+      background-color: rgba(144, 129, 106, 0.1);
+    }
+  }
+
+  &__label {
+    font-weight: 600;
+  }
+
+  &__hint {
+    font-size: em(12);
+    color: var(--a-muted);
+  }
+}
+
+// ---------- Бічні картки ----------
+.ed-card {
+  display: flex;
+  flex-direction: column;
+  gap: em(12);
+  padding: em(16);
+  background-color: var(--a-surface);
+  border: 1px solid var(--a-line);
+  border-radius: em(16);
+
+  &__title {
+    font-size: em(15);
+    font-weight: 700;
+  }
+
+  &--details {
+    summary {
+      cursor: pointer;
+    }
+
+    &:not([open]) {
+      gap: 0;
+    }
+  }
+}
+
+.ed-slug {
+  display: flex;
+  align-items: center;
+
+  &__prefix {
+    padding-right: em(4, 14);
+    font-size: em(14);
+    color: var(--a-muted);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.ed-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(6);
+  min-height: em(40);
+  padding: em(6);
+  background-color: var(--a-surface);
+  border: 1px solid rgba(17, 17, 20, 0.16);
+  border-radius: em(10);
+
+  &:focus-within {
+    border-color: var(--a-accent);
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: em(4, 13);
+    height: em(26, 13);
+    padding: 0 em(4, 13) 0 em(10, 13);
+    font-size: em(13);
+    font-weight: 600;
+    background-color: rgba(144, 129, 106, 0.14);
+    border-radius: em(100, 13);
+
+    button {
+      width: em(18, 13);
+      height: em(18, 13);
+      line-height: 1;
+      cursor: pointer;
+      background: none;
+      border: 0;
+      border-radius: 50%;
+
+      &:hover {
+        background-color: rgba(17, 17, 20, 0.1);
+      }
+    }
+  }
+
+  &__input {
+    flex: 1 1 em(80);
+    min-width: 0;
+    padding: 0 em(4);
+    background: none;
+    border: 0;
+    outline: none;
+  }
+}
+
+.ed-delete {
+  align-self: flex-start;
+  margin-top: em(8);
+}
