@@ -1,0 +1,153 @@
+@use "../../styles/tools" as *;
+
+$text-color: #262626;
+$muted-color: #6b6e7b;
+$number-color: #b58838;
+$card-bg: #ffffff;
+$icon-bg: #f5f5f5;
+
+.community {
+  padding: em(100) 0;
+
+  @include mobile {
+    padding: em(56) 0;
+  }
+
+  // Та сама сітка, що у футері: 4 колонки по 335px
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, em(335));
+    justify-content: space-between;
+    gap: em(20);
+
+    // Планшет: вступ зверху на всю ширину, картки в ряд
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+      justify-content: stretch;
+      gap: em(40);
+    }
+
+    @include mobile {
+      gap: em(32);
+    }
+  }
+
+  // ---------- Вступ ----------
+  &__intro {
+    align-self: center;
+  }
+
+  // Шрифт і кольори — у .section-title (global.scss)
+  &__title {
+    max-width: em(313, 48);
+    margin-top: em(16, 48);
+
+    @include tablet {
+      max-width: none;
+    }
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  &__text {
+    max-width: em(275, 15);
+    margin-top: em(16, 15);
+    font-size: em(15);
+    font-weight: 400;
+    line-height: 1.2;
+    color: $muted-color;
+
+    @include tablet {
+      max-width: em(480, 15);
+    }
+  }
+
+  // ---------- Картки ----------
+  // Картки займають 3 останні колонки сітки
+  &__steps {
+    grid-column: 2 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: em(20);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include tablet {
+      grid-column: auto;
+    }
+
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: em(12);
+    }
+  }
+
+  &__card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    aspect-ratio: 1;
+    // У Figma рамка всередині картки, тож відступ 30px рахується від зовнішнього краю
+    padding: calc(#{em(30)} - 1px);
+    background-color: $card-bg;
+    border: 1px solid rgba(17, 17, 20, 0.09);
+    border-radius: em(29);
+
+    // Телефон: не квадрат, висота по вмісту
+    @include mobile {
+      aspect-ratio: auto;
+      gap: em(40);
+      padding: em(24);
+      border-radius: em(24);
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: em(56);
+    height: em(56);
+    background-color: $icon-bg;
+    border-radius: em(16);
+
+    img {
+      display: block;
+      width: em(26);
+      height: em(26);
+    }
+  }
+
+  &__number {
+    display: block;
+    font-family: Arkhip, sans-serif;
+    font-size: 1em;
+    line-height: 1.2;
+    color: $number-color;
+  }
+
+  &__card-title {
+    margin-top: em(12, 24);
+    font-family: Arkhip, sans-serif;
+    font-size: em(24);
+    font-weight: 400;
+    line-height: 1.1;
+    color: $text-color;
+    // Переноси рядків як у макеті (\n у даних)
+    white-space: pre-line;
+  }
+
+  &__card-text {
+    margin-top: em(8, 15);
+    // У макеті текстовий блок на 5px ширший за відступи картки (278 проти 273)
+    margin-right: em(-5, 15);
+    font-size: em(15);
+    font-weight: 400;
+    line-height: 1.2;
+    color: $muted-color;
+  }
+}

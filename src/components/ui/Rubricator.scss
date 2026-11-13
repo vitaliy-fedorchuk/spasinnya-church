@@ -1,0 +1,35 @@
+@use "../../styles/tools" as *;
+
+$color: #868686;
+
+.rubricator {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: em(7.4);
+  height: em(30);
+  padding: 0 em(11);
+  border: 1px solid $color;
+  border-radius: em(100);
+  color: $color;
+  white-space: nowrap;
+
+  // Для темного чи кольорового фону
+  &--light {
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &__icon {
+    display: block;
+    flex-shrink: 0;
+    width: em(16);
+    height: em(16);
+  }
+
+  &__text {
+    font-size: em(14);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+}

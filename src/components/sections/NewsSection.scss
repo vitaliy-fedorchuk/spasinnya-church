@@ -1,0 +1,252 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+
+.news {
+  padding-bottom: em(100);
+
+  @include mobile {
+    padding-bottom: em(56);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__title {
+    margin-top: em(16, 48);
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  // ---------- Картки ----------
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: em(20);
+    margin: em(40) 0 0;
+    padding: 0;
+    list-style: none;
+
+    @include tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    // Телефон: картки гортаються вбік
+    @include mobile {
+      display: flex;
+      gap: em(12);
+      margin: em(24) em(-16) 0;
+      padding: 0 em(16);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding: 0 em(16);
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid rgba(17, 17, 20, 0.09);
+    border-radius: em(30);
+    transition:
+      transform 0.4s ease,
+      box-shadow 0.4s ease;
+
+    &:hover {
+      transform: translateY(em(-4));
+      box-shadow: 0 em(16) em(40) rgba(17, 17, 20, 0.08);
+    }
+
+    // Третя картка на планшеті не влазить у 2 колонки — ховаємо
+    @include tablet {
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+
+    @include mobile {
+      flex: 0 0 em(300);
+      border-radius: em(20);
+      scroll-snap-align: start;
+
+      &:nth-child(3) {
+        display: flex;
+      }
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 453 / 290;
+    object-fit: cover;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: em(24);
+
+    @include mobile {
+      padding: em(18) em(16) em(20);
+    }
+  }
+
+  &__read-time {
+    display: flex;
+    align-items: center;
+    gap: em(8, 13);
+    font-size: em(13);
+    font-weight: 500;
+    line-height: 1.2;
+    color: #90816a;
+
+    img {
+      width: em(16, 13);
+      height: em(16, 13);
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(10);
+    margin: em(15) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    height: em(23, 13);
+    padding: 0 em(15, 13);
+    font-size: em(13);
+    font-weight: 500;
+    line-height: 1;
+    color: $muted;
+    border: 1px solid rgba(134, 134, 134, 0.5);
+    border-radius: em(100, 13);
+  }
+
+  &__card-title {
+    margin-top: em(16, 22);
+    font-family: Arkhip, sans-serif;
+    font-size: em(22);
+    font-weight: 400;
+    line-height: 1.18;
+    color: #111114;
+
+    @include mobile {
+      margin-top: em(14, 18);
+      font-size: em(18);
+    }
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
+
+    // Вся картка клікабельна
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &__card:has(.news__link:focus-visible) {
+    outline: 2px solid #90816a;
+    outline-offset: 2px;
+  }
+
+  // Автор і дата — завжди внизу картки
+  &__meta {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: em(12);
+    margin-top: auto;
+    padding-top: em(16);
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: em(12);
+    min-width: 0;
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+    width: em(44);
+    height: em(44);
+    object-fit: cover;
+    border-radius: 50%;
+    // Обводка всередині кола: впритул до фото і не виходить за межі 44px
+    box-sizing: border-box;
+    border: em(3) solid #90816a;
+
+    @include mobile {
+      width: em(40);
+      height: em(40);
+    }
+  }
+
+  &__author-name {
+    font-size: em(15);
+    font-weight: 600;
+    line-height: 1.2;
+    color: $dark;
+    white-space: nowrap;
+  }
+
+  &__author-role,
+  &__date {
+    font-size: em(13);
+    font-weight: 500;
+    line-height: 1.2;
+    color: $muted;
+    white-space: nowrap;
+  }
+
+  &__author-role {
+    margin-top: em(4, 13);
+  }
+
+  &__more {
+    display: flex;
+    justify-content: center;
+    margin-top: em(56);
+
+    @include mobile {
+      margin-top: em(32);
+    }
+  }
+}

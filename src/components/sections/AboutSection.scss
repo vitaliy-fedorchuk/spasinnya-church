@@ -1,0 +1,240 @@
+@use "../../styles/tools" as *;
+
+$accent-color: #90816a;
+$placeholder-color: #d9d9d9;
+$page-bg: #f5f5f5;
+
+// Кружечки з фото: розмір, обводка і наскільки кожен заходить на попередній
+$avatar-size: em(80);
+$avatar-border: em(3);
+$avatar-overlap: em(-19.5);
+$avatar-size-mobile: em(52);
+$avatar-border-mobile: em(2);
+$avatar-overlap-mobile: em(-13);
+
+.about {
+  padding-top: em(59);
+
+  @include mobile {
+    padding-top: em(40);
+  }
+
+  // ---------- Шапка секції: заголовок ліворуч, учасники праворуч ----------
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: em(40);
+    // У макеті шапка вужча за відео на 20px з кожного боку
+    padding: 0 em(20);
+
+    @include tablet {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: em(32);
+    }
+
+    @include mobile {
+      gap: em(24);
+      padding: 0;
+    }
+  }
+
+  &__title {
+    margin-top: em(16, 48);
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  &__members {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    // У макеті кружечки по центру заголовка (а не заголовка разом із міткою):
+    // притискаємо донизу з відступом 14px від низу заголовка
+    align-self: flex-end;
+    margin-bottom: em(14);
+
+    @include tablet {
+      align-self: flex-start;
+      margin-bottom: 0;
+    }
+  }
+
+  // ---------- Фото в кружечках ----------
+  &__avatars {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__avatar {
+    position: relative;
+    flex-shrink: 0;
+    width: $avatar-size;
+    height: $avatar-size;
+    border-radius: 50%;
+    transition: transform 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    & + & {
+      margin-left: $avatar-overlap;
+    }
+
+    // Біла обводка поверх фото — як у Figma (обводка всередині кола,
+    // фото під нею не зменшується)
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: $avatar-border solid #ffffff;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    // Ховер: кружечок трохи піднімається, порядок накладання не змінюється
+    @media (hover: hover) {
+      &:hover {
+        transform: translateY(em(-6));
+      }
+    }
+
+    @include mobile {
+      width: $avatar-size-mobile;
+      height: $avatar-size-mobile;
+
+      & + & {
+        margin-left: $avatar-overlap-mobile;
+      }
+
+      &::after {
+        border-width: $avatar-border-mobile;
+      }
+
+      // На телефоні показуємо 5 облич, щоб усе вмістилося в рядок
+      &:nth-child(n + 6) {
+        display: none;
+      }
+    }
+  }
+
+  // Фото обрізане колом на 1px менше за обводку: якщо краї фото й обводки
+  // збігаються, при згладжуванні крізь білий край просвічує темна облямівка
+  &__avatar-photo {
+    position: absolute;
+    inset: 0;
+    // overflow обов'язковий: clip-path ховає зайве лише візуально, а збільшене
+    // фото (перше — у 14 разів більше за коло) інакше розширює сторінку на телефоні
+    overflow: hidden;
+    clip-path: circle(calc(50% - 1px));
+    // Поки фото вантажиться
+    background-color: $placeholder-color;
+  }
+
+  &__avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // ---------- Лічильник «312 членів церкви» ----------
+  &__count {
+    position: relative;
+    z-index: 2;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    // Цифра і підпис — одним блоком по центру пігулки
+    justify-content: center;
+    gap: em(9);
+    min-width: em(173);
+    height: $avatar-size;
+    // 20px від краю до тексту = 17px + 3px обводки
+    padding: 0 em(17);
+    margin-left: em(-20);
+    background-color: $page-bg;
+    border: $avatar-border solid $accent-color;
+    border-radius: em(100);
+    box-shadow: 0 0 em(10.1) rgba(0, 0, 0, 0.1);
+    // Перекриваємо загальні стилі <p>
+    font-size: 1em;
+    color: $accent-color;
+
+    @include mobile {
+      min-width: 0;
+      height: $avatar-size-mobile;
+      gap: em(6);
+      padding: 0 em(12);
+      margin-left: $avatar-overlap-mobile;
+      border-width: $avatar-border-mobile;
+    }
+  }
+
+  &__count-number {
+    font-family: Arkhip, sans-serif;
+    font-size: em(32);
+    line-height: 1.1;
+
+    @include mobile {
+      font-size: em(22);
+    }
+  }
+
+  &__count-label {
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.2;
+
+    @include mobile {
+      font-size: em(13);
+    }
+  }
+
+  // ---------- Відео ----------
+  &__video {
+    position: relative;
+    margin-top: em(32);
+    aspect-ratio: 2;
+    overflow: hidden;
+    background-color: $placeholder-color;
+    border-radius: em(29.656);
+
+    @include mobile {
+      margin-top: em(24);
+      aspect-ratio: 1;
+      border-radius: em(20);
+    }
+  }
+
+  &__video-media {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    // Кадр як у макеті: зображення трохи зсунуте вгору
+    object-position: 50% 29.2%;
+  }
+
+  &__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: em(51.85);
+    height: em(51.85);
+    background-color: $page-bg;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &__play-icon {
+    display: block;
+    width: em(15.21);
+    height: em(16.67);
+  }
+}

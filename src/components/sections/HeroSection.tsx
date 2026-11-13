@@ -3,10 +3,10 @@ import BlackButton from "../buttons/BlackButton";
 
 const HeroSection = () => {
   return (
-    <section className="section_hero">
+    <section className="hero" data-surface="dark">
       <div className="container">
-        <div className="hero">
-          <div className="hero_icon">
+        <div className="hero__content">
+          <div className="hero__icon">
             <svg
               width="20"
               height="20"
@@ -14,7 +14,7 @@ const HeroSection = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_1698_1105)">
+              <g clipPath="url(#clip0_1698_1105)">
                 <path
                   d="M18.2842 10.4108L10.8333 4.9925V3.33333H11.6667C12.1267 3.33333 12.5 2.96 12.5 2.5C12.5 2.04 12.1267 1.66667 11.6667 1.66667H10.8333V0.833333C10.8333 0.373333 10.46 0 10 0C9.54 0 9.16667 0.373333 9.16667 0.833333V1.66667H8.33333C7.87333 1.66667 7.5 2.04 7.5 2.5C7.5 2.96 7.87333 3.33333 8.33333 3.33333H9.16667V4.9925L1.71583 10.4108C0.641667 11.1925 0 12.4525 0 13.7808V16.6667C0 18.505 1.495 20 3.33333 20H16.6667C18.505 20 20 18.505 20 16.6667V13.7808C20 12.4525 19.3583 11.1925 18.2842 10.4108ZM10 12.5C8.62167 12.5 7.5 13.6217 7.5 15V18.3333H5.83333V9.4775L10 6.4475L14.1667 9.4775V18.3333H12.5V15C12.5 13.6217 11.3783 12.5 10 12.5ZM1.66667 16.6667V13.7808C1.66667 12.9833 2.05167 12.2275 2.69667 11.7583L4.16667 10.6892V18.3333H3.33333C2.41417 18.3333 1.66667 17.5858 1.66667 16.6667ZM9.16667 18.3333V15C9.16667 14.5408 9.54083 14.1667 10 14.1667C10.4592 14.1667 10.8333 14.5408 10.8333 15V18.3333H9.16667ZM18.3333 16.6667C18.3333 17.5858 17.5858 18.3333 16.6667 18.3333H15.8333V10.6892L17.3033 11.7583C17.9483 12.2275 18.3333 12.9833 18.3333 13.7808V16.6667Z"
                   fill="white"
@@ -28,16 +28,24 @@ const HeroSection = () => {
             </svg>
           </div>
 
-          <div className="hero_title max-width520">
-            <h1 className="h1">Вас вітає "Церква&nbsp;Спасіння"</h1>
+          <div className="hero__title">
+            {/* Кожен рядок окремо — для анімації появи */}
+            <h1>
+              <span className="hero__line">
+                <span className="hero__line-text">Вас вітає</span>
+              </span>
+              <span className="hero__line">
+                <span className="hero__line-text">"Церква&nbsp;Спасіння"</span>
+              </span>
+            </h1>
           </div>
 
-          <p className="hero-description max-width590">
+          <p className="hero__description">
             Ми віримо, що кожна людина цінна в Божих очах. У нашій церкві ви
             знайдете духовну підтримку, щиру молитву, друзів, які стануть для
             вас родиною, та відповіді на найважливіші питання життя.
           </p>
-          <BlackButton />
+          <BlackButton className="hero__button" />
         </div>
       </div>
     </section>

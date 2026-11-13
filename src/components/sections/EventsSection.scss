@@ -1,0 +1,42 @@
+@use "../../styles/tools" as *;
+
+.events {
+  // Зверху відступ дає попередня секція (100px), знизу — 74px до наступної
+  padding-bottom: em(74);
+
+  @include mobile {
+    padding-bottom: em(48);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: em(37);
+    text-align: center;
+
+    @include mobile {
+      margin-bottom: em(24);
+    }
+  }
+
+  &__title {
+    margin-top: em(16, 48);
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  &__text {
+    margin-top: em(16, 18);
+    font-size: em(18);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #868686;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+}

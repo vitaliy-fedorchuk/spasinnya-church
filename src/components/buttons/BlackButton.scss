@@ -1,55 +1,75 @@
-.button_wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+@use "../../styles/tools" as *;
+
+// Відступ кружка від країв кнопки (справа, зверху, знизу)
+$button-height: em(53);
+$circle-gap: em(3);
+$circle-size: $button-height - $circle-gap * 2;
+$text-line-height: 1.2;
 
 .black-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  height: 53px;
-  padding: 0 3px 0 30px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #262626;
-  border: none;
-  border-radius: 100px;
-  text-decoration: none;
-  cursor: pointer;
 
-  &:hover {
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: em(16);
+    box-sizing: border-box;
+    height: $button-height;
+    padding: 0 $circle-gap 0 em(30);
+    font-size: 1em;
+    color: #fff;
     background-color: #262626;
-    transition: 0.6s ease;
+    border: none;
+    border-radius: em(100);
+    text-decoration: none;
+    cursor: pointer;
 
-    .black-button_circle {
-      background-color: #262626;
-      border: 1px solid #f5f5f5;
-      transition: 0.6s ease;
-    }
+    &:hover {
+      .black-button__text {
+        transform: translateY(-100%) rotate(0.001deg);
+      }
 
-    .black-button_svg {
-      fill: #f5f5f5;
-      transform: rotate(45deg);
+      .black-button__icon {
+        transform: rotate(45deg);
+      }
     }
   }
-}
 
-.black-button_circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 47px;
-  height: 47px;
-  padding: 0;
-  border-radius: 100%;
-  background-color: #f5f5f5;
-  border: 1px solid #f5f5f5;
-}
+  // Ховер: текст їде вгору, знизу виїжджає його копія (як у пунктах меню)
+  &__label {
+    display: block;
+    overflow: hidden;
+    line-height: $text-line-height;
+  }
 
-.black-button_svg {
-  fill: #262626;
-  transform: rotate(0deg);
-  transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+  &__text {
+    display: block;
+    text-shadow: 0 #{$text-line-height}em 0 currentColor;
+    transform: translateY(0%) rotate(0.001deg);
+    transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+  }
+
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: $circle-size;
+    height: $circle-size;
+    padding: 0;
+    border-radius: 100%;
+    background-color: #f5f5f5;
+  }
+
+  &__icon {
+    width: em(22);
+    height: em(22);
+    fill: #262626;
+    transform: rotate(0deg);
+    transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
 }

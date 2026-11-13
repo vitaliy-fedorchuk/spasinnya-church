@@ -1,0 +1,231 @@
+@use "../../styles/tools" as *;
+
+$card-height: em(460);
+// Наскільки кожна наступна картка нижча за попередню в стосі (видно краї)
+$peek: em(12);
+// Де зупиняються картки і права частина: по центру екрана, але не вище за шапку
+$sticky-top: max(#{em(100)}, calc(50vh - #{$card-height} / 2));
+
+.ministries {
+  padding-bottom: em(100);
+
+  @include mobile {
+    padding-bottom: em(56);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: em(690) em(571);
+    column-gap: em(80);
+    align-items: start;
+
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: em(40);
+    }
+  }
+
+  // ---------- Права частина: стоїть на місці, поки картки гортаються ----------
+  &__intro {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: $sticky-top;
+    display: flex;
+    align-items: center;
+    height: $card-height;
+    // У макеті текст трохи вище центру картки
+    padding-bottom: em(32);
+    box-sizing: border-box;
+
+    @include tablet {
+      grid-column: auto;
+      grid-row: auto;
+      position: static;
+      height: auto;
+      padding-bottom: 0;
+    }
+  }
+
+  &__title {
+    max-width: em(557, 48);
+    margin-top: em(16, 48);
+
+    @include tablet {
+      max-width: none;
+    }
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  &__text {
+    max-width: em(571, 18);
+    margin-top: em(16, 18);
+    font-size: em(18);
+    font-weight: 400;
+    line-height: 1.4;
+    color: #868686;
+
+    @include mobile {
+      font-size: em(16);
+    }
+  }
+
+  // ---------- Ліва частина: стос карток ----------
+  &__cards {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    // Відстань «на підльоті»: скільки гортати, поки наступна картка накриє попередню
+    gap: em(160);
+
+    @include mobile {
+      gap: em(100);
+    }
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include tablet {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+
+  &__card {
+    position: sticky;
+    // Кожна наступна картка зупиняється трохи нижче — видно краї попередніх
+    top: calc(#{$sticky-top} + var(--index) * #{$peek});
+    height: $card-height;
+    overflow: hidden;
+    background-color: #d9d9d9;
+    border-radius: em(22.188);
+    // Накрита картка трохи меншає (--cover задає useStackedCards)
+    transform: scale(calc(1 - var(--cover, 0) * 0.06));
+    transform-origin: center top;
+    will-change: transform;
+    // Поява знизу: картка прозора біля низу екрана і стає непрозорою, коли лягає
+    // в стос (--reveal задає useStackedCards; без нього — видна повністю)
+    opacity: var(--reveal, 1);
+
+    // Градієнт знизу під текст (як у макеті)
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 45.521%, rgba(0, 0, 0, 0.6));
+    }
+
+    // Притемнення накритої картки
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background-color: #000000;
+      opacity: calc(var(--cover, 0) * 0.4);
+      pointer-events: none;
+    }
+
+    @include tablet {
+      top: calc(#{em(100)} + var(--index) * #{$peek});
+    }
+
+    @include mobile {
+      top: calc(#{em(76)} + var(--index) * #{em(10)});
+      height: em(440);
+      border-radius: em(18);
+    }
+  }
+
+  &__photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  &__logo {
+    position: absolute;
+    top: em(40);
+    left: em(40);
+    z-index: 2;
+    display: block;
+    // Логотипи різної форми — вирівнюємо за висотою (у макеті 33px)
+    width: auto;
+    height: em(36);
+
+    @include mobile {
+      top: em(20);
+      left: em(20);
+      height: em(30);
+    }
+
+    // Темний логотип → білий
+    &--inverted {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  &__body {
+    position: absolute;
+    left: em(40);
+    right: em(40);
+    bottom: em(40);
+    z-index: 2;
+
+    @include mobile {
+      left: em(20);
+      right: em(20);
+      bottom: em(24);
+    }
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    height: em(29, 14);
+    padding: 0 em(19.23, 14);
+    font-size: em(14);
+    font-weight: 500;
+    line-height: 1;
+    color: #90816a;
+    background-color: #ffffff;
+    border-radius: em(74, 14);
+  }
+
+  &__card-title {
+    margin-top: em(16, 22);
+    font-family: Arkhip, sans-serif;
+    font-size: em(22);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #ffffff;
+
+    @include mobile {
+      font-size: em(20);
+      margin-top: em(12, 20);
+    }
+  }
+
+  &__card-text {
+    max-width: em(497);
+    margin-top: em(10);
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #f5f5f5;
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+}

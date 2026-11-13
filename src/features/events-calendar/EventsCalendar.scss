@@ -1,0 +1,520 @@
+@use "../../styles/tools" as *;
+
+$bg: #262626;
+$accent: #90816a;
+$light: #f5f5f5;
+$white-15: rgba(255, 255, 255, 0.15);
+$white-75: rgba(255, 255, 255, 0.75);
+$white-80: rgba(255, 255, 255, 0.8);
+$tile-text-dark: #464646;
+$pop: cubic-bezier(0.17, 0.67, 0.3, 1.33);
+
+// Розміри календаря з макету
+$tile: em(75.93);
+$tile-gap: em(11.29);
+$calendar-width: em(599.2); // 7 × 75.93 + 6 × 11.29
+
+.events-calendar {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) em(640);
+  padding: em(30);
+  background-color: $bg;
+  border-radius: em(30);
+  color: #ffffff;
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: em(30);
+  }
+
+  @include mobile {
+    row-gap: em(24);
+    padding: em(16);
+    border-radius: em(20);
+  }
+
+  // ---------- Календар ----------
+  &__calendar {
+    align-self: center;
+    // У макеті календар на 37.74px від лівого краю своєї частини
+    justify-self: start;
+    margin-left: em(37.74);
+    width: $calendar-width;
+
+    @include tablet {
+      justify-self: center;
+      margin-left: 0;
+    }
+    // У макеті календар по центру лівої частини, з відступом ~60px зверху і знизу
+    padding: em(60) 0;
+
+    @include tablet {
+      padding: em(16) 0 0;
+    }
+
+    @include mobile {
+      width: 100%;
+      padding: 0;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 em(22.58);
+
+    @include mobile {
+      padding: 0;
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: em(45.16);
+    height: em(45.16);
+    padding: 0;
+    background-color: $white-15;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      transform 0.3s $pop,
+      background-color 0.3s ease,
+      opacity 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: scale(1.075);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    @include mobile {
+      width: em(36);
+      height: em(36);
+    }
+  }
+
+  &__arrow-icon {
+    display: block;
+    width: em(22.58);
+    height: em(22.58);
+
+    &--flipped {
+      transform: rotate(180deg);
+    }
+
+    @include mobile {
+      width: em(18);
+      height: em(18);
+    }
+  }
+
+  &__month {
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    line-height: 1.274;
+    text-align: center;
+    user-select: none;
+
+    @include mobile {
+      font-size: em(22);
+    }
+  }
+
+  &__weekdays,
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    column-gap: $tile-gap;
+
+    @include mobile {
+      column-gap: em(6);
+    }
+  }
+
+  &__weekdays {
+    margin-top: em(34.2);
+    margin-bottom: em(22.58);
+
+    @include mobile {
+      margin-top: em(20);
+      margin-bottom: em(12);
+    }
+  }
+
+  &__weekday {
+    font-size: em(22);
+    line-height: 1.03;
+    color: $white-75;
+    text-align: center;
+    user-select: none;
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  &__grid {
+    row-gap: $tile-gap;
+
+    @include mobile {
+      row-gap: em(6);
+    }
+  }
+
+  // ---------- Клітинка дня ----------
+  &__tile {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    padding: 0;
+    color: $white-75;
+    background-color: $white-15;
+    border: none;
+    border-radius: em(8.468);
+    user-select: none;
+
+    @include mobile {
+      border-radius: em(6);
+    }
+
+    &--empty {
+      background: none;
+    }
+
+    &--no-event {
+      cursor: default;
+    }
+
+    &--event,
+    &--selected {
+      cursor: pointer;
+      transition:
+        transform 0.3s $pop,
+        background-color 0.3s ease,
+        color 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    &--event {
+      color: $tile-text-dark;
+      background-color: $white-80;
+    }
+
+    &--selected {
+      color: $white-75;
+      background-color: $accent;
+    }
+
+    // Сьогодні: темне коло під числом
+    &--today::before {
+      content: "";
+      position: absolute;
+      inset: 15%;
+      z-index: -1;
+      background-color: $bg;
+      border-radius: 50%;
+    }
+
+    &--today {
+      color: $white-75;
+    }
+  }
+
+  &__day {
+    font-size: em(22.58);
+    font-weight: 500;
+    line-height: 1;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  // ---------- Легенда ----------
+  &__legend {
+    display: flex;
+    justify-content: center;
+    gap: em(48);
+    margin-top: em(43.9);
+
+    @include mobile {
+      gap: em(24);
+      margin-top: em(20);
+    }
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: center;
+    gap: em(8.5, 22);
+    font-size: em(22);
+    line-height: 1.28;
+    color: rgba(255, 255, 255, 0.56);
+
+    @include mobile {
+      gap: em(6, 14);
+      font-size: em(14);
+    }
+  }
+
+  &__legend-dot {
+    width: em(22.58, 22);
+    height: em(22.58, 22);
+    background-color: $light;
+    border-radius: 50%;
+
+    &--selected {
+      background-color: $accent;
+    }
+
+    @include mobile {
+      width: em(14, 14);
+      height: em(14, 14);
+    }
+  }
+
+  // ---------- Кількість подій у дні (кружечок у кутку) ----------
+  &__count {
+    position: absolute;
+    top: em(-5, 11);
+    right: em(-5, 11);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: em(18, 11);
+    height: em(18, 11);
+    font-size: em(11);
+    font-weight: 600;
+    line-height: 1;
+    color: $bg;
+    background-color: #ffffff;
+    border-radius: 50%;
+    // Тонке кільце кольору фону — щоб кружечок «відрізався» від клітинки
+    box-shadow: 0 0 0 em(2, 11) $bg;
+
+    @include mobile {
+      top: em(-4, 9);
+      right: em(-4, 9);
+      width: em(15, 9);
+      height: em(15, 9);
+      font-size: em(9);
+    }
+  }
+
+  // ---------- Події вибраного дня ----------
+  // На десктопі висота панелі = висота рядка (як у макеті, ≥740px),
+  // а вміст гортається всередині, якщо подій кілька
+  &__panel {
+    position: relative;
+    min-height: em(740);
+    background-color: $white-15;
+    border-radius: em(20);
+    overflow: hidden;
+
+    @include tablet {
+      min-height: 0;
+    }
+
+    @include mobile {
+      border-radius: em(14);
+    }
+  }
+
+  &__panel-scroll {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: em(60) em(30) em(40);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    animation: events-calendar-fade 0.5s ease;
+    // Тонкий світлий скролбар
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+    // Планшет і телефон: без внутрішньої прокрутки — події просто одна під одною
+    @include tablet {
+      position: static;
+      overflow: visible;
+    }
+
+    @include mobile {
+      padding: em(24) em(16);
+    }
+  }
+
+  &__day-note {
+    margin-bottom: em(24, 15);
+    font-size: em(15);
+    font-weight: 400;
+    color: $white-75;
+    text-align: center;
+
+    @include mobile {
+      font-size: em(13);
+    }
+  }
+
+  &__event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+
+    // Друга й наступні події — під лінією
+    & + & {
+      margin-top: em(48);
+      padding-top: em(48);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+      @include mobile {
+        margin-top: em(28);
+        padding-top: em(28);
+      }
+    }
+  }
+
+  &__event-title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    line-height: 1;
+
+    @include mobile {
+      font-size: em(24);
+    }
+  }
+
+  &__event-img {
+    display: block;
+    width: 100%;
+    height: em(320);
+    margin-top: em(40);
+    object-fit: cover;
+    border-radius: em(15);
+
+    @include mobile {
+      height: auto;
+      aspect-ratio: 16 / 10;
+      margin-top: em(20);
+      border-radius: em(10);
+    }
+  }
+
+  &__event-text {
+    max-width: em(540, 18);
+    margin-top: em(30, 18);
+    font-size: em(18);
+    font-weight: 400;
+    line-height: 1.2;
+    color: $white-80;
+
+    @include mobile {
+      margin-top: em(16, 15);
+      font-size: em(15);
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: em(14) em(10);
+    max-width: em(540);
+    margin: em(25) 0 0;
+    padding: 0;
+    list-style: none;
+
+    @include mobile {
+      gap: em(8);
+      margin-top: em(16);
+    }
+  }
+
+  &__chip {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: em(6, 18.9);
+    height: em(40, 18.9);
+    padding: 0 em(12, 18.9);
+    font-size: em(18.9);
+    line-height: 1;
+    color: $white-80;
+    border: em(1.35, 18.9) solid #e8e8e8;
+    border-radius: em(135, 18.9);
+    white-space: nowrap;
+
+    img {
+      display: block;
+      width: em(16, 18.9);
+      height: em(16, 18.9);
+    }
+
+    @include mobile {
+      font-size: em(14);
+      height: em(34, 14);
+      padding: 0 em(10, 14);
+      gap: em(6, 14);
+
+      img {
+        width: em(14, 14);
+        height: em(14, 14);
+      }
+    }
+  }
+
+  &__route {
+    display: block;
+    transition: transform 0.3s $pop;
+
+    img {
+      display: block;
+      width: em(40.94);
+      height: em(40.47);
+    }
+
+    &:hover {
+      transform: rotate(45deg);
+    }
+
+    @include mobile {
+      img {
+        width: em(34);
+        height: em(34);
+      }
+    }
+  }
+
+  &__empty {
+    margin: auto;
+    font-size: em(18);
+    color: $white-75;
+  }
+}
+
+@keyframes events-calendar-fade {
+  from {
+    opacity: 0;
+    transform: translateY(em(8));
+  }
+}

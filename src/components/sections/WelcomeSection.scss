@@ -1,0 +1,218 @@
+@use "../../styles/tools" as *;
+
+$box-color: #90816a;
+$card-bg: #f5f5f5;
+$dark: #262626;
+
+.welcome {
+  // Фото пастора виходить за коричневий блок на 109px угору
+  padding-top: em(109);
+  padding-bottom: em(120);
+
+  @include tablet {
+    padding-top: 0;
+  }
+
+  @include mobile {
+    padding-bottom: em(56);
+  }
+
+  &__box {
+    margin: 0 em(15);
+    background-color: $box-color;
+    border-radius: em(30);
+
+    @include mobile {
+      margin: 0 em(8);
+      border-radius: em(20);
+    }
+  }
+
+  &__inner {
+    position: relative;
+
+    @include tablet {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  // ---------- Текст і кнопки ----------
+  &__content {
+    max-width: em(822);
+    padding: em(100) 0 em(120);
+
+    @include tablet {
+      align-self: stretch;
+      max-width: none;
+      padding: em(64) 0 em(40);
+    }
+
+    @include mobile {
+      padding: em(40) 0 em(28);
+    }
+  }
+
+  &__title {
+    --section-title-color: #ffffff;
+    margin-top: em(16, 48);
+
+    // Подвійний клас: інакше .section-title (підключається пізніше) перебиває висоту рядка
+    &.section-title {
+      line-height: 1.2;
+    }
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  &__text {
+    max-width: em(761, 18);
+    margin-top: em(17, 18);
+    font-size: em(18);
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+
+    @include mobile {
+      font-size: em(16);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(15);
+    margin-top: em(40);
+
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: em(10);
+      margin-top: em(28);
+    }
+  }
+
+  // Іконки в темному кружечку кнопок
+  &__icon {
+    display: block;
+    width: em(21);
+    height: em(21);
+
+    // Локація з двох шарів; у макеті дзеркально відбита
+    &--location {
+      position: relative;
+      width: em(22);
+      height: em(22);
+      transform: scaleX(-1);
+    }
+  }
+
+  &__icon-pin,
+  &__icon-outline {
+    position: absolute;
+    display: block;
+  }
+
+  &__icon-pin {
+    top: 21.5%;
+    left: 31.43%;
+    width: 37.14%;
+    height: 37.13%;
+  }
+
+  &__icon-outline {
+    top: 0;
+    left: 9.94%;
+    width: 80.12%;
+    height: 100%;
+  }
+
+  // ---------- Пастор ----------
+  // Десктоп: фото праворуч, стоїть на нижньому краї блоку й виходить угору
+  &__pastor {
+    position: absolute;
+    right: em(19);
+    bottom: 0;
+    width: em(605);
+    height: em(650);
+    margin: 0;
+
+    @include tablet {
+      position: relative;
+      right: auto;
+      width: em(420);
+      height: auto;
+      aspect-ratio: 605 / 650;
+    }
+
+    @include mobile {
+      width: 100%;
+      max-width: em(340);
+    }
+  }
+
+  &__pastor-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+
+  // Табличка з ім'ям
+  &__card {
+    position: absolute;
+    right: em(1);
+    bottom: em(120);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: em(3);
+    width: em(329);
+    padding: em(24);
+    background-color: $card-bg;
+    border-radius: em(20);
+
+    @include tablet {
+      right: em(-40);
+      bottom: em(60);
+    }
+
+    @include mobile {
+      right: auto;
+      left: 50%;
+      bottom: em(20);
+      width: max-content;
+      padding: em(14) em(18);
+      border-radius: em(14);
+      transform: translateX(-50%);
+    }
+  }
+
+  &__card-name {
+    font-size: em(18);
+    font-weight: 600;
+    line-height: 1.2;
+    color: $dark;
+    white-space: nowrap;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &__card-role {
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.2;
+    color: rgba(38, 38, 38, 0.8);
+    white-space: nowrap;
+
+    @include mobile {
+      font-size: em(13);
+    }
+  }
+}

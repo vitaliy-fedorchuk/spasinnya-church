@@ -1,3 +1,16 @@
+@use "../../styles/tools" as *;
+
+$fade: 0.4s;
+$on-light-color: #262626;
+
+// Плавна поява/зникнення: visibility перемикається в кінці зникнення,
+// щоб приховані кнопки не ловили кліки і фокус
+@mixin fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -5,41 +18,105 @@
   width: 100%;
   box-sizing: border-box;
   z-index: 100;
-  padding: 65px 80px 0px 80px;
-}
+  // --scrollbar-width задає useNavigation, коли меню відкрите і скрол прихований
+  padding: em(65) calc(#{em(80)} + var(--scrollbar-width, 0px)) 0 em(80);
+  // Сама шапка прозора для кліків — клікабельні лише її кнопки й логотип
+  pointer-events: none;
 
-.navbar_container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 100%;
-  justify-content: space-between;
-}
+  @include mobile {
+    padding: em(20) calc(#{em(16)} + var(--scrollbar-width, 0px)) 0 em(16);
+  }
 
-.navbar_inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-}
+  &__container {
+    width: 100%;
 
-.navbar_menu-btn {
-  justify-self: left;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 190px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-  font-family: Arkhip, sans-serif;
-  font-size: 16px;
-  padding: 8px;
-}
+    // Поява першого екрана: шапка проявляється останньою (див. HeroSection.scss)
+    @media (prefers-reduced-motion: no-preference) {
+      opacity: 0;
+      transition: opacity 0.8s ease 1.2s;
 
-.button_wrapper {
-  justify-self: end;
-  min-width: 190px;
+      .is-loaded & {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Три колонки: «Меню» | логотип точно по центру | «Допомогти»
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__menu-toggle,
+  &__logo,
+  &__action {
+    pointer-events: auto;
+    transition:
+      opacity $fade ease,
+      visibility $fade;
+  }
+
+  &__menu-toggle {
+    justify-self: start;
+    transition:
+      opacity $fade ease,
+      visibility $fade,
+      color 0.2s ease;
+  }
+
+  // Над світлим фоном (не над фото й темними блоками) «Меню» стає темним.
+  // Що під кнопкою, визначає useIsOverLight за атрибутом data-surface="dark"
+  &--on-light &__menu-toggle {
+    color: $on-light-color;
+  }
+
+  &__action {
+    justify-self: end;
+  }
+
+  &__logo svg {
+    display: block;
+    width: em(277);
+    height: auto;
+
+    @include mobile {
+      width: em(150);
+    }
+  }
+
+  // На телефоні «Меню» — лише смужки, «Допомогти» — лише кружок зі стрілкою
+  // (текст лишається для скрінрідерів)
+  @include mobile {
+    &__menu-toggle .menu-toggle__text {
+      @include visually-hidden;
+    }
+
+    &__action .black-button__link {
+      gap: 0;
+      padding: 0 em(3);
+    }
+
+    &__action .black-button__label {
+      @include visually-hidden;
+    }
+  }
+
+  // Сторінка прокручена: логотип є лише вгорі
+  &--scrolled &__logo {
+    @include fade-out;
+  }
+
+  // Меню відкривається: логотип з'являється, коли шторка оверлея вже
+  // накрила верх екрана (вона розкривається 1s з повільним стартом)
+  &--menu-open &__logo {
+    transition-delay: 0.45s;
+  }
+
+  // Гортаємо вниз: кнопки плавно зникають (при скролі вгору повертаються)
+  &--hidden &__menu-toggle,
+  &--hidden &__action {
+    @include fade-out;
+  }
 }

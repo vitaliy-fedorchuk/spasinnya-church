@@ -1,0 +1,194 @@
+@use "../../styles/tools" as *;
+
+$accent: #90816a;
+$dark: #262626;
+$muted: #868686;
+
+.faq {
+  // Зверху відступ дає попередня секція (100px)
+  padding-bottom: em(100);
+
+  @include mobile {
+    padding-bottom: em(56);
+  }
+
+  &__title {
+    margin-top: em(16, 48);
+
+    @include mobile {
+      margin-top: em(16, 32);
+    }
+  }
+
+  &__text {
+    margin-top: em(16, 18);
+    font-size: em(18);
+    font-weight: 400;
+    line-height: 1.2;
+    color: $muted;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  // ---------- Фільтр за темами ----------
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(12);
+    margin-top: em(39);
+
+    // Телефон: кнопки в один рядок, гортаються вбік
+    @include mobile {
+      flex-wrap: nowrap;
+      gap: em(8);
+      margin: em(24) em(-16) 0;
+      padding: 0 em(16);
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  &__tab {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: em(10, 18);
+    height: em(57, 18);
+    padding: 0 em(24, 18) 0 em(22.74, 18);
+    font-size: em(18);
+    font-weight: 500;
+    line-height: 1;
+    color: $dark;
+    white-space: nowrap;
+    background-color: #ffffff;
+    border: 1px solid rgba(17, 17, 20, 0.16);
+    border-radius: em(100, 18);
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+
+    &:hover {
+      border-color: $accent;
+    }
+
+    &--active {
+      color: #ffffff;
+      background-color: $accent;
+      border-color: $accent;
+    }
+
+    @include mobile {
+      height: em(44, 15);
+      padding: 0 em(16, 15);
+      font-size: em(15);
+    }
+  }
+
+  &__tab-count {
+    font-family: Arkhip, sans-serif;
+    font-size: em(14, 18);
+    color: $muted;
+    transition: color 0.3s ease;
+
+    .faq__tab--active & {
+      color: #f5f5f5;
+    }
+  }
+
+  // ---------- Картки з відповідями ----------
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: em(20);
+    margin: em(44) 0 0;
+    padding: 0;
+    list-style: none;
+    animation: faq-fade 0.5s ease;
+
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: em(12);
+      margin-top: em(24);
+    }
+  }
+
+  &__card {
+    box-sizing: border-box;
+    min-height: em(263);
+    // 36px до вмісту зліва (35 + рамка) і 40px зверху, як у макеті
+    padding: em(39) em(35) em(36);
+    background-color: #ffffff;
+    border: 1px solid rgba(17, 17, 20, 0.09);
+    border-radius: em(30.216);
+
+    @include mobile {
+      min-height: 0;
+      padding: em(24) em(20);
+      border-radius: em(20);
+    }
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    height: em(34, 13.85);
+    padding: 0 em(11, 13.85);
+    font-size: em(13.85);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: em(1.108, 13.85);
+    text-transform: uppercase;
+    color: $accent;
+    background-color: rgba(144, 129, 106, 0.08);
+    border-radius: em(100, 13.85);
+
+    @include mobile {
+      height: em(30, 12);
+      font-size: em(12);
+    }
+  }
+
+  &__question {
+    margin-top: em(16.4, 22);
+    font-family: Arkhip, sans-serif;
+    font-size: em(22);
+    font-weight: 400;
+    line-height: 1.282;
+    letter-spacing: em(-0.45, 22);
+    color: #111114;
+
+    @include mobile {
+      margin-top: em(14, 19);
+      font-size: em(19);
+    }
+  }
+
+  &__answer {
+    margin-top: em(16.4, 16);
+    font-size: 1em;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #71717a;
+
+    @include mobile {
+      margin-top: em(10, 15);
+      font-size: em(15);
+    }
+  }
+}
+
+@keyframes faq-fade {
+  from {
+    opacity: 0;
+    transform: translateY(em(10));
+  }
+}

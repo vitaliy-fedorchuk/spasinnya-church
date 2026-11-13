@@ -1,0 +1,66 @@
+@use "../../styles/tools" as *;
+
+$ease: cubic-bezier(0.7, 0, 0.3, 1);
+$bar-offset: em(4);
+
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: em(10);
+  padding: em(8);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-family: Arkhip, sans-serif;
+  // <button> не успадковує розмір шрифту сам — без цього em рахувались би від 13.33px
+  font-size: inherit;
+
+  &__text {
+    font-size: em(18);
+    line-height: 130%;
+  }
+
+  &__icon {
+    position: relative;
+    width: em(24);
+    height: em(10);
+  }
+
+  &__bar {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: em(2);
+    margin-top: em(-1);
+    background-color: currentColor;
+    // Origin завжди по центру: якщо його перемикати, смужки стрибають без анімації
+    transform-origin: center;
+    transition: transform 0.5s $ease;
+
+    &--top {
+      transform: translateY(-$bar-offset);
+    }
+
+    &--bottom {
+      transform: translateY($bar-offset);
+    }
+  }
+
+  // Ховер: нижня смужка коротшає до половини, лівий край лишається на місці
+  &:hover &__bar--bottom {
+    transform: translate(-25%, $bar-offset) scaleX(0.5);
+  }
+
+  // Відкрите меню: смужки складаються в хрестик
+  &--active &__bar--top,
+  &--active:hover &__bar--top {
+    transform: rotate(45deg);
+  }
+
+  &--active &__bar--bottom,
+  &--active:hover &__bar--bottom {
+    transform: rotate(-45deg);
+  }
+}

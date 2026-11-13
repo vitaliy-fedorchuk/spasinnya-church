@@ -1,0 +1,40 @@
+@use "sass:math";
+
+// Резинова верстка: 1em = 16px на макеті 1920px (мобільний — на 390px),
+// базовий розмір — чиста частка ширини вікна (vw), див. --size-font у global.scss.
+// Розміри з Figma переводимо так: em(30) → 1.875em.
+// Якщо в елемента свій font-size, внутрішні розміри рахуємо від нього:
+// em(12, 18) — 12px усередині тексту 18px.
+$design-base: 16;
+
+@function em($px, $context: $design-base) {
+  @return math.div($px, $context) * 1em;
+}
+
+// Брейкпоінти (включно). Базовий розмір для кожного — у global.scss (:root)
+$bp-tablet: 1199px;
+$bp-mobile: 767px;
+
+@mixin tablet {
+  @media (max-width: $bp-tablet) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $bp-mobile) {
+    @content;
+  }
+}
+
+// Ховає текст візуально, але лишає його для скрінрідерів
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
