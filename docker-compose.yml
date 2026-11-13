@@ -1,0 +1,18 @@
+# Локальна база для розробки: docker compose up -d
+# (на VPS — окреме налаштування, паролі звідти сюди не потрапляють)
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: spasinnya
+      POSTGRES_PASSWORD: spasinnya_dev
+      POSTGRES_DB: spasinnya
+    ports:
+      - "5432:5432"
+    volumes:
+      # Postgres 18 тримає дані в /var/lib/postgresql/<версія>/docker
+      - pgdata:/var/lib/postgresql
+
+volumes:
+  pgdata:

@@ -1,10 +1,16 @@
+import { z } from "zod";
+
 /**
  * Стаття блогу = шапка (метадані) + масив блоків.
+ *
+ * Тут — єдине джерело правди про блоки: zod-схеми. З них виводяться
+ * TypeScript-типи, і ними ж перевіряються дані — при збереженні з адмінки
+ * і при читанні з бази (зламаний блок не потрапить на сторінку).
  *
  * Кожен блок має `id` (стабільний ключ для React і для адмінки: перетягування,
  * редагування) і `type`, від якого залежать решта полів.
  * Щоб додати новий вид блоку:
- *   1) описати його тут і додати в union `ArticleBlock`;
+ *   1) описати схему тут і додати в `articleBlockSchema`;
  *   2) зробити компонент у ./blocks;
  *   3) зареєструвати в ./blocks/registry.ts.
  *
@@ -12,130 +18,142 @@
  * **жирний**, *курсив*, [посилання](https://...).
  */
 
-export interface ImageData {
-  src: string;
+const text = z.string().trim().min(1);
+const id = z.string().min(1);
+
+export const imageDataSchema = z.object({
+  src: text,
   /** Опис для скрінрідерів; порожній — якщо фото суто декоративне */
-  alt: string;
-}
+  alt: z.string(),
+});
 
 /** Ліде — збільшений вступний абзац */
-export interface LeadBlock {
-  id: string;
-  type: "lead";
-  text: string;
-}
+export const leadBlockSchema = z.object({ id, type: z.literal("lead"), text });
 
 /** Звичайний текст: один або кілька абзаців */
-export interface TextBlock {
-  id: string;
-  type: "text";
-  paragraphs: string[];
-}
+export const textBlockSchema = z.object({
+  id,
+  type: z.literal("text"),
+  paragraphs: z.array(text).min(1),
+});
 
-/** Підзаголовок усередині статті */
-export interface HeadingBlock {
-  id: string;
-  type: "heading";
-  /** 2 — розділ, 3 — підрозділ */
-  level: 2 | 3;
-  text: string;
-}
+/** Підзаголовок усередині статті: 2 — розділ, 3 — підрозділ */
+export const headingBlockSchema = z.object({
+  id,
+  type: z.literal("heading"),
+  level: z.union([z.literal(2), z.literal(3)]),
+  text,
+});
 
-/** Цитата людини */
-export interface QuoteBlock {
-  id: string;
-  type: "quote";
-  text: string;
-  author?: string;
-  /** Посада / підпис під автором */
-  role?: string;
-}
+/** Цитата людини (role — посада / підпис під автором) */
+export const quoteBlockSchema = z.object({
+  id,
+  type: z.literal("quote"),
+  text,
+  author: z.string().optional(),
+  role: z.string().optional(),
+});
 
-/** Біблійний вірш — окремий акцентний блок */
-export interface VerseBlock {
-  id: string;
-  type: "verse";
-  text: string;
-  /** Напр. «Івана 3:16» */
-  reference: string;
-}
+/** Біблійний вірш — окремий акцентний блок; reference — напр. «Івана 3:16» */
+export const verseBlockSchema = z.object({
+  id,
+  type: z.literal("verse"),
+  text,
+  reference: text,
+});
 
-/** Одне фото */
-export interface ImageBlock {
-  id: string;
-  type: "image";
-  image: ImageData;
-  caption?: string;
-  /** Ширше за колонку тексту */
-  wide?: boolean;
-}
+/** Одне фото; wide — ширше за колонку тексту */
+export const imageBlockSchema = z.object({
+  id,
+  type: z.literal("image"),
+  image: imageDataSchema,
+  caption: z.string().optional(),
+  wide: z.boolean().optional(),
+});
 
 /** Кілька фото поряд (2–4); на телефоні гортаються вбік */
-export interface GalleryBlock {
-  id: string;
-  type: "gallery";
-  images: ImageData[];
-  caption?: string;
-}
+export const galleryBlockSchema = z.object({
+  id,
+  type: z.literal("gallery"),
+  images: z.array(imageDataSchema).min(2).max(4),
+  caption: z.string().optional(),
+});
 
 /** Список */
-export interface ListBlock {
-  id: string;
-  type: "list";
-  ordered?: boolean;
-  items: string[];
-}
+export const listBlockSchema = z.object({
+  id,
+  type: z.literal("list"),
+  ordered: z.boolean().optional(),
+  items: z.array(text).min(1),
+});
 
-/** Відео з YouTube: спершу обкладинка, плеєр вантажиться по кліку */
-export interface VideoBlock {
-  id: string;
-  type: "video";
-  /** ID ролика на YouTube (частина після v=) */
-  youtubeId: string;
-  /** Своя обкладинка; без неї — превʼю з YouTube */
-  poster?: string;
-  title: string;
-  caption?: string;
-}
+/**
+ * Відео з YouTube: спершу обкладинка, плеєр вантажиться по кліку.
+ * youtubeId — частина після v=; poster — своя обкладинка (без неї — превʼю з YouTube).
+ */
+export const videoBlockSchema = z.object({
+  id,
+  type: z.literal("video"),
+  youtubeId: z.string().regex(/^[\w-]{6,20}$/, "Невірний ID ролика YouTube"),
+  poster: z.string().optional(),
+  title: text,
+  caption: z.string().optional(),
+});
 
 /** Виділена примітка: розклад, адреса, «як долучитися» */
-export interface CalloutBlock {
-  id: string;
-  type: "callout";
-  title?: string;
-  text: string;
-}
+export const calloutBlockSchema = z.object({
+  id,
+  type: z.literal("callout"),
+  title: z.string().optional(),
+  text,
+});
 
 /** Візуальний розділювач між частинами статті */
-export interface DividerBlock {
-  id: string;
-  type: "divider";
-}
+export const dividerBlockSchema = z.object({ id, type: z.literal("divider") });
 
 /** Кнопка-заклик (реєстрація, пожертва, детальніше) */
-export interface ButtonBlock {
-  id: string;
-  type: "button";
-  text: string;
-  href: string;
-  external?: boolean;
-}
+export const buttonBlockSchema = z.object({
+  id,
+  type: z.literal("button"),
+  text,
+  href: text,
+  external: z.boolean().optional(),
+});
 
-export type ArticleBlock =
-  | LeadBlock
-  | TextBlock
-  | HeadingBlock
-  | QuoteBlock
-  | VerseBlock
-  | ImageBlock
-  | GalleryBlock
-  | ListBlock
-  | VideoBlock
-  | CalloutBlock
-  | DividerBlock
-  | ButtonBlock;
+export const articleBlockSchema = z.discriminatedUnion("type", [
+  leadBlockSchema,
+  textBlockSchema,
+  headingBlockSchema,
+  quoteBlockSchema,
+  verseBlockSchema,
+  imageBlockSchema,
+  galleryBlockSchema,
+  listBlockSchema,
+  videoBlockSchema,
+  calloutBlockSchema,
+  dividerBlockSchema,
+  buttonBlockSchema,
+]);
 
+export type ImageData = z.infer<typeof imageDataSchema>;
+export type LeadBlock = z.infer<typeof leadBlockSchema>;
+export type TextBlock = z.infer<typeof textBlockSchema>;
+export type HeadingBlock = z.infer<typeof headingBlockSchema>;
+export type QuoteBlock = z.infer<typeof quoteBlockSchema>;
+export type VerseBlock = z.infer<typeof verseBlockSchema>;
+export type ImageBlock = z.infer<typeof imageBlockSchema>;
+export type GalleryBlock = z.infer<typeof galleryBlockSchema>;
+export type ListBlock = z.infer<typeof listBlockSchema>;
+export type VideoBlock = z.infer<typeof videoBlockSchema>;
+export type CalloutBlock = z.infer<typeof calloutBlockSchema>;
+export type DividerBlock = z.infer<typeof dividerBlockSchema>;
+export type ButtonBlock = z.infer<typeof buttonBlockSchema>;
+
+export type ArticleBlock = z.infer<typeof articleBlockSchema>;
 export type BlockType = ArticleBlock["type"];
+
+// ---------- Стаття, як її бачать компоненти сайту ----------
+// (у базі зберігається інакше — див. src/server/articles.ts, там і перетворення)
 
 export interface Author {
   name: string;
@@ -150,7 +168,9 @@ export interface Article {
   tags: string[];
   /** ISO-дата для машин */
   date: string;
+  /** «12 січня 2026» */
   dateLabel: string;
+  /** «5 хв читання» — рахується з тексту блоків */
   readTime: string;
   author: Author;
   cover: ImageData;

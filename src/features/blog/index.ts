@@ -1,3 +1,3 @@
 export { default as ArticlePage } from "./ArticlePage";
-export { ARTICLES, getArticle, articleHref } from "./articles";
+export { articleHref } from "./urls";
 export type { Article, ArticleBlock, BlockType } from "./types";

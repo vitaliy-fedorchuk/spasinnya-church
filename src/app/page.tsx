@@ -6,8 +6,16 @@ import WelcomeSection from "../components/sections/WelcomeSection";
 import MinistriesSection from "../components/sections/MinistriesSection";
 import FaqSection from "../components/sections/FaqSection";
 import NewsSection from "../components/sections/NewsSection";
+import { getLatestArticles } from "../server/articles";
 
-export default function HomePage() {
+// Сторінка збирається на кожен запит: щойно опублікована стаття видно одразу,
+// а збірка сайту не потребує доступу до бази. Запит до бази — мілісекунди;
+// якщо колись знадобиться, додамо кешування.
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const news = await getLatestArticles({ limit: 3 });
+
   return (
     <>
       <HeroSection />
@@ -17,7 +25,7 @@ export default function HomePage() {
       <WelcomeSection />
       <MinistriesSection />
       <FaqSection />
-      <NewsSection />
+      <NewsSection articles={news} />
     </>
   );
 }

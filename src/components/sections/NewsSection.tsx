@@ -3,20 +3,18 @@ import Rubricator from "../ui/Rubricator";
 import BlackButton from "../buttons/BlackButton";
 import newspaperIconAsset from "../../assets/news/newspaper.svg";
 import bookIconAsset from "../../assets/news/book.svg";
-import { ARTICLES, articleHref } from "../../features/blog";
+import { articleHref, type Article } from "../../features/blog";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
 const newspaperIcon = newspaperIconAsset.src;
 const bookIcon = bookIconAsset.src;
 
 interface NewsSectionProps {
-  /** Не показувати цю статтю (на сторінці самої статті) */
-  exclude?: string;
+  /** Статті для карток (сторінка бере їх з бази) */
+  articles: Article[];
 }
 
-const NewsSection = ({ exclude }: NewsSectionProps) => {
-  const news = ARTICLES.filter((a) => a.slug !== exclude).slice(0, 3);
-
+const NewsSection = ({ articles: news }: NewsSectionProps) => {
   return (
     <section id="news" className="news" aria-labelledby="news-title">
       <div className="container">

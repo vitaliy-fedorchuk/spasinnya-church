@@ -1,0 +1,53 @@
+// Схема бази. Зміни → `npm run db:migrate -- --name <що змінилось>`:
+// Prisma створить міграцію в prisma/migrations (вона йде в git) і оновить клієнт.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+/// Автор статей (пастор, служитель). Окремо — щоб не вписувати щоразу.
+model Author {
+  id        String    @id @default(cuid())
+  name      String
+  role      String
+  /// Адреса фото (/uploads/...). На етапі 5 — звʼязок із медіатекою.
+  photo     String
+  articles  Article[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Article {
+  id             String        @id @default(cuid())
+  /// Частина адреси: /blog/<slug>
+  slug           String        @unique
+  title          String
+  status         ArticleStatus @default(DRAFT)
+  /// Дата, яку бачать читачі; задається при публікації
+  publishedAt    DateTime?
+  tags           String[]
+  coverSrc       String
+  coverAlt       String        @default("")
+  /// Масив блоків статті. Структуру кожного блоку перевіряє zod
+  /// (src/features/blog/types.ts) — і при збереженні, і при читанні.
+  blocks         Json          @default("[]")
+  /// Якщо порожні — беруться назва і перший абзац
+  seoTitle       String?
+  seoDescription String?
+  author         Author        @relation(fields: [authorId], references: [id])
+  authorId       String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status, publishedAt])
+}
