@@ -28,28 +28,57 @@ model Author {
 }
 
 model Article {
-  id             String        @id @default(cuid())
+  id             String         @id @default(cuid())
   /// Частина адреси: /blog/<slug>
-  slug           String        @unique
+  slug           String         @unique
   title          String
-  status         ArticleStatus @default(DRAFT)
+  status         ArticleStatus  @default(DRAFT)
   /// Дата, яку бачать читачі; задається при публікації
   publishedAt    DateTime?
   tags           String[]
   coverSrc       String
-  coverAlt       String        @default("")
+  coverAlt       String         @default("")
   /// Масив блоків статті. Структуру кожного блоку перевіряє zod
   /// (src/features/blog/types.ts) — і при збереженні, і при читанні.
-  blocks         Json          @default("[]")
+  blocks         Json           @default("[]")
   /// Якщо порожні — беруться назва і перший абзац
   seoTitle       String?
   seoDescription String?
-  author         Author        @relation(fields: [authorId], references: [id])
+  author         Author         @relation(fields: [authorId], references: [id])
   authorId       String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  /// Хто створив / хто останнім змінив (адміни; не плутати з автором статті)
+  createdBy      User?          @relation("ArticleCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById    String?
+  updatedBy      User?          @relation("ArticleUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  updatedById    String?
+  events         ArticleEvent[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
   @@index([status, publishedAt])
+  @@index([updatedAt])
+}
+
+enum ArticleAction {
+  CREATED
+  EDITED
+  PUBLISHED
+  UNPUBLISHED
+}
+
+/// Журнал змін статті: хто і що робив. Послідовні правки однієї людини
+/// (автозбереження) зливаються в один запис «редагував» — див. server/admin/history.ts
+model ArticleEvent {
+  id        String        @id @default(cuid())
+  article   Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId String
+  user      User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+  action    ArticleAction
+  /// Час останньої дії (для злитих правок — оновлюється)
+  at        DateTime      @default(now())
+
+  @@index([articleId, at])
 }
 
 // ---------- Адмінка: користувачі й вхід ----------
@@ -62,17 +91,20 @@ enum UserRole {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  email        String    @unique
-  name         String
+  id              String         @id @default(cuid())
+  email           String         @unique
+  name            String
   /// argon2id — сам пароль ніде не зберігається
-  passwordHash String
-  role         UserRole  @default(EDITOR)
-  lastLoginAt  DateTime?
-  sessions     Session[]
-  media        Media[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  passwordHash    String
+  role            UserRole       @default(EDITOR)
+  lastLoginAt     DateTime?
+  sessions        Session[]
+  media           Media[]
+  articlesCreated Article[]      @relation("ArticleCreatedBy")
+  articlesUpdated Article[]      @relation("ArticleUpdatedBy")
+  articleEvents   ArticleEvent[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
 
 /// Вхід = сесія. У cookie — випадковий токен, тут — лише його SHA-256:

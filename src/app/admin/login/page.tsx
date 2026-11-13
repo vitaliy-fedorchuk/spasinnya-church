@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/auth/session";
 import LoginForm from "./LoginForm";
+import Logo from "../(panel)/Logo";
 import "./login.scss";
 
 export const metadata: Metadata = { title: "Вхід" };
@@ -15,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <main className="login">
       <div className="login__card">
-        <p className="login__brand">Церква Спасіння</p>
+        <Logo className="login__logo" />
         <h1 className="login__title">Вхід в адмінку</h1>
         <LoginForm next={next} />
       </div>

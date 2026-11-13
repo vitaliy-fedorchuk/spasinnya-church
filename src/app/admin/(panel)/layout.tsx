@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { requireUser } from "@/server/auth/session";
 import { logout } from "@/server/auth/actions";
 import AdminNav from "./AdminNav";
+import Logo from "./Logo";
+import { Icon } from "./icons";
 import "./panel.scss";
 
 const ROLE_LABEL = { ADMIN: "Адміністратор", EDITOR: "Редактор" } as const;
@@ -13,8 +15,8 @@ export default async function PanelLayout({ children }: { children: ReactNode })
   return (
     <div className="panel">
       <aside className="panel__sidebar">
-        <a className="panel__brand" href="/admin">
-          <span className="panel__brand-name">Церква Спасіння</span>
+        <a className="panel__brand" href="/admin" aria-label="Церква Спасіння — адмінка">
+          <Logo className="panel__logo" />
           <span className="panel__brand-sub">Адмінка</span>
         </a>
 
@@ -26,10 +28,12 @@ export default async function PanelLayout({ children }: { children: ReactNode })
             <span className="panel__user-role">{ROLE_LABEL[user.role]}</span>
           </div>
           <a className="panel__site-link" href="/" target="_blank" rel="noreferrer">
-            Відкрити сайт ↗
+            <Icon name="external" />
+            Відкрити сайт
           </a>
           <form action={logout}>
             <button className="panel__logout" type="submit">
+              <Icon name="logout" />
               Вийти
             </button>
           </form>

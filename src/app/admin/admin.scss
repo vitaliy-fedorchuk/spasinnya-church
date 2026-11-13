@@ -61,6 +61,13 @@ a {
 
 // ---------- Спільні елементи ----------
 
+// Іконка (src/app/admin/(panel)/icons.tsx): розмір — від шрифту кнопки/посилання
+.a-icon {
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+}
+
 .a-btn {
   display: inline-flex;
   align-items: center;
@@ -171,6 +178,9 @@ a {
 
 // Кнопка-посилання (дрібні дії: «Прибрати», «Видалити», «Згенерувати з назви»)
 .ed-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: em(6, 14);
   width: fit-content;
   padding: 0;
   font-size: em(14);

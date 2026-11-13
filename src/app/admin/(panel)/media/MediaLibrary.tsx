@@ -6,6 +6,7 @@ import type { MediaItem } from "@/features/media/urls";
 import { ACCEPT_IMAGES, formatBytes } from "@/features/media/upload";
 import { deleteMedia, getMediaUsage, listMedia, updateMediaAlt } from "@/server/media/actions";
 import { UploadList, useUploads } from "./useUploads";
+import { Icon } from "../icons";
 
 type Usage = Awaited<ReturnType<typeof getMediaUsage>>;
 
@@ -135,9 +136,11 @@ const MediaDetails = ({
 
       <div className="m-details__actions">
         <button type="button" className="ed-link-btn" onClick={copyUrl}>
+          <Icon name="link" />
           Копіювати адресу
         </button>
         <button type="button" className="ed-link-btn ed-link-btn--danger" onClick={remove} disabled={busy || used > 0}>
+          <Icon name="trash" />
           Видалити
         </button>
       </div>
@@ -214,6 +217,7 @@ const MediaLibrary = ({ initialItems, initialCursor }: { initialItems: MediaItem
           <p className="m-drop__text">Перетягніть фото сюди</p>
           <p className="m-drop__hint">JPG, PNG, WEBP, AVIF, GIF · до 20 МБ · можна кілька</p>
           <label className="a-btn a-btn--primary">
+            <Icon name="upload" />
             Вибрати файли
             <input
               type="file"

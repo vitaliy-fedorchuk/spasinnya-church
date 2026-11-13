@@ -5,6 +5,7 @@ import { variantOf, type MediaItem } from "@/features/media/urls";
 import { ACCEPT_IMAGES } from "@/features/media/upload";
 import MediaPicker from "../../media/MediaPicker";
 import { UploadList, useUploads } from "../../media/useUploads";
+import { Icon } from "../../icons";
 
 /** Підпис + поле + підказка/помилка */
 export const Field = ({
@@ -223,6 +224,7 @@ export const ImageInput = ({
         <span className="ed-field__label">{label}</span>
         <div className="ed-image__buttons">
           <label className="a-btn a-btn--ghost ed-image__btn">
+            <Icon name="upload" />
             {uploading ? "Завантаження…" : "Завантажити"}
             <input
               type="file"
@@ -237,6 +239,7 @@ export const ImageInput = ({
             />
           </label>
           <button type="button" className="a-btn a-btn--ghost ed-image__btn" onClick={() => setPickerOpen(true)}>
+            <Icon name="media" />
             Медіатека
           </button>
           {src && (

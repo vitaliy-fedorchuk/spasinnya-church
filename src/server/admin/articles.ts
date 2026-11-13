@@ -4,6 +4,7 @@ import { requireUser } from "../auth/session";
 import type { Prisma } from "../../generated/prisma/client";
 import { articleInclude, toArticle } from "../articles";
 import type { EditorArticle } from "@/features/blog/editor";
+import { getArticleHistory } from "./history";
 
 export type ArticleFilter = "all" | "published" | "scheduled" | "draft";
 
@@ -26,38 +27,96 @@ const whereFor = (filter: ArticleFilter, now: Date): Prisma.ArticleWhereInput =>
 const stateOf = (a: { status: "DRAFT" | "PUBLISHED"; publishedAt: Date | null }, now: Date): ArticleState =>
   a.status === "DRAFT" ? "draft" : a.publishedAt && a.publishedAt > now ? "scheduled" : "published";
 
-/** Список статей для адмінки з фільтром за станом і пошуком за назвою */
-export const listAdminArticles = async ({ filter = "all", q = "" }: { filter?: ArticleFilter; q?: string }) => {
+export type ArticleSort = "updated" | "published" | "title";
+export const ADMIN_PAGE_SIZE = 20;
+
+export interface ArticleListQuery {
+  filter?: ArticleFilter;
+  q?: string;
+  year?: number;
+  tag?: string;
+  sort?: ArticleSort;
+  page?: number;
+}
+
+/**
+ * Список статей для адмінки: стан, пошук, рік, тег, сортування, сторінки.
+ * Рік рахується за датою публікації, а для чернеток без дати — за датою створення.
+ */
+export const listAdminArticles = async ({
+  filter = "all",
+  q = "",
+  year,
+  tag,
+  sort = "updated",
+  page = 1,
+}: ArticleListQuery) => {
   await requireUser();
   const now = new Date();
-  const search: Prisma.ArticleWhereInput = q ? { title: { contains: q, mode: "insensitive" } } : {};
 
-  const [rows, counts] = await Promise.all([
+  // Усе, крім вкладки стану: від цього рахуються лічильники вкладок
+  const base: Prisma.ArticleWhereInput[] = [];
+  if (q) base.push({ title: { contains: q, mode: "insensitive" } });
+  if (tag) base.push({ tags: { has: tag } });
+  if (year) {
+    const from = new Date(year, 0, 1);
+    const to = new Date(year + 1, 0, 1);
+    base.push({
+      OR: [
+        { publishedAt: { gte: from, lt: to } },
+        { publishedAt: null, createdAt: { gte: from, lt: to } },
+      ],
+    });
+  }
+  const where: Prisma.ArticleWhereInput = { AND: [...base, whereFor(filter, now)] };
+
+  const orderBy: Prisma.ArticleOrderByWithRelationInput[] =
+    sort === "title"
+      ? [{ title: "asc" }]
+      : sort === "published"
+        ? [{ publishedAt: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }]
+        : [{ updatedAt: "desc" }];
+
+  const [total, rows, counts, years, tags] = await Promise.all([
+    db.article.count({ where }),
     db.article.findMany({
-      where: { ...whereFor(filter, now), ...search },
-      orderBy: [{ updatedAt: "desc" }],
+      where,
+      orderBy,
+      skip: (Math.max(1, page) - 1) * ADMIN_PAGE_SIZE,
+      take: ADMIN_PAGE_SIZE,
       select: {
         id: true,
         slug: true,
         title: true,
         status: true,
+        tags: true,
         publishedAt: true,
+        createdAt: true,
         updatedAt: true,
         coverSrc: true,
         author: { select: { name: true } },
+        createdBy: { select: { name: true } },
+        updatedBy: { select: { name: true } },
       },
     }),
-    // Лічильники для вкладок — з урахуванням пошуку
     Promise.all(
       (["all", "published", "scheduled", "draft"] as const).map((f) =>
-        db.article.count({ where: { ...whereFor(f, now), ...search } }),
+        db.article.count({ where: { AND: [...base, whereFor(f, now)] } }),
       ),
     ),
+    db.$queryRaw<{ y: number }[]>`
+      SELECT DISTINCT EXTRACT(YEAR FROM COALESCE("publishedAt", "createdAt"))::int AS y
+      FROM "Article" ORDER BY y DESC`,
+    db.$queryRaw<{ t: string }[]>`SELECT DISTINCT unnest(tags) AS t FROM "Article" ORDER BY t`,
   ]);
 
   return {
     articles: rows.map((r) => ({ ...r, state: stateOf(r, now) })),
     counts: { all: counts[0], published: counts[1], scheduled: counts[2], draft: counts[3] },
+    total,
+    pages: Math.max(1, Math.ceil(total / ADMIN_PAGE_SIZE)),
+    years: years.map((r) => r.y),
+    tags: tags.map((r) => r.t),
   };
 };
 
@@ -73,6 +132,7 @@ export const getArticleForEditor = async (id: string) => {
     id: row.id,
     status: row.status,
     updatedAt: row.updatedAt.toISOString(),
+    history: await getArticleHistory(row.id),
     article: {
       title: row.title,
       slug: row.slug,

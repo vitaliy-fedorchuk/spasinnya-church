@@ -25,6 +25,7 @@ export default async function EditArticlePage({ params }: Props) {
       id={found.id}
       initialStatus={found.status}
       initialArticle={found.article}
+      initialHistory={found.history}
       authors={authors}
     />
   );

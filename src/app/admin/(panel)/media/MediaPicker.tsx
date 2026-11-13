@@ -5,6 +5,7 @@ import type { MediaItem } from "@/features/media/urls";
 import { ACCEPT_IMAGES } from "@/features/media/upload";
 import { listMedia } from "@/server/media/actions";
 import { UploadList, useUploads } from "./useUploads";
+import { Icon } from "../icons";
 import "./media.scss";
 
 interface Props {
@@ -88,6 +89,7 @@ const MediaPicker = ({ onSelect, onClose }: Props) => {
             aria-label="Пошук фото"
           />
           <label className="a-btn a-btn--primary">
+            <Icon name="upload" />
             Завантажити
             <input
               type="file"

@@ -24,15 +24,13 @@ const PARAGRAPH_SPLIT = /\n\s*\n/;
  * як блок виглядає на сайті, тут — як його редагують). TypeScript не дасть
  * забути форму для нового виду.
  */
-export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: ComponentType<Props<T>> } } = {
+export const BLOCK_FIELDS: { [T in BlockType]: { component: ComponentType<Props<T>> } } = {
   lead: {
-    hint: "Збільшений перший абзац",
     component: ({ block, onChange }) => (
       <RichTextarea label="Текст" value={block.text} onChange={(text) => onChange({ ...block, text })} large />
     ),
   },
   text: {
-    hint: "Один або кілька абзаців",
     component: ({ block, onChange }) => (
       <RichTextarea
         label="Текст"
@@ -44,7 +42,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   heading: {
-    hint: "Підзаголовок розділу",
     component: ({ block, onChange }) => (
       <div className="ed-row">
         <Field label="Рівень">
@@ -62,7 +59,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   quote: {
-    hint: "Слова людини з підписом",
     component: ({ block, onChange }) => (
       <>
         <RichTextarea label="Цитата" value={block.text} onChange={(text) => onChange({ ...block, text })} />
@@ -74,7 +70,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   verse: {
-    hint: "Біблійний вірш — темний акцентний блок",
     component: ({ block, onChange }) => (
       <>
         <Textarea
@@ -93,7 +88,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   image: {
-    hint: "Одне фото з підписом",
     component: ({ block, onChange }) => (
       <>
         <ImageInput label="Фото" src={block.image.src} alt={block.image.alt} onChange={(image) => onChange({ ...block, image })} />
@@ -103,7 +97,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   gallery: {
-    hint: "2–4 фото поряд",
     component: ({ block, onChange }) => {
       const setImage = (i: number, img: { src: string; alt: string }) =>
         onChange({ ...block, images: block.images.map((x, j) => (j === i ? img : x)) });
@@ -138,7 +131,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     },
   },
   list: {
-    hint: "Пункти з крапками або номерами",
     component: ({ block, onChange }) => (
       <>
         <RichTextarea
@@ -153,7 +145,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   video: {
-    hint: "Відео з YouTube",
     component: ({ block, onChange }) => (
       <>
         <TextInput
@@ -176,7 +167,6 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   callout: {
-    hint: "Виділена примітка: розклад, адреса",
     component: ({ block, onChange }) => (
       <>
         <TextInput label="Заголовок" value={block.title ?? ""} onChange={(title) => onChange({ ...block, title })} />
@@ -185,11 +175,9 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
     ),
   },
   divider: {
-    hint: "Три крапки між частинами",
     component: () => <p className="ed-muted">Без налаштувань</p>,
   },
   button: {
-    hint: "Кнопка-заклик",
     component: ({ block, onChange }) => (
       <>
         <div className="ed-row">

@@ -37,19 +37,27 @@ $sidebar-width: em(248);
   &__brand {
     display: flex;
     flex-direction: column;
-    gap: em(2);
-    padding: 0 em(12);
+    gap: em(8);
+    padding: em(4) em(12) 0;
+    color: #ffffff;
     text-decoration: none;
 
     @include tablet {
+      flex-direction: row;
+      align-items: center;
+      gap: em(12);
       padding: 0;
     }
   }
 
-  &__brand-name {
-    font-family: Arkhip, sans-serif;
-    font-size: em(18);
-    line-height: 1.1;
+  &__logo {
+    display: block;
+    width: em(176);
+    height: auto;
+
+    @include tablet {
+      width: em(120);
+    }
   }
 
   &__brand-sub {
@@ -76,6 +84,7 @@ $sidebar-width: em(248);
   &__nav-link {
     display: flex;
     align-items: center;
+    gap: em(12);
     height: em(42);
     padding: 0 em(12);
     font-weight: 600;
@@ -139,6 +148,9 @@ $sidebar-width: em(248);
 
   &__site-link,
   &__logout {
+    display: inline-flex;
+    align-items: center;
+    gap: em(8, 14);
     width: fit-content;
     padding: 0;
     font-size: em(14);

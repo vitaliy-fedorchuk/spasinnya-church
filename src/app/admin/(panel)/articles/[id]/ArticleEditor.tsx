@@ -18,6 +18,8 @@ import {
   unpublishArticle,
   type SaveResult,
 } from "@/server/admin/article-actions";
+import type { HistoryEntry } from "@/server/admin/history";
+import { Icon } from "../../icons";
 import BlockList from "./BlockList";
 import { Field, ImageInput, Textarea, TextInput } from "./fields";
 
@@ -28,6 +30,7 @@ interface Props {
   id: string;
   initialStatus: Status;
   initialArticle: EditorArticle;
+  initialHistory: HistoryEntry[];
   authors: { id: string; name: string; role: string }[];
 }
 
@@ -49,12 +52,25 @@ const SAVE_LABEL: Record<SaveState, string> = {
   error: "Не вдалося зберегти",
 };
 
-const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) => {
+const ACTION_LABEL: Record<HistoryEntry["action"], string> = {
+  CREATED: "створив(-ла)",
+  EDITED: "редагував(-ла)",
+  PUBLISHED: "опублікував(-ла)",
+  UNPUBLISHED: "зняв(-ла) з публікації",
+};
+
+const formatWhen = (iso: string) =>
+  new Intl.DateTimeFormat("uk-UA", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(
+    new Date(iso),
+  );
+
+const ArticleEditor = ({ id, initialStatus, initialArticle, initialHistory, authors }: Props) => {
   const [article, setArticle] = useState<EditorArticle>(() => ({
     ...initialArticle,
     blocks: initialArticle.blocks.map(normalizeBlock),
   }));
   const [status, setStatus] = useState<Status>(initialStatus);
+  const [history, setHistory] = useState(initialHistory);
   const [saveState, setSaveState] = useState<SaveState>("saved");
   const [issues, setIssues] = useState<EditorIssue[]>([]);
   const [busy, setBusy] = useState(false);
@@ -93,7 +109,9 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
     clearIssues((i) => i.field === "blocks");
   };
 
-  const onTitle = (title: string) => patch(slugLocked ? { title } : { title, slug: slugify(title) });
+  // Адреса йде за назвою; поки назва порожня — лишається тимчасова
+  const onTitle = (title: string) =>
+    patch(slugLocked || !slugify(title) ? { title } : { title, slug: slugify(title) });
 
   const onBlockChange = (block: ArticleBlock) => {
     setBlocks((list) => list.map((b) => (b.id === block.id ? block : b)));
@@ -131,6 +149,7 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
     if (res.ok) {
       setNow(Date.now());
       setStatus(res.status);
+      setHistory(res.history);
       setIssues([]);
       // Поки зберігали, могли щось змінити — тоді лишаємось «dirty»
       setSaveState(versionRef.current === version ? "saved" : "dirty");
@@ -248,7 +267,8 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
       {/* ---------- Верхня панель ---------- */}
       <div className="ed-bar">
         <Link href="/admin/articles" className="ed-bar__back">
-          ← Статті
+          <Icon name="back" />
+          Статті
         </Link>
         <span className={`a-badge a-badge--${state}`}>{STATE_LABEL[state]}</span>
         <span className={`ed-bar__save ed-bar__save--${saveState}`} aria-live="polite">
@@ -257,14 +277,17 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
 
         <div className="ed-bar__actions">
           <button type="button" className="a-btn a-btn--ghost" onClick={onPreview}>
+            <Icon name="eye" />
             Переглянути
           </button>
           {status === "DRAFT" ? (
             <>
               <button type="button" className="a-btn a-btn--ghost" onClick={save} disabled={saveState === "saving"}>
+                <Icon name="save" />
                 Зберегти
               </button>
               <button type="button" className="a-btn a-btn--primary" onClick={onPublish} disabled={busy}>
+                <Icon name="publish" />
                 {article.publishedAt && new Date(article.publishedAt).getTime() > now ? "Запланувати" : "Опублікувати"}
               </button>
             </>
@@ -275,6 +298,7 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
               onClick={save}
               disabled={busy || saveState === "saving" || saveState === "saved"}
             >
+              <Icon name="save" />
               Оновити
             </button>
           )}
@@ -474,6 +498,26 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
             />
           </details>
 
+          <details className="ed-card ed-card--details" open>
+            <summary className="ed-card__title">
+              <Icon name="history" /> Історія змін
+            </summary>
+            {history.length === 0 ? (
+              <p className="ed-muted">Ще немає записів</p>
+            ) : (
+              <ol className="ed-history">
+                {history.map((h) => (
+                  <li key={h.id}>
+                    <span className="ed-history__who">{h.userName ?? "Хтось"}</span> {ACTION_LABEL[h.action]}
+                    <time className="ed-history__when" dateTime={h.at}>
+                      {formatWhen(h.at)}
+                    </time>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </details>
+
           <form
             action={deleteArticle.bind(null, id)}
             onSubmit={(e) => {
@@ -481,6 +525,7 @@ const ArticleEditor = ({ id, initialStatus, initialArticle, authors }: Props) =>
             }}
           >
             <button type="submit" className="ed-link-btn ed-link-btn--danger ed-delete">
+              <Icon name="trash" />
               Видалити статтю
             </button>
           </form>

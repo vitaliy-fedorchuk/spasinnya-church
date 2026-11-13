@@ -28,6 +28,9 @@
   }
 
   &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: em(6);
     font-weight: 600;
     text-decoration: none;
 
@@ -435,14 +438,13 @@
       cursor: grabbing;
     }
 
-    svg {
-      width: em(10);
-      height: em(18);
-      fill: var(--a-muted);
-    }
+    color: var(--a-muted);
   }
 
   &__type {
+    display: inline-flex;
+    align-items: center;
+    gap: em(8, 13);
     font-size: em(13);
     font-weight: 700;
     color: var(--a-accent-dark);
@@ -456,6 +458,8 @@
     margin-left: auto;
 
     button {
+      display: inline-grid;
+      place-items: center;
       width: em(32);
       height: em(32);
       color: var(--a-muted);
@@ -498,7 +502,7 @@
   }
 }
 
-// «+» між блоками
+// «+» між блоками / «Додати блок» унизу
 .ed-inserter {
   position: relative;
   display: flex;
@@ -519,11 +523,13 @@
   &__toggle {
     position: relative;
     z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: em(8);
     align-self: center;
-    width: em(24);
-    height: em(24);
-    font-weight: 700;
-    line-height: 1;
+    width: em(26);
+    height: em(26);
     color: var(--a-muted);
     cursor: pointer;
     background-color: var(--a-bg);
@@ -533,15 +539,18 @@
     transition:
       opacity 0.2s ease,
       color 0.2s ease;
+
+    .a-icon {
+      width: em(16);
+      height: em(16);
+    }
   }
 
-  &:hover::before,
-  &.is-open::before {
+  &:hover::before {
     background-color: rgba(144, 129, 106, 0.4);
   }
 
   &:hover &__toggle,
-  &.is-open &__toggle,
   &__toggle:focus-visible {
     color: var(--a-text);
     opacity: 1;
@@ -572,65 +581,9 @@
     opacity: 1;
 
     &:hover {
+      color: var(--a-text);
       border-color: var(--a-accent);
     }
-  }
-
-  &__menu {
-    position: absolute;
-    top: calc(100% - #{em(4)});
-    left: 50%;
-    z-index: 30;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: em(2);
-    width: min(em(520), calc(100vw - #{em(32)}));
-    padding: em(6);
-    list-style: none;
-    background-color: var(--a-surface);
-    border: 1px solid var(--a-line);
-    border-radius: em(14);
-    box-shadow: 0 em(16) em(40) rgba(17, 17, 20, 0.14);
-    transform: translateX(-50%);
-
-    @include mobile {
-      grid-template-columns: minmax(0, 1fr);
-      max-height: 60vh;
-      overflow-y: auto;
-    }
-  }
-
-  // Меню «Додати блок» внизу відкривається вгору, щоб не ховатись за краєм
-  &--prominent &__menu {
-    top: auto;
-    bottom: calc(100% + #{em(6)});
-  }
-
-  &__item {
-    display: flex;
-    flex-direction: column;
-    gap: em(2);
-    width: 100%;
-    padding: em(8) em(10);
-    text-align: left;
-    cursor: pointer;
-    background: none;
-    border: 0;
-    border-radius: em(8);
-
-    &:hover,
-    &:focus-visible {
-      background-color: rgba(144, 129, 106, 0.1);
-    }
-  }
-
-  &__label {
-    font-weight: 600;
-  }
-
-  &__hint {
-    font-size: em(12);
-    color: var(--a-muted);
   }
 }
 
@@ -729,4 +682,34 @@
 .ed-delete {
   align-self: flex-start;
   margin-top: em(8);
+}
+
+// ---------- Історія змін ----------
+.ed-history {
+  display: flex;
+  flex-direction: column;
+  gap: em(8);
+  max-height: em(260);
+  overflow-y: auto;
+  font-size: em(13);
+  list-style: none;
+
+  li {
+    padding-left: em(12, 13);
+    border-left: 2px solid rgba(144, 129, 106, 0.35);
+  }
+
+  &__who {
+    font-weight: 700;
+  }
+
+  &__when {
+    display: block;
+    color: var(--a-muted);
+  }
+}
+
+.ed-card__title .a-icon {
+  margin-right: em(4, 15);
+  vertical-align: -0.15em;
 }

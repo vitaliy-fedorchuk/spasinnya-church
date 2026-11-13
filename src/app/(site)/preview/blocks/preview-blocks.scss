@@ -1,0 +1,110 @@
+@use "../../../../styles/tools" as *;
+
+// Темна шапка — щоб білий логотип у навбарі було видно
+.pb-hero {
+  margin: em(15);
+  padding: em(170) 0 em(70);
+  color: #ffffff;
+  background-color: #262626;
+  border-radius: em(30);
+
+  @include mobile {
+    margin: em(8);
+    padding: em(110) 0 em(36);
+    border-radius: em(20);
+  }
+
+  &__label {
+    font-size: em(14);
+    font-weight: 600;
+    color: #c9b89c;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__title {
+    margin-top: em(12, 50);
+  }
+
+  &__text {
+    max-width: em(640, 18);
+    margin-top: em(16, 18);
+    color: rgba(255, 255, 255, 0.75);
+  }
+}
+
+.pb-body {
+  padding-top: em(60);
+  padding-bottom: em(100);
+
+  @include mobile {
+    padding-top: em(32);
+    padding-bottom: em(56);
+  }
+}
+
+.pb-group {
+  & + & {
+    margin-top: em(80);
+
+    @include mobile {
+      margin-top: em(48);
+    }
+  }
+
+  &__title {
+    padding-bottom: em(12, 36);
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    color: #262626;
+
+    @include mobile {
+      font-size: em(26);
+    }
+  }
+}
+
+.pb-item {
+  padding: em(40) 0;
+  border-top: 1px solid rgba(17, 17, 20, 0.1);
+
+  @include mobile {
+    padding: em(28) 0;
+  }
+
+  &__label {
+    max-width: em(860, 14);
+    margin: 0 auto em(20, 14);
+    font-size: em(14);
+    font-weight: 700;
+    color: #90816a;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+
+    span {
+      font-weight: 500;
+      color: #868686;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+  }
+}
+
+.preview-bar-lite {
+  position: fixed;
+  bottom: em(16);
+  left: 50%;
+  z-index: 1000;
+  padding: em(10) em(20);
+  font-size: em(15);
+  font-weight: 600;
+  background: rgba(38, 38, 38, 0.92);
+  border-radius: em(100);
+  transform: translateX(-50%);
+
+  a {
+    color: #c9b89c;
+    text-decoration: none;
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState, type ComponentType } from "react";
+import { Fragment, useState, type ComponentType } from "react";
 import {
   closestCenter,
   DndContext,
@@ -18,9 +18,10 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { ArticleBlock, BlockType } from "@/features/blog/types";
-import { BLOCK_TYPES } from "@/features/blog/editor";
 import { BLOCKS } from "@/features/blog/blocks/registry";
 import { BLOCK_FIELDS } from "./BlockFields";
+import BlockPicker from "./BlockPicker";
+import { BLOCK_ICON, Icon } from "../../icons";
 
 interface BlockListProps {
   blocks: ArticleBlock[];
@@ -33,59 +34,16 @@ interface BlockListProps {
   onRemove: (index: number) => void;
 }
 
-// ---------- Меню «Додати блок» ----------
+// ---------- «+» між блоками / «Додати блок» унизу ----------
 
-const Inserter = ({ onPick, prominent }: { onPick: (type: BlockType) => void; prominent?: boolean }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const close = (e: Event) => {
-      if (e instanceof KeyboardEvent ? e.key === "Escape" : !ref.current?.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("pointerdown", close);
-    document.addEventListener("keydown", close);
-    return () => {
-      document.removeEventListener("pointerdown", close);
-      document.removeEventListener("keydown", close);
-    };
-  }, [open]);
-
-  return (
-    <div ref={ref} className={`ed-inserter ${prominent ? "ed-inserter--prominent" : ""} ${open ? "is-open" : ""}`}>
-      <button
-        type="button"
-        className="ed-inserter__toggle"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-        title="Додати блок сюди"
-      >
-        {prominent ? "+ Додати блок" : "+"}
-      </button>
-      {open && (
-        <ul className="ed-inserter__menu" role="menu">
-          {BLOCK_TYPES.map((type) => (
-            <li key={type} role="none">
-              <button
-                type="button"
-                role="menuitem"
-                className="ed-inserter__item"
-                onClick={() => {
-                  onPick(type);
-                  setOpen(false);
-                }}
-              >
-                <span className="ed-inserter__label">{BLOCKS[type].label}</span>
-                <span className="ed-inserter__hint">{BLOCK_FIELDS[type].hint}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-};
+const Inserter = ({ onOpen, prominent }: { onOpen: () => void; prominent?: boolean }) => (
+  <div className={`ed-inserter ${prominent ? "ed-inserter--prominent" : ""}`.trim()}>
+    <button type="button" className="ed-inserter__toggle" onClick={onOpen} title="Додати блок сюди">
+      <Icon name="plus" />
+      {prominent && "Додати блок"}
+    </button>
+  </div>
+);
 
 // ---------- Картка блоку ----------
 
@@ -126,26 +84,22 @@ const BlockCard = ({ block, index, total, error, onChange, onMove, onDuplicate, 
           {...attributes}
           {...listeners}
         >
-          <svg viewBox="0 0 12 20" aria-hidden="true">
-            {[4, 10, 16].map((y) => (
-              <Fragment key={y}>
-                <circle cx="3" cy={y} r="1.6" />
-                <circle cx="9" cy={y} r="1.6" />
-              </Fragment>
-            ))}
-          </svg>
+          <Icon name="grip" />
         </button>
-        <span className="ed-block__type">{BLOCKS[block.type].label}</span>
+        <span className="ed-block__type">
+          <Icon name={BLOCK_ICON[block.type]} />
+          {BLOCKS[block.type].label}
+        </span>
 
         <div className="ed-block__actions">
           <button type="button" onClick={() => onMove(index, index - 1)} disabled={index === 0} title="Вище">
-            ↑
+            <Icon name="up" />
           </button>
           <button type="button" onClick={() => onMove(index, index + 1)} disabled={index === total - 1} title="Нижче">
-            ↓
+            <Icon name="down" />
           </button>
           <button type="button" onClick={() => onDuplicate(index)} title="Дублювати">
-            ⧉
+            <Icon name="copy" />
           </button>
           <button
             type="button"
@@ -155,7 +109,7 @@ const BlockCard = ({ block, index, total, error, onChange, onMove, onDuplicate, 
               if (window.confirm(`Видалити блок «${BLOCKS[block.type].label}»?`)) onRemove(index);
             }}
           >
-            ✕
+            <Icon name="trash" />
           </button>
         </div>
       </header>
@@ -175,6 +129,9 @@ const BlockCard = ({ block, index, total, error, onChange, onMove, onDuplicate, 
 // ---------- Список ----------
 
 const BlockList = ({ blocks, errors, onChange, onInsert, onMove, onDuplicate, onRemove }: BlockListProps) => {
+  // Куди вставляти блок, вибраний у вікні (null — вікно закрите)
+  const [insertAt, setInsertAt] = useState<number | null>(null);
+
   const sensors = useSensors(
     // Перетягування починається після руху на 5px — щоб клік по ручці не «смикав»
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -196,7 +153,7 @@ const BlockList = ({ blocks, errors, onChange, onInsert, onMove, onDuplicate, on
         <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
           {blocks.map((block, i) => (
             <Fragment key={block.id}>
-              <Inserter onPick={(type) => onInsert(i, type)} />
+              <Inserter onOpen={() => setInsertAt(i)} />
               <BlockCard
                 block={block}
                 index={i}
@@ -213,7 +170,17 @@ const BlockList = ({ blocks, errors, onChange, onInsert, onMove, onDuplicate, on
       </DndContext>
 
       {blocks.length === 0 && <p className="ed-blocks__empty">Стаття поки порожня. Почніть із вступу або тексту.</p>}
-      <Inserter prominent onPick={(type) => onInsert(blocks.length, type)} />
+      <Inserter prominent onOpen={() => setInsertAt(blocks.length)} />
+
+      {insertAt !== null && (
+        <BlockPicker
+          onClose={() => setInsertAt(null)}
+          onPick={(type) => {
+            onInsert(insertAt, type);
+            setInsertAt(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -12,9 +12,10 @@ import {
   type EditorIssue,
 } from "@/features/blog/editor";
 import type { ArticleBlock } from "@/features/blog/types";
+import { getArticleHistory, logArticleEvent, type HistoryEntry } from "./history";
 
 export type SaveResult =
-  | { ok: true; status: "DRAFT" | "PUBLISHED"; publishedAt: string | null; updatedAt: string }
+  | { ok: true; status: "DRAFT" | "PUBLISHED"; publishedAt: string | null; updatedAt: string; history: HistoryEntry[] }
   | { ok: false; issues: EditorIssue[] };
 
 const fail = (message: string, field?: string): SaveResult => ({ ok: false, issues: [{ message, field }] });
@@ -35,8 +36,11 @@ export async function createArticle() {
       coverSrc: "",
       authorId: author.id,
       blocks: [],
+      createdById: user.id,
+      updatedById: user.id,
     },
   });
+  await logArticleEvent(article.id, user.id, "CREATED");
 
   redirect(`/admin/articles/${article.id}`);
 }
@@ -55,11 +59,17 @@ const toData = (a: EditorArticle, blocks: ArticleBlock[]) => ({
   blocks: blocks as Prisma.InputJsonValue,
 });
 
-const resultOf = (row: { status: "DRAFT" | "PUBLISHED"; publishedAt: Date | null; updatedAt: Date }): SaveResult => ({
+const resultOf = async (row: {
+  id: string;
+  status: "DRAFT" | "PUBLISHED";
+  publishedAt: Date | null;
+  updatedAt: Date;
+}): Promise<SaveResult> => ({
   ok: true,
   status: row.status,
   publishedAt: row.publishedAt?.toISOString() ?? null,
   updatedAt: row.updatedAt.toISOString(),
+  history: await getArticleHistory(row.id),
 });
 
 /** Унікальність адреси — зрозумілим текстом замість помилки бази */
@@ -71,7 +81,7 @@ const isSlugTaken = (e: unknown) =>
  * вона й далі проходить повну перевірку: зміни одразу видно на сайті.
  */
 export async function saveArticle(id: string, input: unknown): Promise<SaveResult> {
-  await requireUser();
+  const user = await requireUser();
   const parsed = editorArticleSchema.safeParse(input);
   if (!parsed.success) return fail("Дані статті пошкоджені — оновіть сторінку");
 
@@ -86,11 +96,14 @@ export async function saveArticle(id: string, input: unknown): Promise<SaveResul
     blocks = blocks.map(cleanBlock);
   }
   const data = toData(article, blocks);
+  // Порожня адреса (стерли назву) — лишаємо стару: інакше дві такі чернетки зіткнулися б
+  if (!data.slug) delete (data as Partial<typeof data>).slug;
   // Опублікована стаття без дати — лишаємо стару, а не стираємо
   if (current.status === "PUBLISHED" && !data.publishedAt) delete (data as Partial<typeof data>).publishedAt;
 
   try {
-    const row = await db.article.update({ where: { id }, data });
+    const row = await db.article.update({ where: { id }, data: { ...data, updatedById: user.id } });
+    await logArticleEvent(id, user.id, "EDITED");
     return resultOf(row);
   } catch (e) {
     if (isSlugTaken(e)) return fail("Стаття з такою адресою вже є", "slug");
@@ -100,7 +113,7 @@ export async function saveArticle(id: string, input: unknown): Promise<SaveResul
 
 /** Опублікувати (або перенести дату публікації). publishedAt: null → зараз */
 export async function publishArticle(id: string, input: unknown): Promise<SaveResult> {
-  await requireUser();
+  const user = await requireUser();
   const parsed = editorArticleSchema.safeParse(input);
   if (!parsed.success) return fail("Дані статті пошкоджені — оновіть сторінку");
 
@@ -115,8 +128,10 @@ export async function publishArticle(id: string, input: unknown): Promise<SaveRe
         ...toData(article, article.blocks.map(cleanBlock)),
         status: "PUBLISHED",
         publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),
+        updatedById: user.id,
       },
     });
+    await logArticleEvent(id, user.id, "PUBLISHED");
     return resultOf(row);
   } catch (e) {
     if (isSlugTaken(e)) return fail("Стаття з такою адресою вже є", "slug");
@@ -126,8 +141,9 @@ export async function publishArticle(id: string, input: unknown): Promise<SaveRe
 
 /** Зняти з публікації — стаття стає чернеткою і зникає з сайту */
 export async function unpublishArticle(id: string): Promise<SaveResult> {
-  await requireUser();
-  const row = await db.article.update({ where: { id }, data: { status: "DRAFT" } });
+  const user = await requireUser();
+  const row = await db.article.update({ where: { id }, data: { status: "DRAFT", updatedById: user.id } });
+  await logArticleEvent(id, user.id, "UNPUBLISHED");
   return resultOf(row);
 }
 

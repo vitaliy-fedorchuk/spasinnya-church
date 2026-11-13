@@ -1,27 +1,17 @@
 @use "../../../../styles/tools" as *;
 
 .articles {
-  // ---------- Вкладки й пошук ----------
-  &__toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: em(12) em(20);
-    margin-bottom: em(16);
-  }
-
+  // ---------- Вкладки стану ----------
   &__tabs {
     display: flex;
     gap: em(4);
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: em(14);
     padding: em(4);
     overflow-x: auto;
     background-color: rgba(17, 17, 20, 0.05);
     border-radius: em(100);
-
-    @include mobile {
-      width: 100%;
-    }
   }
 
   &__tab {
@@ -56,20 +46,108 @@
     color: var(--a-muted);
   }
 
+  // ---------- Фільтри ----------
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: em(10);
+    margin-bottom: em(16);
+  }
+
   &__search {
-    width: em(280);
+    position: relative;
+    flex: 1 1 em(240);
+    max-width: em(360);
+
+    .a-icon {
+      position: absolute;
+      top: 50%;
+      left: em(14);
+      color: var(--a-muted);
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .a-input {
+      height: em(42);
+      padding-left: em(40);
+      border-radius: em(100);
+    }
 
     @include mobile {
-      width: 100%;
+      flex-basis: 100%;
+      max-width: none;
     }
   }
 
-  &__search-input {
+  &__select {
+    width: auto;
     height: em(42);
+    padding: 0 em(32) 0 em(14);
+    border-radius: em(100);
+
+    @include mobile {
+      flex: 1 1 40%;
+    }
+  }
+
+  &__view {
+    display: flex;
+    gap: em(2);
+    margin-left: auto;
+    padding: em(3);
+    background-color: rgba(17, 17, 20, 0.05);
     border-radius: em(100);
   }
 
-  // ---------- Список ----------
+  &__view-btn {
+    display: grid;
+    place-items: center;
+    width: em(36);
+    height: em(36);
+    color: var(--a-muted);
+    border-radius: 50%;
+
+    &:hover {
+      color: var(--a-text);
+    }
+
+    &.is-active {
+      color: var(--a-text);
+      background-color: var(--a-surface);
+      box-shadow: 0 1px em(3) rgba(17, 17, 20, 0.08);
+    }
+  }
+
+  &__found {
+    display: flex;
+    gap: em(14, 14);
+    margin: em(-4, 14) 0 em(14, 14);
+    font-size: em(14);
+    color: var(--a-muted);
+  }
+
+  &__reset {
+    font-weight: 600;
+    color: var(--a-accent-dark);
+  }
+
+  // ---------- Групи за місяцем ----------
+  &__group + &__group {
+    margin-top: em(24);
+  }
+
+  &__group-title {
+    margin-bottom: em(10, 13);
+    font-size: em(13);
+    font-weight: 700;
+    color: var(--a-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  // ---------- Рядки ----------
   &__list {
     overflow: hidden;
     list-style: none;
@@ -81,13 +159,18 @@
   &__row {
     position: relative;
     display: grid;
-    grid-template-columns: em(72) minmax(0, 1fr) em(140) em(330) em(110);
+    grid-template-columns: em(72) minmax(0, 1fr) em(140) em(340) em(130);
     align-items: center;
     gap: em(20);
     padding: em(14) em(20);
+    transition: background-color 0.15s ease;
 
     & + & {
       border-top: 1px solid var(--a-line);
+    }
+
+    &:hover {
+      background-color: rgba(144, 129, 106, 0.04);
     }
 
     @include tablet {
@@ -108,6 +191,14 @@
         "actions actions";
       padding: em(14) em(16);
     }
+
+    .a-badge {
+      justify-self: start;
+
+      @include tablet {
+        grid-area: badge;
+      }
+    }
   }
 
   &__cover {
@@ -116,6 +207,13 @@
     aspect-ratio: 4 / 3;
     object-fit: cover;
     border-radius: em(10);
+
+    &--empty {
+      display: grid;
+      place-items: center;
+      color: rgba(17, 17, 20, 0.25);
+      background-color: rgba(17, 17, 20, 0.05);
+    }
 
     @include tablet {
       grid-area: cover;
@@ -141,7 +239,7 @@
       color: var(--a-accent-dark);
     }
 
-    // Уся рядок-картка клікабельна (як картки новин на сайті)
+    // Уся картка / рядок клікабельні
     &::after {
       content: "";
       position: absolute;
@@ -158,36 +256,22 @@
     white-space: nowrap;
   }
 
-  &__row .a-badge {
-    justify-self: start;
-
-    @include tablet {
-      grid-area: badge;
-    }
-  }
-
   &__dates {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: em(16);
+    gap: em(16, 13);
     font-size: em(13);
+
+    dt {
+      color: var(--a-muted);
+    }
 
     @include tablet {
       grid-area: dates;
       display: flex;
       flex-wrap: wrap;
       gap: em(4, 13) em(20, 13);
-    }
 
-    dt {
-      color: var(--a-muted);
-    }
-
-    dd {
-      white-space: nowrap;
-    }
-
-    @include tablet {
       div {
         display: flex;
         gap: em(6, 13);
@@ -199,13 +283,17 @@
     }
   }
 
+  &__who {
+    color: var(--a-muted);
+  }
+
   &__actions {
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: em(4);
+    gap: em(6);
 
     @include tablet {
       grid-area: actions;
@@ -215,6 +303,9 @@
   }
 
   &__action {
+    display: inline-flex;
+    align-items: center;
+    gap: em(6, 14);
     font-size: em(14);
     font-weight: 600;
     color: var(--a-accent-dark);
@@ -224,6 +315,134 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  // ---------- Картки ----------
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(em(230), 1fr));
+    gap: em(16);
+    list-style: none;
+
+    @include mobile {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: em(10);
+    }
+  }
+
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(16);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 em(10) em(30) rgba(17, 17, 20, 0.08);
+      transform: translateY(em(-2));
+    }
+  }
+
+  &__card-cover {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 10;
+    color: rgba(17, 17, 20, 0.25);
+    background-color: rgba(17, 17, 20, 0.05);
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .a-badge {
+      position: absolute;
+      top: em(8, 13);
+      left: em(8, 13);
+      background-color: rgba(255, 255, 255, 0.92);
+    }
+  }
+
+  &__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: em(4);
+    padding: em(12) em(14) em(14);
+
+    .articles__title {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    @include mobile {
+      padding: em(10);
+
+      .articles__title {
+        font-size: em(14);
+      }
+    }
+  }
+
+  &__editor {
+    display: flex;
+    align-items: center;
+    gap: em(6, 12);
+    font-size: em(12);
+    color: var(--a-muted);
+  }
+
+  // ---------- Сторінки ----------
+  &__pages {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: em(6);
+    margin-top: em(24);
+  }
+
+  &__page-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: em(6);
+  }
+
+  &__page {
+    display: inline-grid;
+    place-items: center;
+    min-width: em(38);
+    height: em(38);
+    padding: 0 em(12);
+    font-weight: 600;
+    text-decoration: none;
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(100);
+
+    &:hover {
+      border-color: rgba(17, 17, 20, 0.25);
+    }
+
+    &.is-current {
+      color: #ffffff;
+      background-color: var(--a-text);
+      border-color: var(--a-text);
+    }
+  }
+
+  &__page-gap {
+    color: var(--a-muted);
   }
 
   &__empty {

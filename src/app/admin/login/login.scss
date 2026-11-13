@@ -25,16 +25,15 @@
     }
   }
 
-  &__brand {
-    font-size: em(13);
-    font-weight: 600;
-    color: var(--a-accent);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+  &__logo {
+    display: block;
+    width: em(170);
+    height: auto;
+    margin-bottom: em(24);
+    color: var(--a-text);
   }
 
   &__title {
-    margin-top: em(6, 30);
     font-family: Arkhip, sans-serif;
     font-size: em(30);
     font-weight: 400;

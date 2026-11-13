@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Icon, type IconName } from "./icons";
 
-/** Розділи адмінки. Нові (медіатека, події…) додаються сюди. */
-const ITEMS = [
-  { href: "/admin/articles", label: "Статті" },
-  { href: "/admin/media", label: "Медіатека" },
+/** Розділи адмінки. Нові (події, служіння…) додаються сюди. */
+const ITEMS: { href: string; label: string; icon: IconName }[] = [
+  { href: "/admin/articles", label: "Статті", icon: "articles" },
+  { href: "/admin/media", label: "Медіатека", icon: "media" },
+  { href: "/admin/blocks", label: "Блоки", icon: "blocks" },
 ];
 
 const AdminNav = () => {
@@ -23,6 +25,7 @@ const AdminNav = () => {
             className={`panel__nav-link ${active ? "panel__nav-link--active" : ""}`.trim()}
             aria-current={active ? "page" : undefined}
           >
+            <Icon name={item.icon} />
             {item.label}
           </Link>
         );

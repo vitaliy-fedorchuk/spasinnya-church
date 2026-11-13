@@ -1,0 +1,138 @@
+@use "../../../../styles/tools" as *;
+
+.catalog {
+  &__intro {
+    max-width: em(640);
+    margin-top: em(8);
+    color: var(--a-muted);
+  }
+
+  &__toc {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    gap: em(6);
+    margin: 0 em(-48) em(24);
+    padding: em(10) em(48);
+    overflow-x: auto;
+    background-color: rgba(245, 245, 245, 0.92);
+    border-bottom: 1px solid var(--a-line);
+    backdrop-filter: blur(10px);
+
+    @include tablet {
+      position: static;
+      margin: 0 0 em(20);
+      padding: 0;
+      background: none;
+      border: 0;
+    }
+  }
+
+  &__toc-link {
+    flex-shrink: 0;
+    padding: em(6, 14) em(14, 14);
+    font-size: em(14);
+    font-weight: 600;
+    text-decoration: none;
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(100, 14);
+
+    &:hover {
+      border-color: var(--a-accent);
+    }
+  }
+
+  &__group {
+    scroll-margin-top: em(70);
+
+    & + & {
+      margin-top: em(40);
+    }
+  }
+
+  &__group-title {
+    margin-bottom: em(14, 13);
+    font-size: em(13);
+    font-weight: 700;
+    color: var(--a-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: em(300) minmax(0, 1fr);
+    overflow: hidden;
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(18);
+
+    & + & {
+      margin-top: em(14);
+    }
+
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: flex-start;
+    gap: em(14);
+    padding: em(20);
+    border-right: 1px solid var(--a-line);
+
+    @include tablet {
+      border-right: 0;
+      border-bottom: 1px solid var(--a-line);
+    }
+  }
+
+  &__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: em(44);
+    height: em(44);
+    color: var(--a-accent-dark);
+    background-color: rgba(144, 129, 106, 0.12);
+    border-radius: em(12);
+
+    .a-icon {
+      width: em(22);
+      height: em(22);
+    }
+  }
+
+  &__name {
+    font-size: em(18);
+    font-weight: 700;
+  }
+
+  &__hint {
+    margin-top: em(2, 14);
+    font-size: em(14);
+    color: var(--a-muted);
+  }
+
+  &__when {
+    margin-top: em(10, 14);
+    font-size: em(14);
+    line-height: 1.5;
+  }
+
+  // Приклад — на фоні сайту
+  &__stage {
+    min-width: 0;
+    padding: em(32) em(28);
+    background-color: #f5f5f5;
+
+    @include mobile {
+      padding: em(20) em(12);
+      overflow-x: hidden;
+    }
+  }
+}
