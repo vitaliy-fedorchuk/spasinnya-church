@@ -40,7 +40,7 @@ $bar-offset: em(4);
     transition: transform 0.5s $ease;
 
     &--top {
-      transform: translateY(-$bar-offset);
+      transform: translateY(em(-4));
     }
 
     &--bottom {

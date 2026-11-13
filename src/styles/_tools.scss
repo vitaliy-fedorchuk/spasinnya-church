@@ -7,8 +7,12 @@
 // em(12, 18) — 12px усередині тексту 18px.
 $design-base: 16;
 
+// На телефоні em() дає чисті vw (px × 100vw / 390), без залежності від
+// font-size: збільшений системний шрифт чи вбудовані браузери (Instagram,
+// Telegram) не ламають верстку. На десктопі й планшеті — em, як і раніше.
+// Перемикач — дві змінні в :root (global.scss): --em-k (1/0) і --vw-px.
 @function em($px, $context: $design-base) {
-  @return math.div($px, $context) * 1em;
+  @return calc(#{math.div($px, $context) * 1em} * var(--em-k) + #{$px} * var(--vw-px));
 }
 
 // Брейкпоінти (включно). Базовий розмір для кожного — у global.scss (:root)

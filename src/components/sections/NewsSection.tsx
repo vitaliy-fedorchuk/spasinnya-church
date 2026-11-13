@@ -3,56 +3,16 @@ import Rubricator from "../ui/Rubricator";
 import BlackButton from "../buttons/BlackButton";
 import newspaperIcon from "../../assets/news/newspaper.svg";
 import bookIcon from "../../assets/news/book.svg";
-import authorPhoto from "../../assets/news/author.webp";
-// TODO: тимчасові фото — замінити на справжні з макету (ті самі імена файлів)
-import news1 from "../../assets/news/news-1.webp";
-import news2 from "../../assets/news/news-2.webp";
-import news3 from "../../assets/news/news-3.webp";
+import { ARTICLES, articleHref } from "../../features/blog";
 
-interface NewsItem {
-  title: string;
-  image: string;
-  readTime: string;
-  tags: string[];
-  /** Дата для машин (ISO) і для людей */
-  date: string;
-  dateLabel: string;
-  href: string;
+interface NewsSectionProps {
+  /** Не показувати цю статтю (на сторінці самої статті) */
+  exclude?: string;
 }
 
-const AUTHOR = { name: "Климчук Микола", role: "Старший пастор", photo: authorPhoto };
+const NewsSection = ({ exclude }: NewsSectionProps) => {
+  const news = ARTICLES.filter((a) => a.slug !== exclude).slice(0, 3);
 
-const NEWS: NewsItem[] = [
-  {
-    title: "Святкове богослужіння з нагоди річниці Церкви",
-    image: news1,
-    readTime: "5 хв читання",
-    tags: ["Події", "Церква", "Молодь"],
-    date: "2026-01-12",
-    dateLabel: "12 січня 2026",
-    href: "#news",
-  },
-  {
-    title: "Міжнародний день молитви за переслідувану церкву",
-    image: news2,
-    readTime: "8 хв читання",
-    tags: ["Події", "Церква", "Молодь"],
-    date: "2026-01-12",
-    dateLabel: "12 січня 2026",
-    href: "#news",
-  },
-  {
-    title: "Старт нового сезону підліткового клубу “Connect”",
-    image: news3,
-    readTime: "3 хв читання",
-    tags: ["Події", "Церква", "Молодь"],
-    date: "2026-01-12",
-    dateLabel: "12 січня 2026",
-    href: "#news",
-  },
-];
-
-const NewsSection = () => {
   return (
     <section id="news" className="news" aria-labelledby="news-title">
       <div className="container">
@@ -64,9 +24,9 @@ const NewsSection = () => {
         </header>
 
         <ul className="news__list">
-          {NEWS.map((item) => (
-            <li key={item.title} className="news__card">
-              <img className="news__image" src={item.image} alt="" loading="lazy" />
+          {news.map((item) => (
+            <li key={item.slug} className="news__card">
+              <img className="news__image" src={item.cover.src} alt="" loading="lazy" />
 
               <div className="news__body">
                 <p className="news__read-time">
@@ -84,17 +44,17 @@ const NewsSection = () => {
 
                 <h3 className="news__card-title">
                   {/* Посилання розтягнуте на всю картку (::after) */}
-                  <a className="news__link" href={item.href}>
+                  <a className="news__link" href={articleHref(item.slug)}>
                     {item.title}
                   </a>
                 </h3>
 
                 <footer className="news__meta">
                   <div className="news__author">
-                    <img className="news__avatar" src={AUTHOR.photo} alt="" loading="lazy" />
+                    <img className="news__avatar" src={item.author.photo} alt="" loading="lazy" />
                     <div>
-                      <p className="news__author-name">{AUTHOR.name}</p>
-                      <p className="news__author-role">{AUTHOR.role}</p>
+                      <p className="news__author-name">{item.author.name}</p>
+                      <p className="news__author-role">{item.author.role}</p>
                     </div>
                   </div>
                   <time className="news__date" dateTime={item.date}>

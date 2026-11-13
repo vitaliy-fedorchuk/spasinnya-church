@@ -3,7 +3,7 @@
 // Відступ кружка від країв кнопки (справа, зверху, знизу)
 $button-height: em(53);
 $circle-gap: em(3);
-$circle-size: $button-height - $circle-gap * 2;
+$circle-size: em(53 - 3 * 2);
 $text-line-height: 1.2;
 
 .black-button {
