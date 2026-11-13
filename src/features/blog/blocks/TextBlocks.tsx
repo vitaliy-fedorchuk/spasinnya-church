@@ -1,4 +1,5 @@
-import type { HeadingBlock, LeadBlock, ListBlock, TextBlock } from "../types";
+import type { DividerBlock, HeadingBlock, LeadBlock, ListBlock, TextBlock } from "../types";
+import LogoMark from "@/components/ui/LogoMark";
 import InlineText from "./InlineText";
 
 export const Lead = ({ block }: { block: LeadBlock }) => (
@@ -39,10 +40,18 @@ export const List = ({ block }: { block: ListBlock }) => {
   );
 };
 
-export const Divider = () => (
-  <div className="ab-divider" role="separator">
-    <span />
-    <span />
-    <span />
-  </div>
-);
+export const Divider = ({ block }: { block: DividerBlock }) => {
+  const style = block.style ?? "dots";
+  return (
+    <div className={`ab-divider ab-divider--${style}`} role="separator">
+      {style === "dots" && (
+        <>
+          <span className="ab-divider__dot" />
+          <span className="ab-divider__dot" />
+          <span className="ab-divider__dot" />
+        </>
+      )}
+      {style === "dove" && <LogoMark />}
+    </div>
+  );
+};

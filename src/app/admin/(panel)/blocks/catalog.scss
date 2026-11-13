@@ -63,7 +63,7 @@
 
   &__item {
     display: grid;
-    grid-template-columns: em(300) minmax(0, 1fr);
+    grid-template-columns: em(440) minmax(0, 1fr);
     overflow: hidden;
     background-color: var(--a-surface);
     border: 1px solid var(--a-line);
@@ -81,8 +81,8 @@
   &__info {
     display: flex;
     align-items: flex-start;
-    gap: em(14);
-    padding: em(20);
+    gap: em(16);
+    padding: em(24);
     border-right: 1px solid var(--a-line);
 
     @include tablet {
@@ -119,9 +119,9 @@
   }
 
   &__when {
-    margin-top: em(10, 14);
-    font-size: em(14);
-    line-height: 1.5;
+    margin-top: em(12, 15);
+    font-size: em(15);
+    line-height: 1.55;
   }
 
   // Приклад — на фоні сайту
@@ -134,5 +134,19 @@
       padding: em(20) em(12);
       overflow-x: hidden;
     }
+  }
+
+  // Кілька варіантів одного блоку (розкладки галереї, види розділювача)
+  &__variant + &__variant {
+    margin-top: em(28);
+    padding-top: em(20);
+    border-top: 1px dashed rgba(17, 17, 20, 0.12);
+  }
+
+  &__variant-label {
+    margin-bottom: em(12, 13);
+    font-size: em(13);
+    font-weight: 700;
+    color: var(--a-accent-dark);
   }
 }

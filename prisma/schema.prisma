@@ -97,6 +97,8 @@ model User {
   /// argon2id — сам пароль ніде не зберігається
   passwordHash    String
   role            UserRole       @default(EDITOR)
+  /// Фото в адмінці (адреса з медіатеки, /uploads/…-1600.webp)
+  avatar          String?
   lastLoginAt     DateTime?
   sessions        Session[]
   media           Media[]

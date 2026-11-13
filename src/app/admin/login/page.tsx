@@ -17,7 +17,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <main className="login">
       <div className="login__card">
         <Logo className="login__logo" />
-        <h1 className="login__title">Вхід в адмінку</h1>
+        <h1 className="login__title">Адмінпанель блогу</h1>
         <LoginForm next={next} />
       </div>
       <a className="login__back" href="/">

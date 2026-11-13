@@ -71,13 +71,28 @@ export const imageBlockSchema = z.object({
   wide: z.boolean().optional(),
 });
 
-/** Кілька фото поряд (2–4); на телефоні гортаються вбік */
+/**
+ * Розкладки галереї:
+ *  - grid     — рівні фото сіткою;
+ *  - featured — перше фото велике, решта менші поруч;
+ *  - row      — усі в один ряд (для 2–4 фото).
+ * Без розкладки: 3 фото — featured, решта — grid (як було спочатку).
+ */
+export const GALLERY_LAYOUTS = ["grid", "featured", "row"] as const;
+export type GalleryLayout = (typeof GALLERY_LAYOUTS)[number];
+
+/** Кілька фото (2–6) у різних розкладках; на телефоні гортаються вбік */
 export const galleryBlockSchema = z.object({
   id,
   type: z.literal("gallery"),
-  images: z.array(imageDataSchema).min(2).max(4),
+  images: z.array(imageDataSchema).min(2).max(6),
+  layout: z.enum(GALLERY_LAYOUTS).optional(),
   caption: z.string().optional(),
 });
+
+/** Розкладка, яку реально малюємо (row для 5–6 фото завузький — тоді сітка) */
+export const galleryLayoutOf = (count: number, layout?: GalleryLayout): GalleryLayout =>
+  layout === "row" && count > 4 ? "grid" : (layout ?? (count === 3 ? "featured" : "grid"));
 
 /** Список */
 export const listBlockSchema = z.object({
@@ -108,8 +123,19 @@ export const calloutBlockSchema = z.object({
   text,
 });
 
-/** Візуальний розділювач між частинами статті */
-export const dividerBlockSchema = z.object({ id, type: z.literal("divider") });
+/**
+ * Розділювач між частинами статті:
+ *  dots — три крапки; line — тонка світла лінія; dove — лінія з голубкою з логотипу;
+ *  space — просто більший відступ (пауза без лінії).
+ */
+export const DIVIDER_STYLES = ["dots", "line", "dove", "space"] as const;
+export type DividerStyle = (typeof DIVIDER_STYLES)[number];
+
+export const dividerBlockSchema = z.object({
+  id,
+  type: z.literal("divider"),
+  style: z.enum(DIVIDER_STYLES).optional(),
+});
 
 /** Кнопка-заклик (реєстрація, пожертва, детальніше) */
 export const buttonBlockSchema = z.object({

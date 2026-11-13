@@ -4,6 +4,8 @@ import news1Asset from "../../../assets/news/news-1.webp";
 import news2Asset from "../../../assets/news/news-2.webp";
 import news3Asset from "../../../assets/news/news-3.webp";
 import posterAsset from "../../../assets/about/video-poster.webp";
+import pastorAsset from "../../../assets/welcome/pastor.webp";
+import youthAsset from "../../../assets/events/youth.webp";
 
 const news1 = news1Asset.src;
 const news2 = news2Asset.src;
@@ -76,4 +78,33 @@ export const SAMPLE_BLOCKS: { [T in BlockType]: Extract<ArticleBlock, { type: T 
   },
   button: { id: "s-button", type: "button", text: "Я тут вперше", href: "#" },
   divider: { id: "s-divider", type: "divider" },
+};
+
+// ---------- Варіанти: розкладки галереї й види розділювача ----------
+
+const photos = [news1, news2, news3, poster, pastorAsset.src, youthAsset.src].map((src) => ({ src, alt: "" }));
+const gallery = (n: number, layout: "grid" | "featured" | "row") =>
+  ({ id: `s-gallery-${n}-${layout}`, type: "gallery", images: photos.slice(0, n), layout }) as const;
+
+/** Блоки з кількома варіантами вигляду — каталог показує кожен */
+export const SAMPLE_VARIANTS: Partial<Record<BlockType, { label: string; block: ArticleBlock }[]>> = {
+  gallery: [
+    { label: "2 фото · сітка", block: gallery(2, "grid") },
+    { label: "2 фото · головне фото", block: gallery(2, "featured") },
+    { label: "3 фото · головне фото", block: gallery(3, "featured") },
+    { label: "3 фото · в один ряд", block: gallery(3, "row") },
+    { label: "4 фото · сітка", block: gallery(4, "grid") },
+    { label: "4 фото · головне фото", block: gallery(4, "featured") },
+    { label: "4 фото · в один ряд", block: gallery(4, "row") },
+    { label: "5 фото · сітка", block: gallery(5, "grid") },
+    { label: "5 фото · головне фото", block: gallery(5, "featured") },
+    { label: "6 фото · сітка", block: gallery(6, "grid") },
+    { label: "6 фото · головне фото", block: gallery(6, "featured") },
+  ],
+  divider: [
+    { label: "Три крапки", block: { id: "s-div-dots", type: "divider", style: "dots" } },
+    { label: "Лінія", block: { id: "s-div-line", type: "divider", style: "line" } },
+    { label: "Лінія з голубкою", block: { id: "s-div-dove", type: "divider", style: "dove" } },
+    { label: "Просто відступ", block: { id: "s-div-space", type: "divider", style: "space" } },
+  ],
 };

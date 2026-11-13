@@ -3,6 +3,7 @@
 import type { ComponentType } from "react";
 import type { ArticleBlock, BlockType } from "@/features/blog/types";
 import { Checkbox, Field, ImageInput, RichTextarea, Textarea, TextInput } from "./fields";
+import { DividerFields, GalleryFields } from "./LayoutFields";
 
 type Props<T extends BlockType> = {
   block: Extract<ArticleBlock, { type: T }>;
@@ -96,40 +97,7 @@ export const BLOCK_FIELDS: { [T in BlockType]: { component: ComponentType<Props<
       </>
     ),
   },
-  gallery: {
-    component: ({ block, onChange }) => {
-      const setImage = (i: number, img: { src: string; alt: string }) =>
-        onChange({ ...block, images: block.images.map((x, j) => (j === i ? img : x)) });
-      return (
-        <>
-          {block.images.map((img, i) => (
-            <div key={i} className="ed-gallery-item">
-              <ImageInput label={`Фото ${i + 1}`} src={img.src} alt={img.alt} onChange={(v) => setImage(i, v)} />
-              {block.images.length > 2 && (
-                <button
-                  type="button"
-                  className="ed-link-btn ed-link-btn--danger"
-                  onClick={() => onChange({ ...block, images: block.images.filter((_, j) => j !== i) })}
-                >
-                  Прибрати фото
-                </button>
-              )}
-            </div>
-          ))}
-          {block.images.length < 4 && (
-            <button
-              type="button"
-              className="ed-link-btn"
-              onClick={() => onChange({ ...block, images: [...block.images, { src: "", alt: "" }] })}
-            >
-              + Додати фото
-            </button>
-          )}
-          <TextInput label="Підпис" value={block.caption ?? ""} onChange={(caption) => onChange({ ...block, caption })} />
-        </>
-      );
-    },
-  },
+  gallery: { component: GalleryFields },
   list: {
     component: ({ block, onChange }) => (
       <>
@@ -174,9 +142,7 @@ export const BLOCK_FIELDS: { [T in BlockType]: { component: ComponentType<Props<
       </>
     ),
   },
-  divider: {
-    component: () => <p className="ed-muted">Без налаштувань</p>,
-  },
+  divider: { component: DividerFields },
   button: {
     component: ({ block, onChange }) => (
       <>

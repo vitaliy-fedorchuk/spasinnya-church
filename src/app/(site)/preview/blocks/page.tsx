@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { requireUser } from "@/server/auth/session";
 import { BLOCKS } from "@/features/blog/blocks/registry";
 import { BLOCK_GROUPS, BLOCK_INFO } from "@/features/blog/blocks/catalog";
-import { SAMPLE_BLOCKS } from "@/features/blog/blocks/samples";
+import { SAMPLE_BLOCKS, SAMPLE_VARIANTS } from "@/features/blog/blocks/samples";
 import ArticleBlocks from "@/features/blog/blocks/ArticleBlocks";
 import "./preview-blocks.scss";
 
@@ -29,14 +29,16 @@ export default async function PreviewBlocksPage() {
         {BLOCK_GROUPS.map((group) => (
           <section key={group.id} className="pb-group">
             <h2 className="pb-group__title">{group.label}</h2>
-            {group.types.map((type) => (
-              <div key={type} className="pb-item">
-                <p className="pb-item__label">
-                  {BLOCKS[type].label} <span>— {BLOCK_INFO[type].hint}</span>
-                </p>
-                <ArticleBlocks blocks={[SAMPLE_BLOCKS[type]]} />
-              </div>
-            ))}
+            {group.types.flatMap((type) =>
+              (SAMPLE_VARIANTS[type] ?? [{ label: BLOCK_INFO[type].hint, block: SAMPLE_BLOCKS[type] }]).map((v) => (
+                <div key={v.block.id} className="pb-item">
+                  <p className="pb-item__label">
+                    {BLOCKS[type].label} <span>— {v.label}</span>
+                  </p>
+                  <ArticleBlocks blocks={[v.block]} />
+                </div>
+              )),
+            )}
           </section>
         ))}
       </div>

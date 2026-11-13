@@ -4,8 +4,8 @@ import "./admin.scss";
 
 export const metadata: Metadata = {
   title: {
-    default: "Адмінка",
-    template: "%s — Адмінка",
+    default: "Адмінпанель блогу",
+    template: "%s — Адмінпанель блогу",
   },
   // Адмінку пошуковики не індексують
   robots: { index: false, follow: false },

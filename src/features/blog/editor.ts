@@ -56,7 +56,7 @@ export const createBlock = (type: BlockType): ArticleBlock => {
     case "image":
       return { id, type, image: { src: "", alt: "" }, caption: "", wide: false };
     case "gallery":
-      return { id, type, images: [{ src: "", alt: "" }, { src: "", alt: "" }], caption: "" };
+      return { id, type, images: [{ src: "", alt: "" }, { src: "", alt: "" }], layout: "grid", caption: "" };
     case "list":
       return { id, type, ordered: false, items: [""] };
     case "video":
@@ -64,7 +64,7 @@ export const createBlock = (type: BlockType): ArticleBlock => {
     case "callout":
       return { id, type, title: "", text: "" };
     case "divider":
-      return { id, type };
+      return { id, type, style: "dots" };
     case "button":
       return { id, type, text: "", href: "", external: false };
   }
@@ -138,7 +138,7 @@ const FIELD_LABEL: Record<string, string> = {
 const issueMessage = (issue: z.core.$ZodIssue) => {
   const key = [...issue.path].reverse().find((p) => typeof p === "string" && p in FIELD_LABEL) as string | undefined;
   const label = key ? FIELD_LABEL[key] : "Поле";
-  if (key === "images" && (issue.code === "too_small" || issue.code === "too_big")) return "Галерея: потрібно від 2 до 4 фото";
+  if (key === "images" && (issue.code === "too_small" || issue.code === "too_big")) return "Галерея: потрібно від 2 до 6 фото";
   if (issue.code === "invalid_format" || (issue.code === "custom" && issue.message)) return issue.message;
   return `Заповніть «${label}»`;
 };

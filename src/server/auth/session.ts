@@ -49,7 +49,7 @@ export const getCurrentUser = cache(async () => {
 
   const session = await db.session.findUnique({
     where: { id: hashToken(token) },
-    include: { user: { select: { id: true, email: true, name: true, role: true } } },
+    include: { user: { select: { id: true, email: true, name: true, role: true, avatar: true } } },
   });
   if (!session) return null;
 

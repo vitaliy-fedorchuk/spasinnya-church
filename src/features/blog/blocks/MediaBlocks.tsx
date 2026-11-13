@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { GalleryBlock, ImageBlock, VideoBlock } from "../types";
+import { galleryLayoutOf, type GalleryBlock, type ImageBlock, type VideoBlock } from "../types";
 import { srcSetOf } from "@/features/media/urls";
 import playIconAsset from "../../../assets/welcome/play.svg";
 
@@ -23,7 +23,11 @@ export const Image = ({ block }: { block: ImageBlock }) => (
 
 export const Gallery = ({ block }: { block: GalleryBlock }) => (
   <figure className="ab-gallery">
-    <ul className="ab-gallery__list" data-count={Math.min(block.images.length, 4)}>
+    <ul
+      className="ab-gallery__list"
+      data-count={block.images.length}
+      data-layout={galleryLayoutOf(block.images.length, block.layout)}
+    >
       {block.images.map((img, i) => (
         <li key={i} className="ab-gallery__item">
           <img

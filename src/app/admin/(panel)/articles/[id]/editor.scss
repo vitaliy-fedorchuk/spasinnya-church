@@ -713,3 +713,113 @@
   margin-right: em(4, 15);
   vertical-align: -0.15em;
 }
+
+
+// ---------- Вибір розкладки галереї / вигляду розділювача ----------
+.ed-layout-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(8);
+
+  &__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: em(6);
+    width: em(120);
+    padding: em(10) em(8) em(8);
+    font-size: em(13);
+    font-weight: 600;
+    color: var(--a-muted);
+    cursor: pointer;
+    background-color: var(--a-surface);
+    border: 1px solid rgba(17, 17, 20, 0.14);
+    border-radius: em(12, 13);
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      border-color: rgba(17, 17, 20, 0.3);
+    }
+
+    &.is-active {
+      color: var(--a-text);
+      border-color: var(--a-accent);
+      box-shadow: 0 0 0 em(2, 13) rgba(144, 129, 106, 0.25);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    @include mobile {
+      width: calc(50% - #{em(4)});
+    }
+  }
+
+  &__svg {
+    width: em(60, 13);
+    height: em(40, 13);
+    fill: rgba(144, 129, 106, 0.45);
+  }
+
+  .is-active &__svg {
+    fill: var(--a-accent);
+  }
+}
+
+.ed-gallery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(8) em(20);
+}
+
+// Мініатюри розділювачів на кнопках
+.ed-divider-sample {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: em(5, 13);
+  width: 100%;
+  height: em(40, 13);
+
+  i {
+    width: em(5, 13);
+    height: em(5, 13);
+    background-color: var(--a-accent);
+    border-radius: 50%;
+  }
+
+  &--line::before,
+  &--dove::before,
+  &--dove::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background-color: rgba(17, 17, 20, 0.25);
+  }
+
+  &--line {
+    padding: 0 em(6, 13);
+  }
+
+  &--dove {
+    gap: em(6, 13);
+    padding: 0 em(6, 13);
+
+    svg {
+      flex-shrink: 0;
+      width: em(18, 13);
+      color: var(--a-accent);
+    }
+  }
+
+  &--space {
+    margin: em(8, 13) em(10, 13);
+    border: 1px dashed rgba(17, 17, 20, 0.2);
+    border-right: 0;
+    border-left: 0;
+  }
+}

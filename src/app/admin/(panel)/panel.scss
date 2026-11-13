@@ -1,11 +1,13 @@
 @use "../../../styles/tools" as *;
 
-$sidebar-width: em(248);
+$sidebar-width: em(256);
+$sidebar-collapsed: em(80);
 
 .panel {
   display: grid;
   grid-template-columns: $sidebar-width minmax(0, 1fr);
   min-height: 100vh;
+  transition: grid-template-columns 0.25s ease;
 
   @include tablet {
     grid-template-columns: minmax(0, 1fr);
@@ -17,27 +19,30 @@ $sidebar-width: em(248);
     top: 0;
     display: flex;
     flex-direction: column;
-    gap: em(28);
+    gap: em(4);
     height: 100vh;
     padding: em(28) em(16) em(20);
+    overflow: hidden auto;
     color: #ffffff;
     background-color: var(--a-sidebar);
 
-    // Планшет і телефон: верхня панель — бренд, розділи, користувач в один-два рядки
+    // Планшет і телефон: верхня панель — бренд, розділи, користувач
     @include tablet {
       z-index: 10;
       flex-flow: row wrap;
       align-items: center;
-      gap: em(10) em(20);
+      gap: em(10) em(16);
       height: auto;
       padding: em(12) em(16);
+      overflow: visible;
     }
   }
 
   &__brand {
     display: flex;
     flex-direction: column;
-    gap: em(8);
+    gap: em(10);
+    margin-bottom: em(24);
     padding: em(4) em(12) 0;
     color: #ffffff;
     text-decoration: none;
@@ -46,6 +51,7 @@ $sidebar-width: em(248);
       flex-direction: row;
       align-items: center;
       gap: em(12);
+      margin: 0;
       padding: 0;
     }
   }
@@ -60,12 +66,24 @@ $sidebar-width: em(248);
     }
   }
 
+  &__logo-mark {
+    display: none;
+    width: em(40);
+    height: auto;
+  }
+
   &__brand-sub {
-    font-size: em(12);
+    font-size: em(11);
     font-weight: 600;
+    line-height: 1.3;
     color: var(--a-accent);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    white-space: nowrap;
+
+    @include mobile {
+      display: none;
+    }
   }
 
   &__nav {
@@ -81,19 +99,31 @@ $sidebar-width: em(248);
     }
   }
 
+  // Пункт меню (і «Згорнути», «Відкрити сайт», «Вийти» — той самий вигляд)
   &__nav-link {
     display: flex;
     align-items: center;
     gap: em(12);
-    height: em(42);
-    padding: 0 em(12);
+    width: 100%;
+    height: em(44);
+    padding: 0 em(14);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
     text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: 0;
     border-radius: em(10);
     transition:
       background-color 0.2s ease,
       color 0.2s ease;
+
+    // Усі іконки меню одного розміру
+    .a-icon {
+      width: em(20);
+      height: em(20);
+    }
 
     &:hover {
       color: #ffffff;
@@ -106,39 +136,90 @@ $sidebar-width: em(248);
     }
 
     @include tablet {
-      height: em(36);
+      width: auto;
+      height: em(38);
+    }
+  }
+
+  &__toggle {
+    margin-top: auto;
+
+    @include tablet {
+      display: none;
     }
   }
 
   &__user {
     display: flex;
     flex-direction: column;
-    gap: em(10);
-    margin-top: auto;
-    padding: em(16) em(12) 0;
+    gap: em(2);
+    margin-top: em(8);
+    padding-top: em(14);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 
     @include tablet {
       flex-direction: row;
       align-items: center;
-      gap: em(14);
+      gap: em(4);
       margin: 0 0 0 auto;
       padding: 0;
       border: 0;
     }
   }
 
+  &__user-card {
+    display: flex;
+    align-items: center;
+    gap: em(12);
+    margin-bottom: em(6);
+    padding: em(4) em(6);
+
+    @include tablet {
+      margin: 0;
+    }
+  }
+
+  &__avatar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: em(42);
+    height: em(42);
+    overflow: hidden;
+    font-size: em(14);
+    font-weight: 700;
+    color: var(--a-sidebar);
+    background-color: #c9b89c;
+    border: 2px solid var(--a-accent);
+    border-radius: 50%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @include tablet {
+      width: em(34, 14);
+      height: em(34, 14);
+    }
+  }
+
   &__user-info {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 
-    @include mobile {
+    @include tablet {
       display: none;
     }
   }
 
   &__user-name {
+    overflow: hidden;
     font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__user-role {
@@ -146,22 +227,63 @@ $sidebar-width: em(248);
     color: rgba(255, 255, 255, 0.55);
   }
 
-  &__site-link,
-  &__logout {
-    display: inline-flex;
-    align-items: center;
-    gap: em(8, 14);
-    width: fit-content;
-    padding: 0;
-    font-size: em(14);
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    cursor: pointer;
-    background: none;
-    border: 0;
+  &__small-link {
+    height: em(40);
+    font-size: em(15);
 
-    &:hover {
-      color: #ffffff;
+    .a-icon {
+      width: em(20, 15);
+      height: em(20, 15);
+    }
+
+    // На телефоні — лише іконки
+    @include mobile {
+      padding: 0 em(10, 15);
+
+      .panel__label {
+        display: none;
+      }
+    }
+  }
+
+  // ---------- Згорнуте меню (лише на комп'ютері) ----------
+  &--collapsed {
+    grid-template-columns: $sidebar-collapsed minmax(0, 1fr);
+
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    &--collapsed &__sidebar {
+      padding-right: em(12);
+      padding-left: em(12);
+    }
+
+    &--collapsed &__brand {
+      align-items: center;
+      padding: em(4) 0 0;
+    }
+
+    &--collapsed &__logo,
+    &--collapsed &__brand-sub,
+    &--collapsed &__label {
+      display: none;
+    }
+
+    &--collapsed &__logo-mark {
+      display: block;
+    }
+
+    &--collapsed &__nav-link {
+      justify-content: center;
+      padding: 0;
+    }
+
+    &--collapsed &__user-card {
+      justify-content: center;
+      padding: em(4) 0;
     }
   }
 

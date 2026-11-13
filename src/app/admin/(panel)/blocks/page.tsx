@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { requireUser } from "@/server/auth/session";
 import { BLOCKS } from "@/features/blog/blocks/registry";
 import { BLOCK_GROUPS, BLOCK_INFO } from "@/features/blog/blocks/catalog";
-import { SAMPLE_BLOCKS } from "@/features/blog/blocks/samples";
+import { SAMPLE_BLOCKS, SAMPLE_VARIANTS } from "@/features/blog/blocks/samples";
 import ArticleBlocks from "@/features/blog/blocks/ArticleBlocks";
 import { BLOCK_ICON, Icon } from "../icons";
 import "./catalog.scss";
@@ -56,7 +56,16 @@ export default async function BlocksCatalogPage() {
                 </div>
               </div>
               <div className="catalog__stage">
-                <ArticleBlocks blocks={[SAMPLE_BLOCKS[type]]} />
+                {SAMPLE_VARIANTS[type] ? (
+                  SAMPLE_VARIANTS[type].map((v) => (
+                    <div key={v.label} className="catalog__variant">
+                      <p className="catalog__variant-label">{v.label}</p>
+                      <ArticleBlocks blocks={[v.block]} />
+                    </div>
+                  ))
+                ) : (
+                  <ArticleBlocks blocks={[SAMPLE_BLOCKS[type]]} />
+                )}
               </div>
             </article>
           ))}

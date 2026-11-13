@@ -24,9 +24,10 @@ const AdminNav = () => {
             href={item.href}
             className={`panel__nav-link ${active ? "panel__nav-link--active" : ""}`.trim()}
             aria-current={active ? "page" : undefined}
+            title={item.label}
           >
             <Icon name={item.icon} />
-            {item.label}
+            <span className="panel__label">{item.label}</span>
           </Link>
         );
       })}
