@@ -1,11 +1,19 @@
 import type { Article, Author } from "./types";
-import authorPhoto from "../../assets/news/author.webp";
+import authorPhotoAsset from "../../assets/news/author.webp";
 // TODO: тимчасові фото і тексти — потім прийдуть з адмінки
-import news1 from "../../assets/news/news-1.webp";
-import news2 from "../../assets/news/news-2.webp";
-import news3 from "../../assets/news/news-3.webp";
-import videoPoster from "../../assets/about/video-poster.webp";
-import pastorPhoto from "../../assets/welcome/pastor.webp";
+import news1Asset from "../../assets/news/news-1.webp";
+import news2Asset from "../../assets/news/news-2.webp";
+import news3Asset from "../../assets/news/news-3.webp";
+import videoPosterAsset from "../../assets/about/video-poster.webp";
+import pastorPhotoAsset from "../../assets/welcome/pastor.webp";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const authorPhoto = authorPhotoAsset.src;
+const news1 = news1Asset.src;
+const news2 = news2Asset.src;
+const news3 = news3Asset.src;
+const videoPoster = videoPosterAsset.src;
+const pastorPhoto = pastorPhotoAsset.src;
 
 const PASTOR: Author = { name: "Климчук Микола", role: "Старший пастор", photo: authorPhoto };
 
@@ -172,4 +180,4 @@ export const ARTICLES: Article[] = [
 
 export const getArticle = (slug: string) => ARTICLES.find((a) => a.slug === slug);
 
-export const articleHref = (slug: string) => `#/blog/${slug}`;
+export const articleHref = (slug: string) => `/blog/${slug}`;

@@ -1,7 +1,10 @@
 import "./EventsSection.scss";
 import Rubricator from "../ui/Rubricator";
 import { EventsCalendar } from "../../features/events-calendar";
-import timeIcon from "../../assets/events/time-together.svg";
+import timeIconAsset from "../../assets/events/time-together.svg";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const timeIcon = timeIconAsset.src;
 
 const EventsSection = () => {
   return (

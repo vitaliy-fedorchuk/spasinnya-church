@@ -1,9 +1,13 @@
 import "./NewsSection.scss";
 import Rubricator from "../ui/Rubricator";
 import BlackButton from "../buttons/BlackButton";
-import newspaperIcon from "../../assets/news/newspaper.svg";
-import bookIcon from "../../assets/news/book.svg";
+import newspaperIconAsset from "../../assets/news/newspaper.svg";
+import bookIconAsset from "../../assets/news/book.svg";
 import { ARTICLES, articleHref } from "../../features/blog";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const newspaperIcon = newspaperIconAsset.src;
+const bookIcon = bookIconAsset.src;
 
 interface NewsSectionProps {
   /** Не показувати цю статтю (на сторінці самої статті) */

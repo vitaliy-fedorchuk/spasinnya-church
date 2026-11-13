@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import "./EventsCalendar.scss";
 import { ROUTE_URL } from "../../constants";
@@ -21,12 +23,20 @@ import {
   findNextEventDate,
   getEventsForDate,
 } from "./events";
-import arrowIcon from "../../assets/events/arrow-next.svg";
-import calendarIcon from "../../assets/events/calendar.svg";
-import clockIcon from "../../assets/events/clock.svg";
-import globeIcon from "../../assets/events/globe.svg";
-import roomIcon from "../../assets/events/room.svg";
-import linkArrowIcon from "../../assets/events/link-arrow.svg";
+import arrowIconAsset from "../../assets/events/arrow-next.svg";
+import calendarIconAsset from "../../assets/events/calendar.svg";
+import clockIconAsset from "../../assets/events/clock.svg";
+import globeIconAsset from "../../assets/events/globe.svg";
+import roomIconAsset from "../../assets/events/room.svg";
+import linkArrowIconAsset from "../../assets/events/link-arrow.svg";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const arrowIcon = arrowIconAsset.src;
+const calendarIcon = calendarIconAsset.src;
+const clockIcon = clockIconAsset.src;
+const globeIcon = globeIconAsset.src;
+const roomIcon = roomIconAsset.src;
+const linkArrowIcon = linkArrowIconAsset.src;
 
 
 const formatFullDate = (date: Date) =>

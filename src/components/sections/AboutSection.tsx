@@ -1,16 +1,29 @@
 import "./AboutSection.scss";
 import Rubricator from "../ui/Rubricator";
-import infoIcon from "../../assets/icons/info.svg";
-import videoPoster from "../../assets/about/video-poster.webp";
-import playIcon from "../../assets/about/play.svg";
-import avatar1 from "../../assets/about/avatars/avatar-1.webp";
-import avatar2 from "../../assets/about/avatars/avatar-2.webp";
-import avatar3 from "../../assets/about/avatars/avatar-3.webp";
-import avatar4 from "../../assets/about/avatars/avatar-4.webp";
-import avatar5 from "../../assets/about/avatars/avatar-5.webp";
-import avatar6 from "../../assets/about/avatars/avatar-6.webp";
-import avatar7 from "../../assets/about/avatars/avatar-7.webp";
-import avatar8 from "../../assets/about/avatars/avatar-8.webp";
+import infoIconAsset from "../../assets/icons/info.svg";
+import videoPosterAsset from "../../assets/about/video-poster.webp";
+import playIconAsset from "../../assets/about/play.svg";
+import avatar1Asset from "../../assets/about/avatars/avatar-1.webp";
+import avatar2Asset from "../../assets/about/avatars/avatar-2.webp";
+import avatar3Asset from "../../assets/about/avatars/avatar-3.webp";
+import avatar4Asset from "../../assets/about/avatars/avatar-4.webp";
+import avatar5Asset from "../../assets/about/avatars/avatar-5.webp";
+import avatar6Asset from "../../assets/about/avatars/avatar-6.webp";
+import avatar7Asset from "../../assets/about/avatars/avatar-7.webp";
+import avatar8Asset from "../../assets/about/avatars/avatar-8.webp";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const infoIcon = infoIconAsset.src;
+const videoPoster = videoPosterAsset.src;
+const playIcon = playIconAsset.src;
+const avatar1 = avatar1Asset.src;
+const avatar2 = avatar2Asset.src;
+const avatar3 = avatar3Asset.src;
+const avatar4 = avatar4Asset.src;
+const avatar5 = avatar5Asset.src;
+const avatar6 = avatar6Asset.src;
+const avatar7 = avatar7Asset.src;
+const avatar8 = avatar8Asset.src;
 
 /** TODO: посилання на відео (mp4). Поки порожнє — кнопка Play лише декоративна. */
 const VIDEO_URL = "";

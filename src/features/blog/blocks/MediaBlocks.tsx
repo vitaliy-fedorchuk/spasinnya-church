@@ -1,6 +1,11 @@
+"use client";
+
 import { useState } from "react";
 import type { GalleryBlock, ImageBlock, VideoBlock } from "../types";
-import playIcon from "../../../assets/welcome/play.svg";
+import playIconAsset from "../../../assets/welcome/play.svg";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const playIcon = playIconAsset.src;
 
 export const Image = ({ block }: { block: ImageBlock }) => (
   <figure className={`ab-image ${block.wide ? "ab-image--wide" : ""}`.trim()}>

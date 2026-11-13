@@ -1,3 +1,5 @@
+"use client";
+
 import type { Ref } from "react";
 import "./MenuToggle.scss";
 import { FULLSCREEN_MENU_ID } from "./FullscreenMenu";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef } from "react";
 import "./Navbar.scss";
 import BlackButton from "../buttons/BlackButton";
@@ -116,7 +118,7 @@ const Navbar = () => {
 
             <BlackButton
               text="Підтримати"
-              href="#contact"
+              href="/#contact"
               bgColor="#90816A"
               textColor="#f5f5f5"
               circleColor="#f5f5f5"

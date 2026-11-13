@@ -1,9 +1,15 @@
 import "./CommunitySection.scss";
 import Rubricator from "../ui/Rubricator";
-import visionIcon from "../../assets/icons/vision.svg";
-import pathIcon from "../../assets/community/path.svg";
-import growthIcon from "../../assets/community/growth.svg";
-import callingIcon from "../../assets/community/calling.svg";
+import visionIconAsset from "../../assets/icons/vision.svg";
+import pathIconAsset from "../../assets/community/path.svg";
+import growthIconAsset from "../../assets/community/growth.svg";
+import callingIconAsset from "../../assets/community/calling.svg";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const visionIcon = visionIconAsset.src;
+const pathIcon = pathIconAsset.src;
+const growthIcon = growthIconAsset.src;
+const callingIcon = callingIconAsset.src;
 
 // \n — перенос рядка як у макеті
 const steps = [

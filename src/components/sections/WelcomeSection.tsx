@@ -2,11 +2,18 @@ import "./WelcomeSection.scss";
 import Rubricator from "../ui/Rubricator";
 import BlackButton from "../buttons/BlackButton";
 import { ROUTE_URL } from "../../constants";
-import medalIcon from "../../assets/welcome/medal.svg";
-import pastorPhoto from "../../assets/welcome/pastor.webp";
-import locationPin from "../../assets/welcome/location-pin.svg";
-import locationOutline from "../../assets/welcome/location-outline.svg";
-import playIcon from "../../assets/welcome/play.svg";
+import medalIconAsset from "../../assets/welcome/medal.svg";
+import pastorPhotoAsset from "../../assets/welcome/pastor.webp";
+import locationPinAsset from "../../assets/welcome/location-pin.svg";
+import locationOutlineAsset from "../../assets/welcome/location-outline.svg";
+import playIconAsset from "../../assets/welcome/play.svg";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const medalIcon = medalIconAsset.src;
+const pastorPhoto = pastorPhotoAsset.src;
+const locationPin = locationPinAsset.src;
+const locationOutline = locationOutlineAsset.src;
+const playIcon = playIconAsset.src;
 
 /** TODO: посилання на онлайн-трансляції (YouTube-канал) */
 const ONLINE_URL = "#";

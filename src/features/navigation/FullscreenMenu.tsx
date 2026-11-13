@@ -1,3 +1,5 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import "./FullscreenMenu.scss";
 import { navLinks } from "./navLinks";

@@ -1,6 +1,10 @@
-import youthImage from "../../assets/events/youth.webp";
-import churchImage from "../../public/images/hero-fon.webp";
+import youthImageAsset from "../../assets/events/youth.webp";
+import churchImageAsset from "../../public/images/hero-fon.webp";
 import { mondayIndex, toDateKey } from "./calendarUtils";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const youthImage = youthImageAsset.src;
+const churchImage = churchImageAsset.src;
 
 export const CALENDAR_TIME_ZONE = "Europe/Kyiv";
 

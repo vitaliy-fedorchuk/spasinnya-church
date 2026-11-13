@@ -144,7 +144,7 @@ export interface Author {
 }
 
 export interface Article {
-  /** Частина адреси: #/blog/<slug> */
+  /** Частина адреси: /blog/<slug> */
   slug: string;
   title: string;
   tags: string[];

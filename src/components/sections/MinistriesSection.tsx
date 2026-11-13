@@ -1,19 +1,35 @@
+"use client";
+
 import { useRef, type CSSProperties } from "react";
 import "./MinistriesSection.scss";
 import Rubricator from "../ui/Rubricator";
 import { useStackedCards } from "../../hooks/useStackedCards";
-import archeryIcon from "../../assets/icons/archery.svg";
-import youthLogo from "../../assets/ministries/youth-logo.svg";
-import teensLogo from "../../assets/ministries/teens-logo.svg";
-import teensPhoto from "../../assets/ministries/teens.webp";
-import kidsLogo from "../../assets/ministries/kids-logo.svg";
-import kidsPhoto from "../../assets/ministries/kids.webp";
-import womenLogo from "../../assets/ministries/women-logo.svg";
-import timothyLogo from "../../assets/ministries/timothy-logo.svg";
-import timothyPhoto from "../../assets/ministries/timothy.webp";
-import youthPhoto from "../../assets/events/youth.webp";
-import worshipPhoto from "../../assets/about/video-poster.webp";
-import churchPhoto from "../../public/images/hero-fon.webp";
+import archeryIconAsset from "../../assets/icons/archery.svg";
+import youthLogoAsset from "../../assets/ministries/youth-logo.svg";
+import teensLogoAsset from "../../assets/ministries/teens-logo.svg";
+import teensPhotoAsset from "../../assets/ministries/teens.webp";
+import kidsLogoAsset from "../../assets/ministries/kids-logo.svg";
+import kidsPhotoAsset from "../../assets/ministries/kids.webp";
+import womenLogoAsset from "../../assets/ministries/women-logo.svg";
+import timothyLogoAsset from "../../assets/ministries/timothy-logo.svg";
+import timothyPhotoAsset from "../../assets/ministries/timothy.webp";
+import youthPhotoAsset from "../../assets/events/youth.webp";
+import worshipPhotoAsset from "../../assets/about/video-poster.webp";
+import churchPhotoAsset from "../../public/images/hero-fon.webp";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const archeryIcon = archeryIconAsset.src;
+const youthLogo = youthLogoAsset.src;
+const teensLogo = teensLogoAsset.src;
+const teensPhoto = teensPhotoAsset.src;
+const kidsLogo = kidsLogoAsset.src;
+const kidsPhoto = kidsPhotoAsset.src;
+const womenLogo = womenLogoAsset.src;
+const timothyLogo = timothyLogoAsset.src;
+const timothyPhoto = timothyPhotoAsset.src;
+const youthPhoto = youthPhotoAsset.src;
+const worshipPhoto = worshipPhotoAsset.src;
+const churchPhoto = churchPhotoAsset.src;
 
 interface Ministry {
   title: string;

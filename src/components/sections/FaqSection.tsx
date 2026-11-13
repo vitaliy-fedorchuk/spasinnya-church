@@ -1,8 +1,13 @@
+"use client";
+
 import { useState } from "react";
 import "./FaqSection.scss";
 import Rubricator from "../ui/Rubricator";
-import questionIcon from "../../assets/icons/question.svg";
+import questionIconAsset from "../../assets/icons/question.svg";
 import { FAQ_CATEGORIES, FAQ_ITEMS } from "./faqData";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const questionIcon = questionIconAsset.src;
 
 const ALL = "all";
 

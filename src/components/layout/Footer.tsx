@@ -1,15 +1,27 @@
 import "./Footer.scss";
 import { CHURCH_ADDRESS as ADDRESS, MAP_URL } from "../../constants";
-import logo from "../../assets/footer/logo.svg";
-import lineSchedule from "../../assets/footer/line-schedule.svg";
-import lineBottom from "../../assets/footer/line-bottom.svg";
-import youtubeIcon from "../../assets/footer/youtube.svg";
-import instagramIcon from "../../assets/footer/instagram.svg";
-import facebookIcon from "../../assets/footer/facebook.svg";
-import phoneIcon from "../../assets/footer/phone.svg";
-import emailIcon from "../../assets/footer/email.svg";
-import locationOutline from "../../assets/footer/location-outline.svg";
-import locationPin from "../../assets/footer/location-pin.svg";
+import logoAsset from "../../assets/footer/logo.svg";
+import lineScheduleAsset from "../../assets/footer/line-schedule.svg";
+import lineBottomAsset from "../../assets/footer/line-bottom.svg";
+import youtubeIconAsset from "../../assets/footer/youtube.svg";
+import instagramIconAsset from "../../assets/footer/instagram.svg";
+import facebookIconAsset from "../../assets/footer/facebook.svg";
+import phoneIconAsset from "../../assets/footer/phone.svg";
+import emailIconAsset from "../../assets/footer/email.svg";
+import locationOutlineAsset from "../../assets/footer/location-outline.svg";
+import locationPinAsset from "../../assets/footer/location-pin.svg";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const logo = logoAsset.src;
+const lineSchedule = lineScheduleAsset.src;
+const lineBottom = lineBottomAsset.src;
+const youtubeIcon = youtubeIconAsset.src;
+const instagramIcon = instagramIconAsset.src;
+const facebookIcon = facebookIconAsset.src;
+const phoneIcon = phoneIconAsset.src;
+const emailIcon = emailIconAsset.src;
+const locationOutline = locationOutlineAsset.src;
+const locationPin = locationPinAsset.src;
 
 const PHONE = "+38 067 115 0033";
 const EMAIL = "hello@spasinnya.church";
@@ -25,11 +37,11 @@ const schedule = [
 
 // TODO: замінити якорі на реальні id секцій
 const navigation = [
-  { label: "Про церкву", href: "#about" },
-  { label: "Служіння", href: "#services" },
-  { label: "Графік подій", href: "#events" },
-  { label: "Новини", href: "#news" },
-  { label: "Підтримати служіння", href: "#contact" },
+  { label: "Про церкву", href: "/#about" },
+  { label: "Служіння", href: "/#services" },
+  { label: "Графік подій", href: "/#events" },
+  { label: "Новини", href: "/#news" },
+  { label: "Підтримати служіння", href: "/#contact" },
 ];
 
 // Іконка локації складається з двох шарів (як у Figma)
