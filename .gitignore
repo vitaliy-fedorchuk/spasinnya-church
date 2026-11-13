@@ -1,30 +1,22 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
+# Залежності
 node_modules
-dist
-dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Next.js
+# Next.js (збірка, кеш, автогенеровані типи)
 .next
 out
 next-env.d.ts
 *.tsbuildinfo
+
+# Секрети: паролі до бази, ключі — тільки локально / на сервері
+.env
+.env*.local
+
+# Логи
+*.log
+npm-debug.log*
+
+# Редактори й ОС
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store

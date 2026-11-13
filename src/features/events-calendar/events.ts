@@ -1,5 +1,5 @@
 import youthImageAsset from "../../assets/events/youth.webp";
-import churchImageAsset from "../../public/images/hero-fon.webp";
+import churchImageAsset from "../../assets/hero/hero-fon.webp";
 import { mondayIndex, toDateKey } from "./calendarUtils";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу

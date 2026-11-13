@@ -15,7 +15,7 @@ import timothyLogoAsset from "../../assets/ministries/timothy-logo.svg";
 import timothyPhotoAsset from "../../assets/ministries/timothy.webp";
 import youthPhotoAsset from "../../assets/events/youth.webp";
 import worshipPhotoAsset from "../../assets/about/video-poster.webp";
-import churchPhotoAsset from "../../public/images/hero-fon.webp";
+import churchPhotoAsset from "../../assets/hero/hero-fon.webp";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
 const archeryIcon = archeryIconAsset.src;

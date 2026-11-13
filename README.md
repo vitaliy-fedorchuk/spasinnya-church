@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+# Церква Спасіння — сайт
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Next.js 16 (App Router) · React 19 · TypeScript · SCSS
 
-Currently, two official plugins are available:
+## Запуск
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # продакшн-збірка (output: standalone — для VPS)
+npm run start    # запустити зібране
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Структура
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+  app/                 сторінки (App Router)
+    layout.tsx         навбар + футер, загальні стилі й метадані
+    page.tsx           головна
+    blog/[slug]/       сторінка статті
+  components/          секції головної, навбар, футер, кнопки
+  features/
+    blog/              статті: типи блоків, реєстр, компоненти блоків
+    events-calendar/   календар подій
+    navigation/        повноекранне меню
+  styles/              _tools.scss (em(), брейкпоінти), global.scss
+  assets/              картинки, іконки, шрифти
+```
+
+## Верстка
+
+Усі розміри — через `em(px)` з `src/styles/_tools.scss` (резинова верстка від ширини
+вікна). На телефоні `em()` дає чисті `vw`. Брейкпоінти: `tablet` ≤ 1199px,
+`mobile` ≤ 767px.
+
+## Статті (блоки)
+
+Стаття — це шапка + масив блоків `{ id, type, ...поля }` (`src/features/blog/types.ts`).
+Новий вид блоку: тип у `types.ts` → компонент у `blocks/` → рядок у `blocks/registry.ts`.
