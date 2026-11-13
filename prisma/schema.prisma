@@ -142,20 +142,35 @@ model LoginAttempt {
 /// Завантажене фото. На диску — кілька розмірів webp:
 /// <UPLOADS_DIR>/<path>-<ширина>.webp (див. src/features/media/urls.ts)
 model Media {
-  id           String   @id @default(cuid())
+  id            String      @id @default(cuid())
   /// Без розміру й розширення: «2026/11/cm…»
-  path         String   @unique
-  originalName String
+  path          String      @unique
+  originalName  String
   /// Розміри після повороту, до зменшення
-  width        Int
-  height       Int
+  width         Int
+  height        Int
   /// Вага найбільшого варіанта, байти
-  bytes        Int
+  bytes         Int
+  /// Вага завантаженого оригіналу (сам оригінал не зберігається) — щоб показати стиснення
+  originalBytes Int?
   /// Опис для незрячих і пошуку — підставляється, коли фото вибирають
-  alt          String   @default("")
-  uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
-  uploadedById String?
-  createdAt    DateTime @default(now())
+  alt           String      @default("")
+  /// Альбом (як папка: одне фото — один альбом); null — «Без альбому»
+  album         MediaAlbum? @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  albumId       String?
+  uploadedBy    User?       @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById  String?
+  createdAt     DateTime    @default(now())
 
   @@index([createdAt])
+  @@index([albumId])
+}
+
+/// Альбом медіатеки: «Табір 2026», «Різдво». Видалення альбому фото не видаляє.
+model MediaAlbum {
+  id        String   @id @default(cuid())
+  name      String
+  media     Media[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

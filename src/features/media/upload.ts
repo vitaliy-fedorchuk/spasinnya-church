@@ -6,11 +6,15 @@ export const ACCEPT_IMAGES = "image/jpeg,image/png,image/webp,image/avif,image/g
  * Завантажити фото в медіатеку (з браузера). XHR, а не fetch — щоб показувати
  * прогрес. iPhone сам перетворює HEIC на JPEG, коли фото вибирають у браузері.
  */
-export const uploadImage = (file: File, { alt = "", onProgress }: { alt?: string; onProgress?: (p: number) => void } = {}) =>
+export const uploadImage = (
+  file: File,
+  { alt = "", albumId, onProgress }: { alt?: string; albumId?: string | null; onProgress?: (p: number) => void } = {},
+) =>
   new Promise<MediaItem>((resolve, reject) => {
     const form = new FormData();
     form.append("file", file);
     form.append("alt", alt);
+    if (albumId) form.append("albumId", albumId);
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/admin/media");

@@ -38,8 +38,38 @@ export interface MediaItem {
   thumb: string;
   width: number;
   height: number;
+  /** Вага найбільшого варіанта на сайті */
   bytes: number;
+  /** Вага завантаженого оригіналу (для старих фото невідома) */
+  originalBytes: number | null;
   alt: string;
   originalName: string;
+  albumId: string | null;
+  /** Чи стоїть десь (стаття, автор, аватар) — якщо відомо */
+  used?: boolean;
   createdAt: string;
+}
+
+export interface MediaAlbumItem {
+  id: string;
+  name: string;
+  count: number;
+  /** Мініатюра останнього фото */
+  cover: string | null;
+}
+
+export type MediaOrientation = "landscape" | "portrait" | "square";
+export type MediaSort = "new" | "old" | "name" | "size";
+
+/** Фільтри медіатеки. album: "all" — усі, "none" — без альбому, інакше id альбому */
+export interface MediaFilters {
+  q?: string;
+  album?: string;
+  /** «2026» або «2026-11» */
+  period?: string;
+  orientation?: MediaOrientation;
+  missingAlt?: boolean;
+  unused?: boolean;
+  sort?: MediaSort;
+  offset?: number;
 }

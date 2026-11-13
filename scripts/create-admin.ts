@@ -47,9 +47,10 @@ const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.
 /** Фото → медіатека (та сама обробка, що й завантаження з адмінки) */
 const importAvatar = async (file: string, userId: string) => {
   const id = `m${Date.now().toString(36)}${randomBytes(6).toString("hex")}`;
-  const processed = await processImage(await readFile(file), id);
+  const input = await readFile(file);
+  const processed = await processImage(input, id);
   await db.media.create({
-    data: { id, ...processed, originalName: path.basename(file), alt: "Фото профілю", uploadedById: userId },
+    data: { id, ...processed, originalBytes: input.byteLength, originalName: path.basename(file), alt: "Фото профілю", uploadedById: userId },
   });
   return mediaUrl(processed.path);
 };

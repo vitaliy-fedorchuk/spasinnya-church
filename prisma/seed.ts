@@ -36,9 +36,10 @@ const importDemoMedia = async () => {
     const id = `demo-${key.toLowerCase()}`;
     let media = await db.media.findUnique({ where: { id } });
     if (!media) {
-      const processed = await processImage(await readFile(path.join(ASSETS, file)), id, DEMO_DATE);
+      const input = await readFile(path.join(ASSETS, file));
+      const processed = await processImage(input, id, DEMO_DATE);
       media = await db.media.create({
-        data: { id, ...processed, originalName: path.basename(file), alt, createdAt: DEMO_DATE },
+        data: { id, ...processed, originalBytes: input.byteLength, originalName: path.basename(file), alt, createdAt: DEMO_DATE },
       });
     }
     urls[key] = mediaUrl(media.path);

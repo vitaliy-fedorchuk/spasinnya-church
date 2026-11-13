@@ -16,7 +16,7 @@ export interface UploadTask {
  * Черга завантажень із прогресом. Файли йдуть по два одночасно —
  * щоб не забивати слабкий мобільний інтернет.
  */
-export const useUploads = (onUploaded: (item: MediaItem) => void) => {
+export const useUploads = (onUploaded: (item: MediaItem) => void, albumId?: string | null) => {
   const [tasks, setTasks] = useState<UploadTask[]>([]);
 
   const update = (key: string, p: Partial<UploadTask>) =>
@@ -32,7 +32,7 @@ export const useUploads = (onUploaded: (item: MediaItem) => void) => {
         for (let job = queue.shift(); job; job = queue.shift()) {
           const { file, key } = job;
           try {
-            const item = await uploadImage(file, { onProgress: (progress) => update(key, { progress }) });
+            const item = await uploadImage(file, { albumId, onProgress: (progress) => update(key, { progress }) });
             setTasks((list) => list.filter((t) => t.key !== key));
             onUploaded(item);
           } catch (e) {
@@ -42,7 +42,7 @@ export const useUploads = (onUploaded: (item: MediaItem) => void) => {
       };
       await Promise.all([worker(), worker()]);
     },
-    [onUploaded],
+    [onUploaded, albumId],
   );
 
   const dismiss = (key: string) => setTasks((list) => list.filter((t) => t.key !== key));

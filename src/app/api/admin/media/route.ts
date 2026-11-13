@@ -29,6 +29,9 @@ export async function POST(req: Request) {
   const f = form.get("file");
   const file = f instanceof File ? f : null;
   const alt = String(form.get("alt") ?? "").trim().slice(0, 300);
+  // Альбом, у який завантажуємо (якщо такого немає — «Без альбому»)
+  const albumParam = String(form.get("albumId") ?? "");
+  const albumId = albumParam && (await db.mediaAlbum.count({ where: { id: albumParam } })) ? albumParam : null;
   if (!file || file.size === 0) return Response.json({ error: "Файл не вибрано" }, { status: 400 });
 
   // Власний id: потрібен для імені файлів ще до запису в базу
@@ -42,6 +45,8 @@ export async function POST(req: Request) {
           id,
           ...processed,
           originalName: file.name.slice(0, 200) || "фото",
+          originalBytes: file.size,
+          albumId,
           alt,
           uploadedById: user.id,
         },
