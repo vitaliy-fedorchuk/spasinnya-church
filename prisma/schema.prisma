@@ -70,6 +70,7 @@ model User {
   role         UserRole  @default(EDITOR)
   lastLoginAt  DateTime?
   sessions     Session[]
+  media        Media[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
@@ -97,4 +98,27 @@ model LoginAttempt {
 
   @@index([email, createdAt])
   @@index([ip, createdAt])
+}
+
+// ---------- Медіатека ----------
+
+/// Завантажене фото. На диску — кілька розмірів webp:
+/// <UPLOADS_DIR>/<path>-<ширина>.webp (див. src/features/media/urls.ts)
+model Media {
+  id           String   @id @default(cuid())
+  /// Без розміру й розширення: «2026/11/cm…»
+  path         String   @unique
+  originalName String
+  /// Розміри після повороту, до зменшення
+  width        Int
+  height       Int
+  /// Вага найбільшого варіанта, байти
+  bytes        Int
+  /// Опис для незрячих і пошуку — підставляється, коли фото вибирають
+  alt          String   @default("")
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById String?
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
 }

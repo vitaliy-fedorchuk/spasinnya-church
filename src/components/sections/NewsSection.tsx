@@ -4,6 +4,7 @@ import BlackButton from "../buttons/BlackButton";
 import newspaperIconAsset from "../../assets/news/newspaper.svg";
 import bookIconAsset from "../../assets/news/book.svg";
 import { articleHref, type Article } from "../../features/blog";
+import { srcSetOf, variantOf } from "@/features/media/urls";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
 const newspaperIcon = newspaperIconAsset.src;
@@ -28,7 +29,14 @@ const NewsSection = ({ articles: news }: NewsSectionProps) => {
         <ul className="news__list">
           {news.map((item) => (
             <li key={item.slug} className="news__card">
-              <img className="news__image" src={item.cover.src} alt="" loading="lazy" />
+              <img
+                className="news__image"
+                src={item.cover.src}
+                srcSet={srcSetOf(item.cover.src)}
+                sizes="(max-width: 767px) 80vw, (max-width: 1199px) 50vw, 460px"
+                alt=""
+                loading="lazy"
+              />
 
               <div className="news__body">
                 <p className="news__read-time">
@@ -53,7 +61,7 @@ const NewsSection = ({ articles: news }: NewsSectionProps) => {
 
                 <footer className="news__meta">
                   <div className="news__author">
-                    <img className="news__avatar" src={item.author.photo} alt="" loading="lazy" />
+                    <img className="news__avatar" src={variantOf(item.author.photo, 480)} alt="" loading="lazy" />
                     <div>
                       <p className="news__author-name">{item.author.name}</p>
                       <p className="news__author-role">{item.author.role}</p>

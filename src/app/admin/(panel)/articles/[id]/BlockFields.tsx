@@ -168,6 +168,7 @@ export const BLOCK_FIELDS: { [T in BlockType]: { hint: string; component: Compon
           label="Своя обкладинка (необовʼязково)"
           src={block.poster ?? ""}
           alt=""
+          hideAlt
           onChange={({ src }) => onChange({ ...block, poster: src })}
         />
         <TextInput label="Підпис" value={block.caption ?? ""} onChange={(caption) => onChange({ ...block, caption })} />

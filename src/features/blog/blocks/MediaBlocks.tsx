@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { GalleryBlock, ImageBlock, VideoBlock } from "../types";
+import { srcSetOf } from "@/features/media/urls";
 import playIconAsset from "../../../assets/welcome/play.svg";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
@@ -9,7 +10,13 @@ const playIcon = playIconAsset.src;
 
 export const Image = ({ block }: { block: ImageBlock }) => (
   <figure className={`ab-image ${block.wide ? "ab-image--wide" : ""}`.trim()}>
-    <img src={block.image.src} alt={block.image.alt} loading="lazy" />
+    <img
+      src={block.image.src}
+      srcSet={srcSetOf(block.image.src)}
+      sizes={block.wide ? "(max-width: 767px) 100vw, 1160px" : "(max-width: 767px) 100vw, 860px"}
+      alt={block.image.alt}
+      loading="lazy"
+    />
     {block.caption && <figcaption className="ab-caption">{block.caption}</figcaption>}
   </figure>
 );
@@ -19,7 +26,13 @@ export const Gallery = ({ block }: { block: GalleryBlock }) => (
     <ul className="ab-gallery__list" data-count={Math.min(block.images.length, 4)}>
       {block.images.map((img, i) => (
         <li key={i} className="ab-gallery__item">
-          <img src={img.src} alt={img.alt} loading="lazy" />
+          <img
+            src={img.src}
+            srcSet={srcSetOf(img.src)}
+            sizes="(max-width: 767px) 85vw, 780px"
+            alt={img.alt}
+            loading="lazy"
+          />
         </li>
       ))}
     </ul>
@@ -43,7 +56,7 @@ export const Video = ({ block }: { block: VideoBlock }) => {
           />
         ) : (
           <button type="button" className="ab-video__poster" onClick={() => setIsPlaying(true)}>
-            <img src={poster} alt="" loading="lazy" />
+            <img src={poster} srcSet={srcSetOf(poster)} sizes="(max-width: 767px) 100vw, 1160px" alt="" loading="lazy" />
             <span className="ab-video__play">
               <img src={playIcon} alt="" />
               Дивитися відео

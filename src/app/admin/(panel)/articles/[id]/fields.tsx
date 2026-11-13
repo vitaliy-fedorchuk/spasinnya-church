@@ -1,6 +1,10 @@
 "use client";
 
-import { useId, useRef, type ReactNode } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
+import { variantOf, type MediaItem } from "@/features/media/urls";
+import { ACCEPT_IMAGES } from "@/features/media/upload";
+import MediaPicker from "../../media/MediaPicker";
+import { UploadList, useUploads } from "../../media/useUploads";
 
 /** Підпис + поле + підказка/помилка */
 export const Field = ({
@@ -165,8 +169,8 @@ export const Checkbox = ({ label, checked, onChange }: { label: string; checked:
 );
 
 /**
- * Фото: адреса + опис. Поки що адресою (/uploads/… або https://…);
- * на етапі 5 тут зʼявиться завантаження й вибір із медіатеки.
+ * Фото: завантажити / вибрати з медіатеки / перетягнути файл на мініатюру.
+ * Адресу вручну теж можна вписати (сховано під «Адреса вручну»).
  */
 export const ImageInput = ({
   label,
@@ -174,41 +178,109 @@ export const ImageInput = ({
   alt,
   onChange,
   error,
+  hideAlt,
 }: {
   label: string;
   src: string;
   alt: string;
   onChange: (v: { src: string; alt: string }) => void;
   error?: string;
+  /** Без поля опису (напр. обкладинка відео) */
+  hideAlt?: boolean;
 }) => {
   const id = useId();
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+
+  // Опис з медіатеки підставляємо, лише якщо тут його ще не задали
+  const take = (item: MediaItem) => onChange({ src: item.url, alt: alt.trim() ? alt : item.alt });
+  const { tasks, start, dismiss } = useUploads(take);
+  const uploading = tasks.some((t) => !t.error);
+
   return (
     <div className={`ed-image ${error ? "ed-image--error" : ""}`.trim()}>
-      <div className="ed-image__preview">
-        {src ? (
-          <img src={src} alt="" />
-        ) : (
-          <span>Немає фото</span>
-        )}
-      </div>
+      <button
+        type="button"
+        className={`ed-image__preview ${dragOver ? "is-drag-over" : ""}`.trim()}
+        onClick={() => setPickerOpen(true)}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          const file = [...e.dataTransfer.files].find((f) => f.type.startsWith("image/"));
+          if (file) start([file]);
+        }}
+        title="Вибрати фото або перетягнути файл сюди"
+      >
+        {src ? <img src={variantOf(src, 480)} alt="" /> : <span>{uploading ? "Завантаження…" : "Перетягніть фото сюди"}</span>}
+      </button>
+
       <div className="ed-image__fields">
-        <Field label={label} error={error} htmlFor={id}>
+        <span className="ed-field__label">{label}</span>
+        <div className="ed-image__buttons">
+          <label className="a-btn a-btn--ghost ed-image__btn">
+            {uploading ? "Завантаження…" : "Завантажити"}
+            <input
+              type="file"
+              accept={ACCEPT_IMAGES}
+              hidden
+              disabled={uploading}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) start([file]);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          <button type="button" className="a-btn a-btn--ghost ed-image__btn" onClick={() => setPickerOpen(true)}>
+            Медіатека
+          </button>
+          {src && (
+            <button type="button" className="ed-link-btn ed-link-btn--danger" onClick={() => onChange({ src: "", alt })}>
+              Прибрати
+            </button>
+          )}
+        </div>
+
+        <UploadList tasks={tasks} onDismiss={dismiss} />
+        {error && <p className="ed-field__error">{error}</p>}
+
+        {!hideAlt && (
+          <input
+            className="ed-input ed-input--small"
+            value={alt}
+            placeholder="Що на фото (для незрячих і пошуку)"
+            aria-label="Опис фото"
+            onChange={(e) => onChange({ src, alt: e.target.value })}
+          />
+        )}
+
+        <details className="ed-image__manual">
+          <summary>Адреса вручну</summary>
           <input
             id={id}
-            className="ed-input"
+            className="ed-input ed-input--small"
             value={src}
             placeholder="/uploads/… або https://…"
+            aria-label="Адреса фото"
             onChange={(e) => onChange({ src: e.target.value, alt })}
           />
-        </Field>
-        <input
-          className="ed-input ed-input--small"
-          value={alt}
-          placeholder="Що на фото (для незрячих і пошуку)"
-          aria-label="Опис фото"
-          onChange={(e) => onChange({ src, alt: e.target.value })}
-        />
+        </details>
       </div>
+
+      {pickerOpen && (
+        <MediaPicker
+          onClose={() => setPickerOpen(false)}
+          onSelect={(item) => {
+            take(item);
+            setPickerOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };

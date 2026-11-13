@@ -1,6 +1,7 @@
 import "./ArticlePage.scss";
 import type { Article } from "./types";
 import ArticleBlocks from "./blocks/ArticleBlocks";
+import { srcSetOf, variantOf } from "@/features/media/urls";
 import { ReadingProgress, ShareButtons } from "./ArticleClient";
 import bookIconAsset from "../../assets/news/book.svg";
 
@@ -13,7 +14,13 @@ const ArticlePage = ({ article }: { article: Article }) => {
       <ReadingProgress />
 
       <header className="article-hero" data-surface="dark">
-        <img className="article-hero__bg" src={article.cover.src} alt={article.cover.alt} />
+        <img
+          className="article-hero__bg"
+          src={article.cover.src}
+          srcSet={srcSetOf(article.cover.src)}
+          sizes="100vw"
+          alt={article.cover.alt}
+        />
 
         <div className="container article-hero__inner">
           <a className="article-hero__back" href="/#news">
@@ -35,7 +42,7 @@ const ArticlePage = ({ article }: { article: Article }) => {
 
           <div className="article-hero__meta">
             <div className="article-hero__author">
-              <img src={article.author.photo} alt="" />
+              <img src={variantOf(article.author.photo, 480)} alt="" />
               <div>
                 <p className="article-hero__author-name">{article.author.name}</p>
                 <p className="article-hero__author-role">{article.author.role}</p>

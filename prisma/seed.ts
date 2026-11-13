@@ -3,35 +3,45 @@
  * Запуск: npm run db:seed (можна повторювати — дані оновлюються, а не дублюються).
  */
 import "dotenv/config";
-import { copyFile, mkdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { articleBlockSchema, type ArticleBlock } from "../src/features/blog/types";
+import { mediaUrl } from "../src/features/media/urls";
+import { processImage } from "../src/server/media/process";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
 
-const UPLOADS_DIR = path.resolve(process.env.UPLOADS_DIR ?? "./uploads");
 const ASSETS = path.resolve("src/assets");
 
-// Демо-фото беремо з макетних картинок і кладемо туди ж, куди падатимуть
-// завантаження з адмінки: <UPLOADS_DIR>/demo/... → /uploads/demo/...
+// Демо-фото проходять ту саму обробку, що й завантаження з адмінки,
+// і лягають у медіатеку (з фіксованими id — повторний seed їх не дублює)
 const DEMO_FILES = {
-  author: "news/author.webp",
-  news1: "news/news-1.webp",
-  news2: "news/news-2.webp",
-  news3: "news/news-3.webp",
-  videoPoster: "about/video-poster.webp",
-  pastor: "welcome/pastor.webp",
+  author: { file: "news/author.webp", alt: "Пастор Климчук Микола" },
+  news1: { file: "news/news-1.webp", alt: "Діти й молодь на святковому служінні" },
+  news2: { file: "news/news-2.webp", alt: "Молодіжне служіння в залі церкви" },
+  news3: { file: "news/news-3.webp", alt: "Молодь під час прославлення" },
+  videoPoster: { file: "about/video-poster.webp", alt: "Квіти й скрипка в залі церкви" },
+  pastor: { file: "welcome/pastor.webp", alt: "Пастор Климчук Микола" },
 } as const;
 
 type DemoFile = keyof typeof DEMO_FILES;
-const url = (key: DemoFile) => `/uploads/demo/${path.basename(DEMO_FILES[key])}`;
+const DEMO_DATE = new Date("2026-01-12T12:00:00+02:00");
+const urls = {} as Record<DemoFile, string>;
+const url = (key: DemoFile) => urls[key];
 
-const copyDemoFiles = async () => {
-  await mkdir(path.join(UPLOADS_DIR, "demo"), { recursive: true });
-  for (const rel of Object.values(DEMO_FILES)) {
-    await copyFile(path.join(ASSETS, rel), path.join(UPLOADS_DIR, "demo", path.basename(rel)));
+const importDemoMedia = async () => {
+  for (const [key, { file, alt }] of Object.entries(DEMO_FILES) as [DemoFile, (typeof DEMO_FILES)[DemoFile]][]) {
+    const id = `demo-${key.toLowerCase()}`;
+    let media = await db.media.findUnique({ where: { id } });
+    if (!media) {
+      const processed = await processImage(await readFile(path.join(ASSETS, file)), id, DEMO_DATE);
+      media = await db.media.create({
+        data: { id, ...processed, originalName: path.basename(file), alt, createdAt: DEMO_DATE },
+      });
+    }
+    urls[key] = mediaUrl(media.path);
   }
 };
 
@@ -44,7 +54,8 @@ interface DemoArticle {
   blocks: ArticleBlock[];
 }
 
-const ARTICLES: DemoArticle[] = [
+// Функція, а не константа: адреси фото відомі лише після importDemoMedia()
+const buildArticles = (): DemoArticle[] => [
   {
     slug: "richnytsia-tserkvy",
     title: "Святкове богослужіння з нагоди річниці Церкви",
@@ -198,11 +209,12 @@ const ARTICLES: DemoArticle[] = [
 ];
 
 const main = async () => {
-  await copyDemoFiles();
+  await importDemoMedia();
+  const ARTICLES = buildArticles();
 
   const author = await db.author.upsert({
     where: { id: "demo-pastor" },
-    update: {},
+    update: { photo: url("author") },
     create: { id: "demo-pastor", name: "Климчук Микола", role: "Старший пастор", photo: url("author") },
   });
 
@@ -222,7 +234,7 @@ const main = async () => {
     await db.article.upsert({ where: { slug: a.slug }, update: data, create: { slug: a.slug, ...data } });
   }
 
-  console.log(`Seed: автор + ${ARTICLES.length} статті, фото в ${path.join(UPLOADS_DIR, "demo")}`);
+  console.log(`Seed: ${Object.keys(DEMO_FILES).length} фото в медіатеці, автор, ${ARTICLES.length} статті`);
 };
 
 main()

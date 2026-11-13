@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { articleHref } from "@/features/blog";
+import { variantOf } from "@/features/media/urls";
 import { listAdminArticles, type ArticleFilter, type ArticleState } from "@/server/admin/articles";
 import { createArticle } from "@/server/admin/article-actions";
 import "./articles.scss";
@@ -100,7 +101,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
         <ul className="articles__list">
           {articles.map((a) => (
             <li key={a.id} className="articles__row">
-              <img className="articles__cover" src={a.coverSrc} alt="" loading="lazy" />
+              <img className="articles__cover" src={variantOf(a.coverSrc, 480)} alt="" loading="lazy" />
 
               <div className="articles__main">
                 <Link className="articles__title" href={`/admin/articles/${a.id}`}>

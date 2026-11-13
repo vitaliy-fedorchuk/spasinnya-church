@@ -169,6 +169,31 @@ a {
   }
 }
 
+// Кнопка-посилання (дрібні дії: «Прибрати», «Видалити», «Згенерувати з назви»)
+.ed-link-btn {
+  width: fit-content;
+  padding: 0;
+  font-size: em(14);
+  font-weight: 600;
+  color: var(--a-accent-dark);
+  cursor: pointer;
+  background: none;
+  border: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &--danger {
+    color: var(--a-danger);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
 .visually-hidden {
   @include visually-hidden;
 }

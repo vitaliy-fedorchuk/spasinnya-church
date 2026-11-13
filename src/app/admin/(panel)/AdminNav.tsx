@@ -4,7 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 /** Розділи адмінки. Нові (медіатека, події…) додаються сюди. */
-const ITEMS = [{ href: "/admin/articles", label: "Статті" }];
+const ITEMS = [
+  { href: "/admin/articles", label: "Статті" },
+  { href: "/admin/media", label: "Медіатека" },
+];
 
 const AdminNav = () => {
   const pathname = usePathname();

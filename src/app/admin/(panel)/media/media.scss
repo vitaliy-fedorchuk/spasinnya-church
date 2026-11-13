@@ -1,0 +1,404 @@
+@use "../../../../styles/tools" as *;
+
+// ---------- Сітка фото (медіатека й вікно вибору) ----------
+.m-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(em(150), 1fr));
+  gap: em(12);
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: repeat(auto-fill, minmax(em(104), 1fr));
+    gap: em(8);
+  }
+}
+
+.m-tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  background-color: var(--a-surface);
+  border: 2px solid transparent;
+  border-radius: em(14);
+  box-shadow: 0 0 0 1px var(--a-line);
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    transform: translateY(em(-2));
+  }
+
+  &.is-selected {
+    border-color: var(--a-accent);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background-color: rgba(17, 17, 20, 0.05);
+  }
+
+  &__name {
+    display: block;
+    padding: em(6, 12) em(8, 12);
+    overflow: hidden;
+    font-size: em(12);
+    color: var(--a-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__warn {
+    position: absolute;
+    top: em(6, 11);
+    left: em(6, 11);
+    padding: em(2, 11) em(6, 11);
+    font-size: em(11);
+    font-weight: 600;
+    color: var(--a-warning);
+    background-color: rgba(255, 255, 255, 0.92);
+    border-radius: em(100, 11);
+  }
+}
+
+.m-empty {
+  padding: em(40) em(16);
+  color: var(--a-muted);
+  text-align: center;
+}
+
+.m-muted {
+  font-size: em(14);
+  color: var(--a-muted);
+}
+
+.m-more {
+  display: flex;
+  margin: em(16) auto 0;
+}
+
+// ---------- Завантаження ----------
+.m-uploads {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+  list-style: none;
+
+  &:not(:empty) {
+    margin: em(4) 0;
+  }
+
+  &__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: em(10);
+    padding: em(8) em(12);
+    overflow: hidden;
+    font-size: em(13);
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(10, 13);
+
+    &.has-error {
+      color: var(--a-danger);
+      border-color: rgba(180, 56, 43, 0.3);
+    }
+  }
+
+  &__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__status {
+    color: var(--a-muted);
+    white-space: nowrap;
+  }
+
+  &__error {
+    flex: 0 1 auto;
+    font-weight: 600;
+  }
+
+  &__dismiss {
+    width: em(22, 13);
+    height: em(22, 13);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+  }
+
+  &__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: em(3, 13);
+    background-color: var(--a-accent);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+}
+
+// ---------- Сторінка медіатеки ----------
+.m-library {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: em(24);
+
+  &.has-details {
+    grid-template-columns: minmax(0, 1fr) em(340);
+
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: em(16);
+    min-width: 0;
+  }
+
+  &__search {
+    max-width: em(420);
+    height: em(42);
+    border-radius: em(100);
+  }
+}
+
+.m-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: em(8);
+  padding: em(28) em(16);
+  text-align: center;
+  background-color: var(--a-surface);
+  border: 2px dashed rgba(17, 17, 20, 0.15);
+  border-radius: em(18);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+
+  &.is-over {
+    background-color: rgba(144, 129, 106, 0.08);
+    border-color: var(--a-accent);
+  }
+
+  &__text {
+    font-weight: 600;
+  }
+
+  &__hint {
+    margin-bottom: em(6, 13);
+    font-size: em(13);
+    color: var(--a-muted);
+  }
+
+  @include mobile {
+    // На телефоні перетягувати нічого — лишаємо кнопку
+    &__text {
+      display: none;
+    }
+  }
+}
+
+.m-details {
+  position: sticky;
+  top: em(24);
+  display: flex;
+  flex-direction: column;
+  gap: em(14);
+  padding: em(16);
+  background-color: var(--a-surface);
+  border: 1px solid var(--a-line);
+  border-radius: em(18);
+
+  @include tablet {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 40;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: em(20) em(20) 0 0;
+    box-shadow: 0 em(-10) em(40) rgba(17, 17, 20, 0.2);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-weight: 700;
+  }
+
+  &__preview {
+    display: block;
+    overflow: hidden;
+    background-color: rgba(17, 17, 20, 0.05);
+    border-radius: em(12);
+
+    img {
+      display: block;
+      width: 100%;
+      max-height: em(260);
+      object-fit: contain;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: em(4);
+    font-size: em(13);
+
+    div {
+      display: grid;
+      grid-template-columns: em(70, 13) minmax(0, 1fr);
+      gap: em(8, 13);
+    }
+
+    dt {
+      color: var(--a-muted);
+    }
+
+    dd {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__alt {
+    height: auto;
+    padding: em(10) em(14);
+    resize: vertical;
+  }
+
+  &__usage {
+    display: flex;
+    flex-direction: column;
+    gap: em(6);
+
+    ul {
+      padding-left: em(18);
+      font-size: em(14);
+    }
+  }
+
+  &__msg {
+    font-size: em(13);
+    color: var(--a-success);
+
+    &.is-error {
+      color: var(--a-danger);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    gap: em(12);
+  }
+}
+
+// ---------- Вікно «Медіатека» ----------
+.m-picker {
+  width: min(em(920), calc(100vw - #{em(32)}));
+  max-width: none;
+  max-height: calc(100vh - #{em(48)});
+  margin: auto;
+  padding: 0;
+  color: var(--a-text);
+  background-color: var(--a-bg);
+  border: 0;
+  border-radius: em(20);
+  box-shadow: 0 em(30) em(80) rgba(0, 0, 0, 0.3);
+
+  &::backdrop {
+    background: rgba(17, 17, 20, 0.5);
+  }
+
+  @include mobile {
+    width: 100vw;
+    max-height: 92vh;
+    margin: auto 0 0;
+    border-radius: em(20) em(20) 0 0;
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: em(12);
+    max-height: inherit;
+    padding: em(20);
+
+    @include mobile {
+      padding: em(16);
+    }
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(26);
+    font-weight: 400;
+  }
+
+  &__close {
+    width: em(36);
+    height: em(36);
+    font-size: em(22);
+    line-height: 1;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+
+    &:hover {
+      background-color: rgba(17, 17, 20, 0.06);
+    }
+  }
+
+  &__toolbar {
+    display: flex;
+    gap: em(10);
+
+    @include mobile {
+      flex-direction: column;
+    }
+  }
+
+  &__search {
+    flex: 1 1 auto;
+    height: em(42);
+    border-radius: em(100);
+  }
+
+  &__body {
+    min-height: em(200);
+    overflow-y: auto;
+  }
+}
