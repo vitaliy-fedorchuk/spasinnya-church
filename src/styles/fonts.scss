@@ -1,0 +1,27 @@
+// Шрифти — спільні для сайту й адмінки (підключаються в app/layout.tsx)
+
+@font-face {
+  font-family: Arkhip;
+  src: url("../assets/fonts/Arkhip.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Gilroy;
+  src: url("../assets/fonts/Gilroy-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../assets/fonts/Gilroy-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../assets/fonts/Gilroy-Semibold.woff2") format("woff2");
+  font-weight: 600;
+}
+@font-face {
+  font-family: Gilroy;
+  src: url("../assets/fonts/Gilroy-Bold.woff2") format("woff2");
+  font-weight: 700;
+}

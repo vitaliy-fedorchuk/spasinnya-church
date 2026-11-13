@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArticlePage, articleHref } from "../../../features/blog";
-import NewsSection from "../../../components/sections/NewsSection";
-import { describeArticle, getArticleBySlug, getLatestArticles } from "../../../server/articles";
+import { ArticlePage, articleHref } from "@/features/blog";
+import NewsSection from "@/components/sections/NewsSection";
+import { describeArticle, getArticleBySlug, getLatestArticles } from "@/server/articles";
 
 interface Props {
   params: Promise<{ slug: string }>;

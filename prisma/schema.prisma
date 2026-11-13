@@ -51,3 +51,50 @@ model Article {
 
   @@index([status, publishedAt])
 }
+
+// ---------- Адмінка: користувачі й вхід ----------
+
+enum UserRole {
+  /// Усе, включно з користувачами
+  ADMIN
+  /// Статті й медіа
+  EDITOR
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  /// argon2id — сам пароль ніде не зберігається
+  passwordHash String
+  role         UserRole  @default(EDITOR)
+  lastLoginAt  DateTime?
+  sessions     Session[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+/// Вхід = сесія. У cookie — випадковий токен, тут — лише його SHA-256:
+/// навіть якщо базу вкрадуть, увійти чужими сесіями не вийде.
+model Session {
+  /// SHA-256 від токена з cookie
+  id        String   @id
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+/// Невдалі спроби входу — для обмеження перебору паролів
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}

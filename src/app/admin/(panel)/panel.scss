@@ -1,0 +1,190 @@
+@use "../../../styles/tools" as *;
+
+$sidebar-width: em(248);
+
+.panel {
+  display: grid;
+  grid-template-columns: $sidebar-width minmax(0, 1fr);
+  min-height: 100vh;
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  // ---------- Бокове меню ----------
+  &__sidebar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: em(28);
+    height: 100vh;
+    padding: em(28) em(16) em(20);
+    color: #ffffff;
+    background-color: var(--a-sidebar);
+
+    // Планшет і телефон: верхня панель — бренд, розділи, користувач в один-два рядки
+    @include tablet {
+      z-index: 10;
+      flex-flow: row wrap;
+      align-items: center;
+      gap: em(10) em(20);
+      height: auto;
+      padding: em(12) em(16);
+    }
+  }
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    gap: em(2);
+    padding: 0 em(12);
+    text-decoration: none;
+
+    @include tablet {
+      padding: 0;
+    }
+  }
+
+  &__brand-name {
+    font-family: Arkhip, sans-serif;
+    font-size: em(18);
+    line-height: 1.1;
+  }
+
+  &__brand-sub {
+    font-size: em(12);
+    font-weight: 600;
+    color: var(--a-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: em(4);
+
+    @include tablet {
+      flex-direction: row;
+      order: 3;
+      width: 100%;
+      overflow-x: auto;
+    }
+  }
+
+  &__nav-link {
+    display: flex;
+    align-items: center;
+    height: em(42);
+    padding: 0 em(12);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border-radius: em(10);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    &--active {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @include tablet {
+      height: em(36);
+    }
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+    gap: em(10);
+    margin-top: auto;
+    padding: em(16) em(12) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    @include tablet {
+      flex-direction: row;
+      align-items: center;
+      gap: em(14);
+      margin: 0 0 0 auto;
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  &__user-name {
+    font-weight: 600;
+  }
+
+  &__user-role {
+    font-size: em(13);
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  &__site-link,
+  &__logout {
+    width: fit-content;
+    padding: 0;
+    font-size: em(14);
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: 0;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+
+  // ---------- Вміст ----------
+  &__main {
+    min-width: 0;
+    padding: em(40) em(48) em(64);
+
+    @include tablet {
+      padding: em(28) em(24) em(48);
+    }
+
+    @include mobile {
+      padding: em(20) em(16) em(40);
+    }
+  }
+}
+
+// Заголовок сторінки адмінки (спільний для розділів)
+.a-page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: em(16);
+  margin-bottom: em(24);
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    line-height: 1.1;
+
+    @include mobile {
+      font-size: em(28);
+    }
+  }
+}

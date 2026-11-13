@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import "../styles/global.scss";
-import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
-import PageLoaded from "../components/layout/PageLoaded";
+import "../styles/fonts.scss";
+
+// Спільна оболонка для сайту й адмінки. Навбар, футер і стилі сайту —
+// у app/(site)/layout.tsx, оформлення адмінки — у app/admin/layout.tsx.
 
 export const metadata: Metadata = {
   // Повна адреса сайту — для карток у соцмережах (og:image тощо)
@@ -28,14 +28,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: WINDOWS_SCRIPT }} />
       </head>
-      <body>
-        <PageLoaded />
-        <div className="App">
-          <Navbar />
-          {children}
-          <Footer />
-        </div>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

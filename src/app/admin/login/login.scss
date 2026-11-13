@@ -1,0 +1,78 @@
+@use "../../../styles/tools" as *;
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: em(20);
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: em(24) em(16);
+
+  &__card {
+    width: 100%;
+    max-width: em(420);
+    padding: em(40) em(36);
+    background-color: var(--a-surface);
+    border: 1px solid var(--a-line);
+    border-radius: em(24);
+    box-shadow: 0 em(20) em(50) rgba(17, 17, 20, 0.06);
+
+    @include mobile {
+      padding: em(28) em(20);
+      border-radius: em(20);
+    }
+  }
+
+  &__brand {
+    font-size: em(13);
+    font-weight: 600;
+    color: var(--a-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  &__title {
+    margin-top: em(6, 30);
+    font-family: Arkhip, sans-serif;
+    font-size: em(30);
+    font-weight: 400;
+    line-height: 1.15;
+
+    @include mobile {
+      font-size: em(26);
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: em(16);
+    margin-top: em(28);
+  }
+
+  &__error {
+    padding: em(10, 14) em(14, 14);
+    font-size: em(14);
+    color: var(--a-danger);
+    background-color: rgba(180, 56, 43, 0.08);
+    border-radius: em(10, 14);
+  }
+
+  &__submit {
+    width: 100%;
+    height: em(48);
+    margin-top: em(4);
+  }
+
+  &__back {
+    font-size: em(14);
+    color: var(--a-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--a-text);
+    }
+  }
+}

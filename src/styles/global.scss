@@ -1,31 +1,5 @@
 @use "tools" as *;
 
-@font-face {
-  font-family: Arkhip;
-  src: url("../assets/fonts/Arkhip.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: Gilroy;
-  src: url("../assets/fonts/Gilroy-Regular.woff2") format("woff2");
-  font-weight: 400;
-}
-@font-face {
-  font-family: Gilroy;
-  src: url("../assets/fonts/Gilroy-Medium.woff2") format("woff2");
-  font-weight: 500;
-}
-@font-face {
-  font-family: Gilroy;
-  src: url("../assets/fonts/Gilroy-Semibold.woff2") format("woff2");
-  font-weight: 600;
-}
-@font-face {
-  font-family: Gilroy;
-  src: url("../assets/fonts/Gilroy-Bold.woff2") format("woff2");
-  font-weight: 700;
-}
-
 // ---------- Резинова верстка ----------
 // Базовий розмір шрифту — чиста частка ширини вікна (vw), без мінімумів і максимумів.
 // Усі розміри на сайті в em від нього, тобто фактично теж у vw:

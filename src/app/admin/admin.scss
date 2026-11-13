@@ -1,0 +1,174 @@
+@use "../../styles/tools" as *;
+
+// Адмінка — не резинова: базовий розмір = налаштування шрифту браузера (зазвичай 16px),
+// em() дає звичайні em. Так інтерфейс однаково зручний на ноутбуці й телефоні.
+:root {
+  --em-k: 1;
+  --vw-px: 0px;
+
+  --a-bg: #f5f5f5;
+  --a-surface: #ffffff;
+  --a-text: #262626;
+  --a-muted: #77777c;
+  --a-line: rgba(17, 17, 20, 0.09);
+  --a-accent: #90816a;
+  --a-accent-dark: #75674f;
+  --a-danger: #b4382b;
+  --a-success: #3f7d4e;
+  --a-warning: #a2701c;
+  --a-sidebar: #262626;
+}
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Gilroy, system-ui, sans-serif;
+  font-size: 1em;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--a-text);
+  background-color: var(--a-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--a-accent);
+  outline-offset: 2px;
+}
+
+// ---------- Спільні елементи ----------
+
+.a-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: em(8);
+  height: em(42);
+  padding: 0 em(20);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: em(100);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+
+  &--primary {
+    color: #ffffff;
+    background-color: var(--a-text);
+
+    &:hover {
+      background-color: #000000;
+    }
+  }
+
+  &--ghost {
+    background-color: var(--a-surface);
+    border-color: var(--a-line);
+
+    &:hover {
+      border-color: rgba(17, 17, 20, 0.25);
+    }
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.55;
+  }
+}
+
+.a-field {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+
+  &__label {
+    font-size: em(14);
+    font-weight: 600;
+  }
+}
+
+.a-input {
+  width: 100%;
+  height: em(46);
+  padding: 0 em(14);
+  background-color: var(--a-surface);
+  border: 1px solid rgba(17, 17, 20, 0.16);
+  border-radius: em(12);
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(17, 17, 20, 0.3);
+  }
+
+  &:focus {
+    border-color: var(--a-accent);
+    outline: none;
+    box-shadow: 0 0 0 em(3) rgba(144, 129, 106, 0.2);
+  }
+}
+
+.a-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: em(6, 13);
+  height: em(26, 13);
+  padding: 0 em(10, 13);
+  font-size: em(13);
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: em(100, 13);
+
+  &::before {
+    content: "";
+    width: em(7, 13);
+    height: em(7, 13);
+    background-color: currentColor;
+    border-radius: 50%;
+  }
+
+  &--published {
+    color: var(--a-success);
+    background-color: rgba(63, 125, 78, 0.1);
+  }
+
+  &--draft {
+    color: var(--a-muted);
+    background-color: rgba(17, 17, 20, 0.06);
+  }
+
+  &--scheduled {
+    color: var(--a-warning);
+    background-color: rgba(162, 112, 28, 0.12);
+  }
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
