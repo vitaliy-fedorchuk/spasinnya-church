@@ -3,6 +3,7 @@ import type { Article } from "./types";
 import ArticleBlocks from "./blocks/ArticleBlocks";
 import { srcSetOf, variantOf } from "@/features/media/urls";
 import { ReadingProgress, ShareButtons } from "./ArticleClient";
+import ArticleLightbox from "./ArticleLightbox";
 import bookIconAsset from "../../assets/news/book.svg";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
@@ -12,6 +13,8 @@ const ArticlePage = ({ article }: { article: Article }) => {
   return (
     <article className="article" aria-labelledby="article-title">
       <ReadingProgress />
+      {/* Перегляд фото на весь екран (клік по фото в блоках «Фото» й «Галерея») */}
+      <ArticleLightbox />
 
       <header className="article-hero" data-surface="dark">
         <img

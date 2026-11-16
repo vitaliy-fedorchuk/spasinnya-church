@@ -1,0 +1,159 @@
+@use "../../styles/tools" as *;
+
+// Фото в статті, які відкриваються на весь екран
+.article [data-zoom] {
+  cursor: zoom-in;
+
+  &:focus-visible {
+    outline: 2px solid #90816a;
+    outline-offset: 3px;
+  }
+}
+
+// ---------- Переглядач ----------
+.lb {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(17, 17, 20, 0.97);
+  // Сторінка під фото розмита — текст статті не відволікає від підпису
+  backdrop-filter: blur(6px);
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+
+  &__stage {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding-top: em(56);
+
+    @include mobile {
+      padding-top: em(56);
+    }
+  }
+
+  &__img {
+    display: block;
+    max-width: none;
+    object-fit: contain;
+    cursor: zoom-out;
+    border-radius: 12px;
+    transform-origin: center;
+    will-change: transform, clip-path;
+    -webkit-user-drag: none;
+  }
+
+  // Лічильник і підпис — знизу
+  &__bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: em(6);
+    min-height: em(90);
+    padding: em(14) em(24) em(28);
+    color: #ffffff;
+    text-align: center;
+
+    @include mobile {
+      min-height: em(70);
+      padding: em(10) em(16) em(20);
+    }
+  }
+
+  &__count {
+    font-size: em(13);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.08em;
+  }
+
+  &__caption {
+    max-width: em(760, 16);
+    font-size: em(16);
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.88);
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  // Кнопки: закрити, назад, вперед
+  &__btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: em(48);
+    height: em(48);
+    padding: 0;
+    color: #ffffff;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    backdrop-filter: blur(8px);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &:focus-visible {
+      outline: 2px solid #c9b89c;
+      outline-offset: 2px;
+    }
+
+    svg {
+      width: em(22);
+      height: em(22);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @include mobile {
+      width: em(40);
+      height: em(40);
+    }
+  }
+
+  &__close {
+    top: em(16);
+    right: em(16);
+  }
+
+  &__prev,
+  &__next {
+    top: 50%;
+    transform: translateY(-50%);
+
+    // На телефоні гортають свайпом — стрілки внизу, щоб не закривати фото
+    @include mobile {
+      top: auto;
+      bottom: em(16);
+      transform: none;
+    }
+  }
+
+  &__prev {
+    left: em(20);
+
+    @include mobile {
+      left: em(16);
+    }
+  }
+
+  &__next {
+    right: em(20);
+
+    @include mobile {
+      right: em(16);
+    }
+  }
+}
