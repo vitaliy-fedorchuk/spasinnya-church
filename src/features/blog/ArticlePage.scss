@@ -109,14 +109,11 @@ $accent: #90816a;
 
   // Розмір — як у h1 першого екрана головної (50 / 32): один масштаб заголовків на сайті
   &__title {
-    max-width: em(1100, 50);
-    margin-top: em(20, 50);
-    font-size: em(50);
-    line-height: 1.1;
+    max-width: em(1100, 60);
+    margin-top: em(20, 60);
 
     @include mobile {
-      margin-top: em(14, 32);
-      font-size: em(32);
+      margin-top: em(14, 36);
     }
   }
 
@@ -154,6 +151,27 @@ $accent: #90816a;
         width: em(40);
         height: em(40);
       }
+    }
+  }
+
+  // Автор без фото — ініціали в колі
+  &__initials {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    box-sizing: border-box;
+    width: em(48, 15);
+    height: em(48, 15);
+    font-size: em(15);
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(144, 129, 106, 0.35);
+    border: em(3, 15) solid $accent;
+    border-radius: 50%;
+
+    @include mobile {
+      width: em(40, 15);
+      height: em(40, 15);
     }
   }
 

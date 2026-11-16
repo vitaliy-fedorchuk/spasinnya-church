@@ -1,5 +1,6 @@
 import "./ArticlePage.scss";
 import type { Article } from "./types";
+import { authorInitials } from "./urls";
 import ArticleBlocks from "./blocks/ArticleBlocks";
 import { srcSetOf, variantOf } from "@/features/media/urls";
 import { ReadingProgress, ShareButtons } from "./ArticleClient";
@@ -16,16 +17,16 @@ const ArticlePage = ({ article }: { article: Article }) => {
       {/* Перегляд фото на весь екран (клік по фото в блоках «Фото» й «Галерея») */}
       <ArticleLightbox />
 
-      <header className="article-hero" data-surface="dark">
+      <header className="article-hero page-hero" data-surface="dark">
         <img
-          className="article-hero__bg"
+          className="article-hero__bg page-hero__bg"
           src={article.cover.src}
           srcSet={srcSetOf(article.cover.src)}
           sizes="100vw"
           alt={article.cover.alt}
         />
 
-        <div className="container article-hero__inner">
+        <div className="container article-hero__inner" data-intro>
           <a className="article-hero__back" href="/blog">
             <svg viewBox="0 0 20 20" aria-hidden="true">
               <path d="M12.5 4.5 7 10l5.5 5.5" />
@@ -39,13 +40,19 @@ const ArticlePage = ({ article }: { article: Article }) => {
             ))}
           </ul>
 
-          <h1 id="article-title" className="article-hero__title">
+          <h1 id="article-title" className="article-hero__title page-title">
             {article.title}
           </h1>
 
           <div className="article-hero__meta">
             <div className="article-hero__author">
-              <img src={variantOf(article.author.photo, 480)} alt="" />
+              {article.author.photo ? (
+                <img src={variantOf(article.author.photo, 480)} alt="" />
+              ) : (
+                <span className="article-hero__initials" aria-hidden="true">
+                  {authorInitials(article.author.name)}
+                </span>
+              )}
               <div>
                 <p className="article-hero__author-name">{article.author.name}</p>
                 <p className="article-hero__author-role">{article.author.role}</p>

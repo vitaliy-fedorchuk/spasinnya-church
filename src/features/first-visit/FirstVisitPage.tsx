@@ -151,13 +151,13 @@ const FirstVisitPage = ({ schedule }: Props) => {
   return (
     <main className="visit">
       {/* ---------- Шапка ---------- */}
-      <header className="visit-hero" data-surface="dark">
-        <img className="visit-hero__bg" src={PHOTO.hero} srcSet={srcSetOf(PHOTO.hero)} sizes="100vw" alt="" />
-        <div className="container visit-hero__inner">
+      <header className="visit-hero page-hero" data-surface="dark">
+        <img className="visit-hero__bg page-hero__bg" src={PHOTO.hero} srcSet={srcSetOf(PHOTO.hero)} sizes="100vw" alt="" />
+        <div className="container visit-hero__inner" data-intro>
           <Rubricator icon={medalIcon} className="rubricator--light">
             Я тут вперше
           </Rubricator>
-          <h1 className="visit-hero__title">Давайте знайомитись</h1>
+          <h1 className="visit-hero__title page-title">Давайте знайомитись</h1>
           <p className="visit-hero__lead">
             Ми розуміємо, що прийти вперше — це крок. Тут вам будуть раді: розповімо, як проходить богослужіння, що
             варто знати і як нас знайти.
@@ -320,7 +320,7 @@ const FirstVisitPage = ({ schedule }: Props) => {
             <p className="visit-cta__lead">
               Маєте запитання перед першим візитом? Напишіть або подзвоніть — пастор і служителі охоче відповідять.
             </p>
-            <div className="visit-hero__actions">
+            <div className="visit-hero__actions visit-cta__actions">
               <BlackButton text="Прокласти маршрут" href={ROUTE_URL} external bgColor="#90816A" svgColor="#90816A" />
               <BlackButton
                 text="Подзвонити нам"

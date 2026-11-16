@@ -3,12 +3,14 @@ import "@/styles/global.scss";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PageLoaded from "@/components/layout/PageLoaded";
+import ScrollReveal from "@/components/layout/ScrollReveal";
 
 /** Публічний сайт: навбар, футер, резинова верстка */
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <PageLoaded />
+      <ScrollReveal />
       <div className="App">
         <Navbar />
         {children}

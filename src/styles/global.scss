@@ -99,6 +99,17 @@ h1 {
   }
 }
 
+// Перший заголовок внутрішніх сторінок (стаття, «Часопис», «Я тут вперше») —
+// один розмір скрізь; трохи більший за h1 головної
+.page-title {
+  font-size: em(60);
+  line-height: 1.08;
+
+  @include mobile {
+    font-size: em(36);
+  }
+}
+
 p {
   font-size: em(18);
   line-height: 130%;
@@ -107,5 +118,156 @@ p {
 
   @include mobile {
     font-size: em(16);
+  }
+}
+
+// ---------- Поява першого екрана внутрішніх сторінок ----------
+// Як на головній (HeroSection.scss): блок відкривається шторкою знизу вгору,
+// фото злегка «осідає», а вміст виїжджає знизу по черзі. Старт — html.is-loaded
+// (PageLoaded). Хто вимкнув анімації в системі — бачить усе одразу.
+$intro-ease: cubic-bezier(0.7, 0, 0.3, 1);
+$curtain-ease: cubic-bezier(0.9, 0, 0.1, 1);
+
+@media (prefers-reduced-motion: no-preference) {
+  html .page-hero {
+    clip-path: inset(100% 0 0 0 round #{em(30)});
+    transition: clip-path 1.2s $curtain-ease;
+
+    @include mobile {
+      clip-path: inset(100% 0 0 0 round #{em(20)});
+    }
+  }
+
+  html.is-loaded .page-hero {
+    clip-path: inset(0 0 0 0 round #{em(30)});
+
+    @include mobile {
+      clip-path: inset(0 0 0 0 round #{em(20)});
+    }
+  }
+
+  html .page-hero__bg {
+    transform: scale(1.12);
+    transition: transform 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+  }
+
+  // Групи, що виїжджають по черзі: [data-intro] > * та окремі [data-intro-item].
+  // html … — сильніше за власні transition блоків, щоб їх не перебивали
+  html [data-intro] > *,
+  html [data-intro-item] {
+    opacity: 0;
+    transform: translateY(em(28));
+    transition:
+      opacity 0.8s ease,
+      transform 0.9s $intro-ease;
+  }
+
+  html.is-loaded .page-hero__bg,
+  html.is-loaded [data-intro] > *,
+  html.is-loaded [data-intro-item] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @for $i from 1 through 8 {
+    html [data-intro] > :nth-child(#{$i}) {
+      transition-delay: #{0.55 + $i * 0.08}s;
+    }
+  }
+
+  html [data-intro-item] {
+    transition-delay: 1s;
+  }
+
+  html [data-intro-item="last"] {
+    transition-delay: 1.15s;
+  }
+}
+
+// ---------- Легкий «слайд ап» при прокрутці (ScrollReveal) ----------
+// Клас .reveal ставиться лише на блоки нижче першого екрана й знімається після появи
+@media (prefers-reduced-motion: no-preference) {
+  html .reveal {
+    opacity: 0;
+    transform: translateY(em(36));
+    transition:
+      opacity 0.7s ease var(--reveal-delay, 0s),
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-delay, 0s);
+  }
+
+  html .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------- Перехід між сторінками (View Transitions, без JS) ----------
+// Стара сторінка зменшується в «картку» і падає вниз; за нею вже чекає нова —
+// теж «карткою» на бежевому тлі — і розгортається на весь екран. Працює в
+// Chrome/Edge і Safari 18+; Firefox просто відкриває сторінку, як раніше.
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition {
+    background-color: #90816a;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 1.1s;
+    animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+    animation-fill-mode: both;
+    transform-origin: 50% 50%;
+  }
+
+  // Стара — поверх нової, поки не впаде
+  ::view-transition-old(root) {
+    z-index: 1;
+    animation-name: page-out;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: page-in;
+  }
+
+  // Шапка сайту однакова на всіх сторінках — лишається на місці
+  .navbar {
+    view-transition-name: site-navbar;
+  }
+}
+
+@keyframes page-out {
+  0% {
+    transform: none;
+    clip-path: inset(0 round 0);
+  }
+
+  35% {
+    transform: scale(0.9);
+    clip-path: inset(0 round 2vw);
+  }
+
+  100% {
+    transform: translateY(110%) scale(0.9);
+    clip-path: inset(0 round 2vw);
+  }
+}
+
+@keyframes page-in {
+  0% {
+    transform: scale(0.9);
+    clip-path: inset(0 round 2vw);
+  }
+
+  60% {
+    transform: scale(0.9);
+    clip-path: inset(0 round 2vw);
+  }
+
+  100% {
+    transform: none;
+    clip-path: inset(0 round 0);
   }
 }

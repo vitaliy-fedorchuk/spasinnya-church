@@ -343,16 +343,16 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
 
   return (
     <main className="archive">
-      <header className="archive-hero" data-surface="dark">
-        <img className="archive-hero__bg" src={HERO_PHOTO} srcSet={srcSetOf(HERO_PHOTO)} sizes="100vw" alt="" />
+      <header className="archive-hero page-hero" data-surface="dark">
+        <img className="archive-hero__bg page-hero__bg" src={HERO_PHOTO} srcSet={srcSetOf(HERO_PHOTO)} sizes="100vw" alt="" />
 
         <div className="container archive-hero__inner">
           <div className="archive-hero__main">
-            <div className="archive-hero__text">
+            <div className="archive-hero__text" data-intro>
               <Rubricator icon={newspaperIcon} className="rubricator--light archive-hero__rubric">
                 Часопис новин
               </Rubricator>
-              <h1 className="archive-hero__title">Хроніка життя церкви</h1>
+              <h1 className="archive-hero__title page-title">Хроніка життя церкви</h1>
               <p className="archive-hero__lead">
                 Служіння, події, свідчення й життя громади — усе, що відбувається в церкві, за датами.
               </p>
@@ -368,7 +368,7 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
             </div>
 
             {data.latest && (
-              <a className="archive-hero__latest" href={articleHref(data.latest.slug)}>
+              <a data-intro-item className="archive-hero__latest" href={articleHref(data.latest.slug)}>
                 <img
                   src={data.latest.cover.src}
                   srcSet={srcSetOf(data.latest.cover.src)}
@@ -387,7 +387,7 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
             )}
           </div>
 
-          <div className="archive-hero__bottom">
+          <div className="archive-hero__bottom" data-intro-item="last">
             <dl className="archive-hero__stats">
               <div>
                 <dt>{plural(data.stats.articles, ["стаття", "статті", "статей"])}</dt>
