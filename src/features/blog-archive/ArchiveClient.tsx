@@ -41,7 +41,10 @@ export const ViewToggle = ({ view }: { view: ArchiveView }) => {
 
 // ---------- Фільтри на телефоні й планшеті: панель знизу ----------
 
-const SheetContext = createContext<{ open: boolean; setOpen: (v: boolean) => void }>({
+const SheetContext = createContext<{
+  open: boolean;
+  setOpen: (v: boolean) => void;
+}>({
   open: false,
   setOpen: () => {},
 });
@@ -80,7 +83,11 @@ export const FiltersPanel = ({ children }: { children: ReactNode }) => {
 
   return (
     <>
-      <div className={`archive-sheet-backdrop${open ? " is-open" : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
+      <div
+        className={`archive-sheet-backdrop${open ? " is-open" : ""}`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
       <aside
         id="archive-filters"
         className={`archive-aside${open ? " is-open" : ""}`}
@@ -92,7 +99,12 @@ export const FiltersPanel = ({ children }: { children: ReactNode }) => {
         <div className="archive-aside__sheet-head">
           <span className="archive-aside__grip" aria-hidden="true" />
           <b>Фільтри</b>
-          <button type="button" className="archive-aside__close" onClick={() => setOpen(false)} aria-label="Закрити фільтри">
+          <button
+            type="button"
+            className="archive-aside__close"
+            onClick={() => setOpen(false)}
+            aria-label="Закрити фільтри"
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>

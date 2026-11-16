@@ -33,7 +33,11 @@ export interface ArchiveData {
   /** Обраний місяць: сусідні місяці зі статтями */
   monthNav: { prev?: string; next?: string };
   /** Для шапки */
-  stats: { articles: number; rubrics: number; years: number };
+  stats: { articles: number; rubrics: number; authors: number; years: number };
+  /** Найсвіжіша стаття (без урахування фільтрів) */
+  latest: Article | null;
+  /** Найбільші рубрики — швидкі посилання в шапці */
+  heroRubrics: string[];
 }
 
 const weekdayFmt = new Intl.DateTimeFormat("uk-UA", { weekday: "short", timeZone: TIME_ZONE });
@@ -48,7 +52,7 @@ const searchIds = async (q: string) => {
   return new Set(rows.map((r) => r.id));
 };
 
-const countBy = <T,>(items: T[], keys: (item: T) => string[]) => {
+const countBy = <T>(items: T[], keys: (item: T) => string[]) => {
   const map = new Map<string, number>();
   for (const item of items) for (const k of keys(item)) map.set(k, (map.get(k) ?? 0) + 1);
   return map;
@@ -58,7 +62,7 @@ export const getBlogArchive = async (p: ArchiveParams): Promise<ArchiveData> => 
   // Легкий зріз усіх опублікованих статей: лічильники й календар рахуємо
   // в памʼяті (статей у церковному блозі сотні, не мільйони), а повні
   // статті з блоками тягнемо лише для тих, що на екрані.
-  const [meta, found, authorRows] = await Promise.all([
+  const [meta, found, authorRows, latestRow] = await Promise.all([
     db.article.findMany({
       where: publishedWhere(),
       select: { id: true, publishedAt: true, tags: true, authorId: true },
@@ -66,6 +70,7 @@ export const getBlogArchive = async (p: ArchiveParams): Promise<ArchiveData> => 
     }),
     p.q ? searchIds(p.q) : null,
     db.author.findMany({ select: { id: true, name: true, role: true, photo: true } }),
+    db.article.findFirst({ where: publishedWhere(), orderBy: { publishedAt: "desc" }, include: articleInclude }),
   ]);
 
   const rows = meta.map((m) => ({ ...m, month: isoDate(m.publishedAt!).slice(0, 7) }));
@@ -86,7 +91,10 @@ export const getBlogArchive = async (p: ArchiveParams): Promise<ArchiveData> => 
   const allTags = countBy(rows, (r) => r.tags);
   const rubrics = [...allTags.keys()]
     .map((tag) => ({ tag, count: tagCounts.get(tag) ?? 0 }))
-    .sort((a, b) => b.count - a.count || (allTags.get(b.tag) ?? 0) - (allTags.get(a.tag) ?? 0) || a.tag.localeCompare(b.tag, "uk"));
+    .sort(
+      (a, b) =>
+        b.count - a.count || (allTags.get(b.tag) ?? 0) - (allTags.get(a.tag) ?? 0) || a.tag.localeCompare(b.tag, "uk"),
+    );
 
   const authorCounts = countBy(forAuthors, (r) => [r.authorId]);
   const writing = new Set(rows.map((r) => r.authorId));
@@ -145,6 +153,11 @@ export const getBlogArchive = async (p: ArchiveParams): Promise<ArchiveData> => 
     authors,
     calendar: { year, counts, minYear, maxYear },
     monthNav,
-    stats: { articles: rows.length, rubrics: allTags.size, years: new Set(years).size },
+    stats: { articles: rows.length, rubrics: allTags.size, authors: writing.size, years: new Set(years).size },
+    latest: latestRow ? toArticle(latestRow) : null,
+    heroRubrics: [...allTags.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([tag]) => tag),
   };
 };

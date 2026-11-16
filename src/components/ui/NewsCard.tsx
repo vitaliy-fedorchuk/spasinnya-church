@@ -1,6 +1,6 @@
 import "./NewsCard.scss";
 import bookIconAsset from "../../assets/news/book.svg";
-import { articleHref, type Article } from "../../features/blog";
+import { articleHref, authorInitials, type Article } from "../../features/blog";
 import { srcSetOf, variantOf } from "@/features/media/urls";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
@@ -62,8 +62,12 @@ const NewsCard = ({ article, sizes, dateBadge, as: Tag = "li", className = "" }:
 
       <footer className="news-card__meta">
         <div className="news-card__author">
-          {article.author.photo && (
+          {article.author.photo ? (
             <img className="news-card__avatar" src={variantOf(article.author.photo, 480)} alt="" loading="lazy" />
+          ) : (
+            <span className="news-card__avatar news-card__avatar--initials" aria-hidden="true">
+              {authorInitials(article.author.name)}
+            </span>
           )}
           <div>
             <p className="news-card__author-name">{article.author.name}</p>

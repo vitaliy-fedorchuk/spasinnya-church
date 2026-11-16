@@ -122,8 +122,8 @@ const Navbar = () => {
               bgColor="#90816A"
               textColor="#f5f5f5"
               circleColor="#f5f5f5"
-              svgColor="#90816A"
               className="navbar__action"
+              plain
             />
           </nav>
         </div>

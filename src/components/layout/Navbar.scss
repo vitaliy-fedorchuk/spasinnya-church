@@ -86,20 +86,24 @@ $on-light-color: #262626;
     }
   }
 
-  // На телефоні «Меню» — лише смужки, «Допомогти» — лише кружок зі стрілкою
-  // (текст лишається для скрінрідерів)
+  // «Підтримати» — проста пігулка без кружка зі стрілкою: вужча і не
+  // налазить на контент, коли шапка зʼявляється при скролі вгору
+  &__action .black-button__link {
+    height: em(46);
+    padding: 0 em(26);
+  }
+
+  // На телефоні «Меню» — лише смужки (текст лишається для скрінрідерів)
   @include mobile {
     &__menu-toggle .menu-toggle__text {
       @include visually-hidden;
     }
 
     &__action .black-button__link {
-      gap: 0;
-      padding: 0 em(3);
-    }
-
-    &__action .black-button__label {
-      @include visually-hidden;
+      // Вужча, щоб не торкатися логотипа по центру
+      height: em(34, 12);
+      padding: 0 em(12, 12);
+      font-size: em(12);
     }
   }
 

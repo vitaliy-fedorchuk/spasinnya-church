@@ -19,30 +19,67 @@ $border: rgba(17, 17, 20, 0.14);
   stroke-linejoin: round;
 }
 
-// ---------- Шапка ----------
+// ---------- Шапка: фото на фоні, як у статті ----------
 .archive-hero {
+  position: relative;
+  display: flex;
+  min-height: em(760);
   margin: em(15);
+  overflow: hidden;
   background-color: $dark;
   border-radius: em(30);
 
   @include mobile {
+    min-height: em(640);
     margin: em(8);
     border-radius: em(20);
   }
 
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // Затемнення як у статті: зверху під шапку сайту, знизу під текст
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 32%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.25) 70%, rgba(0, 0, 0, 0) 100%);
+  }
+
   // .archive-hero__inner — ще й .container, чий padding перебивав би наш
   & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(40);
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(20);
+    }
+  }
+
+  &__main {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: em(24) em(40);
-    padding-top: em(140);
-    padding-bottom: em(56);
+    gap: em(32) em(48);
 
     @include mobile {
-      padding-top: em(100);
-      padding-bottom: em(24);
+      gap: em(20);
     }
   }
 
@@ -50,8 +87,8 @@ $border: rgba(17, 17, 20, 0.14);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: em(16);
-    max-width: em(760);
+    gap: em(18);
+    max-width: em(780);
 
     @include mobile {
       gap: em(12);
@@ -64,27 +101,179 @@ $border: rgba(17, 17, 20, 0.14);
     font-weight: 600;
     line-height: 1.2;
     color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: em(100, 14);
+    backdrop-filter: blur(8px);
   }
 
   &__lead {
+    max-width: em(640, 18);
     font-size: em(18);
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.8);
 
     @include mobile {
       font-size: em(15);
     }
   }
 
+  &__rubrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(8);
+    margin-top: em(6);
+    padding: 0;
+    list-style: none;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      height: em(36, 14);
+      padding: 0 em(16, 14);
+      font-size: em(14);
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: em(100, 14);
+      backdrop-filter: blur(8px);
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.24);
+      }
+
+      @include mobile {
+        height: em(32, 13);
+        padding: 0 em(12, 13);
+        font-size: em(13);
+      }
+    }
+  }
+
+  // Картка «Свіжа стаття» — скло поверх фото
+  &__latest {
+    display: flex;
+    align-items: stretch;
+    gap: em(16);
+    box-sizing: border-box;
+    width: em(460);
+    padding: em(12);
+    color: #ffffff;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: em(24);
+    backdrop-filter: blur(14px);
+    transition: background-color 0.25s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    img {
+      flex-shrink: 0;
+      width: em(150);
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: em(16);
+    }
+
+    @include mobile {
+      width: 100%;
+      gap: em(12);
+      padding: em(10);
+      border-radius: em(18);
+
+      img {
+        width: em(84);
+        border-radius: em(12);
+      }
+    }
+  }
+
+  &__latest-body {
+    display: flex;
+    flex-direction: column;
+    gap: em(8);
+    min-width: 0;
+    padding: em(6) em(4) em(4) 0;
+
+    @include mobile {
+      gap: em(4);
+      padding: em(2) 0;
+    }
+  }
+
+  &__latest-label {
+    font-size: em(13);
+    font-weight: 600;
+    color: #d8c9b0;
+
+    @include mobile {
+      font-size: em(12);
+    }
+  }
+
+  &__latest-title {
+    display: -webkit-box;
+    overflow: hidden;
+    font-family: Arkhip, sans-serif;
+    font-size: em(20);
+    line-height: 1.2;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    @include mobile {
+      font-size: em(15);
+      -webkit-line-clamp: 2;
+    }
+  }
+
+  &__latest-more {
+    display: inline-flex;
+    align-items: center;
+    gap: em(4, 14);
+    margin-top: auto;
+    font-size: em(14);
+    font-weight: 600;
+
+    .archive-icon {
+      width: em(16, 14);
+      height: em(16, 14);
+    }
+
+    @include mobile {
+      display: none;
+    }
+  }
+
+  // Низ шапки: цифри + «Гортати стрічку», як рядок автора в статті
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: em(16) em(32);
+    margin-top: em(40);
+    padding-top: em(24);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+    @include mobile {
+      margin-top: em(20);
+      padding-top: em(16);
+    }
+  }
+
   &__stats {
     display: flex;
-    gap: em(40);
+    gap: em(48);
     margin: 0;
 
     @include mobile {
-      gap: em(24);
+      gap: em(20);
     }
 
     div {
@@ -95,22 +284,47 @@ $border: rgba(17, 17, 20, 0.14);
     dd {
       margin: 0;
       font-family: Arkhip, sans-serif;
-      font-size: em(44);
-      line-height: 1.2;
+      font-size: em(40);
+      line-height: 1.15;
       color: #ffffff;
 
       @include mobile {
-        font-size: em(28);
+        font-size: em(26);
       }
     }
 
     dt {
       font-size: em(14);
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.7);
 
       @include mobile {
-        font-size: em(12);
+        font-size: em(11);
       }
+    }
+  }
+
+  &__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: em(8, 15);
+    font-size: em(15);
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .archive-icon {
+      width: em(18, 15);
+      height: em(18, 15);
+    }
+
+    @include mobile {
+      display: none;
     }
   }
 }
@@ -520,13 +734,18 @@ $border: rgba(17, 17, 20, 0.14);
 
   img,
   &__ph {
+    display: grid;
+    place-items: center;
+    font-size: em(14);
+    font-weight: 700;
+    color: $accent;
     flex-shrink: 0;
     box-sizing: border-box;
-    width: em(44);
-    height: em(44);
+    width: em(44, 14);
+    height: em(44, 14);
     object-fit: cover;
     background: #eeeae4;
-    border: em(3) solid $accent;
+    border: em(3, 14) solid $accent;
     border-radius: 50%;
   }
 
@@ -779,6 +998,9 @@ $border: rgba(17, 17, 20, 0.14);
     border-bottom: 2px solid $dark;
 
     @include mobile {
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: em(4) em(12);
       padding-bottom: em(10);
     }
   }
@@ -836,22 +1058,23 @@ $border: rgba(17, 17, 20, 0.14);
 .archive-row {
   position: relative;
   display: grid;
-  grid-template-columns: em(64) em(240) minmax(0, 1fr);
-  align-items: center;
-  gap: em(24);
-  padding: em(22) 0;
+  grid-template-columns: em(64) em(360) minmax(0, 1fr);
+  align-items: stretch;
+  gap: em(28);
+  padding: em(28) 0;
   border-bottom: 1px solid $line;
 
   &__date {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     font-size: em(13);
     color: $muted;
 
     b {
       font-family: Arkhip, sans-serif;
-      font-size: em(36, 13);
+      font-size: em(40, 13);
       font-weight: 400;
       line-height: 1.1;
       color: $dark;
@@ -861,28 +1084,62 @@ $border: rgba(17, 17, 20, 0.14);
   &__img {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: 100%;
+    min-height: em(250);
     object-fit: cover;
-    border-radius: em(20);
-    transition: transform 0.4s ease;
+    border-radius: em(24);
   }
 
   &__body {
     display: flex;
     flex-direction: column;
-    gap: em(10);
+    align-items: flex-start;
     min-width: 0;
+    padding: em(4) 0;
   }
 
-  &__meta {
+  // Як у картці: книжечка + «5 хв читання»
+  &__read-time {
+    display: flex;
+    align-items: center;
+    gap: em(8, 13);
     font-size: em(13);
-    font-weight: 600;
+    font-weight: 500;
+    line-height: 1.2;
     color: $accent;
+
+    img {
+      width: em(16, 13);
+      height: em(16, 13);
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(10);
+    margin-top: em(14);
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      height: em(23, 13);
+      padding: 0 em(15, 13);
+      font-size: em(13);
+      font-weight: 500;
+      line-height: 1;
+      color: $muted;
+      border: 1px solid rgba(134, 134, 134, 0.5);
+      border-radius: em(100, 13);
+    }
   }
 
   &__title {
+    margin-top: em(16, 28);
     font-family: Arkhip, sans-serif;
-    font-size: em(26);
+    font-size: em(28);
     font-weight: 400;
     line-height: 1.15;
     color: $dark;
@@ -917,56 +1174,125 @@ $border: rgba(17, 17, 20, 0.14);
 
   &__excerpt {
     display: -webkit-box;
+    margin-top: em(10, 16);
     overflow: hidden;
     font-size: em(16);
     line-height: 1.55;
     color: #55555a;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
+  }
+
+  // Автор і дата — внизу, як у картці
+  &__footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: em(12);
+    width: 100%;
+    margin-top: auto;
+    padding-top: em(18);
   }
 
   &__author {
-    font-size: em(14);
+    display: flex;
+    align-items: center;
+    gap: em(12);
+    min-width: 0;
+
+    .archive-authors__ph {
+      width: em(44, 14);
+      height: em(44, 14);
+      border-width: em(3, 14);
+    }
+
+    img {
+      flex-shrink: 0;
+      box-sizing: border-box;
+      width: em(44);
+      height: em(44);
+      object-fit: cover;
+      border: em(3) solid $accent;
+      border-radius: 50%;
+    }
+  }
+
+  &__author-name {
+    font-size: em(15);
+    font-weight: 600;
+    line-height: 1.2;
+    color: $dark;
+  }
+
+  &__author-role,
+  &__when {
+    font-size: em(13);
+    font-weight: 500;
+    line-height: 1.2;
     color: $muted;
+    white-space: nowrap;
+  }
+
+  &__author-role {
+    margin-top: em(4, 13);
   }
 
   @include tablet {
-    grid-template-columns: em(56) em(200) minmax(0, 1fr);
+    grid-template-columns: em(56) em(280) minmax(0, 1fr);
     gap: em(20);
+
+    &__img {
+      min-height: em(210);
+    }
   }
 
-  // Телефон: число | заголовок | квадратне фото
+  // Телефон: число | час читання, теги, заголовок | квадратне фото
   @include mobile {
-    grid-template-columns: em(44) minmax(0, 1fr) em(96);
+    grid-template-columns: em(44) minmax(0, 1fr) em(100);
+    align-items: center;
     gap: em(12);
-    padding: em(14) 0;
+    padding: em(16) 0;
 
     &__date b {
-      font-size: em(24, 13);
+      font-size: em(26, 13);
     }
 
     &__img {
       grid-row: 1;
       grid-column: 3;
+      height: auto;
+      min-height: 0;
       aspect-ratio: 1;
-      border-radius: em(14);
+      border-radius: em(16);
     }
 
     &__body {
-      gap: em(4);
+      padding: 0;
     }
 
-    &__meta {
+    &__read-time {
       font-size: em(12);
     }
 
+    &__tags {
+      gap: em(6);
+      margin-top: em(8);
+
+      li {
+        height: em(21, 11);
+        padding: 0 em(10, 11);
+        font-size: em(11);
+      }
+    }
+
     &__title {
+      margin-top: em(8, 17);
       font-size: em(17);
       line-height: 1.2;
     }
 
     &__excerpt,
-    &__author {
+    &__footer {
       display: none;
     }
   }

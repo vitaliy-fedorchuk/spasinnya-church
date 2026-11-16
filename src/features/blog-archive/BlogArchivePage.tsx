@@ -3,7 +3,8 @@ import "./BlogArchive.scss";
 import Link from "next/link";
 import Form from "next/form";
 import NewsCard from "@/components/ui/NewsCard";
-import { articleHref } from "@/features/blog";
+import bookIconAsset from "@/assets/news/book.svg";
+import { articleHref, authorInitials } from "@/features/blog";
 import { srcSetOf, variantOf } from "@/features/media/urls";
 import type { ArchiveArticle, ArchiveData } from "@/server/blog-archive";
 import { FiltersButton, FiltersPanel, FiltersSheetProvider, ViewToggle } from "./ArchiveClient";
@@ -17,6 +18,12 @@ import {
   type ArchiveParams,
   type ArchiveView,
 } from "./params";
+
+// Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
+const bookIcon = bookIconAsset.src;
+
+/** Фото шапки — зала, повна людей (з медіатеки) */
+const HERO_PHOTO = "/uploads/2026/01/demo-news3-1600.webp";
 
 /** Посилання на Telegram-канал церкви; порожнє — блок не показуємо */
 const TELEGRAM_URL = "";
@@ -53,7 +60,12 @@ const SearchForm = ({ p, className }: { p: ArchiveParams; className: string }) =
 /** «Старіші новини» — як BlackButton, але з Next-посиланням і стрілкою вниз */
 const MoreLink = ({ href, text, keepScroll }: { href: string; text: string; keepScroll?: boolean }) => (
   <div className="black-button archive-more">
-    <Link href={href} scroll={!keepScroll} className="black-button__link" style={{ backgroundColor: "#262626", color: "#fff" }}>
+    <Link
+      href={href}
+      scroll={!keepScroll}
+      className="black-button__link"
+      style={{ backgroundColor: "#262626", color: "#fff" }}
+    >
       <span className="black-button__label">
         <span className="black-button__text">{text}</span>
       </span>
@@ -75,19 +87,39 @@ const Sidebar = ({ p, data }: { p: ArchiveParams; data: ArchiveData }) => {
       <section className="archive-box">
         <div className="archive-cal__head">
           {calendar.year > calendar.minYear ? (
-            <Link className="archive-round" href={archiveHref(p, { month: undefined, year: calendar.year - 1 })} scroll={false} aria-label="Попередній рік">
+            <Link
+              className="archive-round"
+              href={archiveHref(p, {
+                month: undefined,
+                year: calendar.year - 1,
+              })}
+              scroll={false}
+              aria-label="Попередній рік"
+            >
               <Chevron dir="left" />
             </Link>
           ) : (
-            <span className="archive-round is-disabled" aria-hidden="true"><Chevron dir="left" /></span>
+            <span className="archive-round is-disabled" aria-hidden="true">
+              <Chevron dir="left" />
+            </span>
           )}
           <b className="archive-cal__year">{calendar.year}</b>
           {calendar.year < calendar.maxYear ? (
-            <Link className="archive-round" href={archiveHref(p, { month: undefined, year: calendar.year + 1 })} scroll={false} aria-label="Наступний рік">
+            <Link
+              className="archive-round"
+              href={archiveHref(p, {
+                month: undefined,
+                year: calendar.year + 1,
+              })}
+              scroll={false}
+              aria-label="Наступний рік"
+            >
               <Chevron dir="right" />
             </Link>
           ) : (
-            <span className="archive-round is-disabled" aria-hidden="true"><Chevron dir="right" /></span>
+            <span className="archive-round is-disabled" aria-hidden="true">
+              <Chevron dir="right" />
+            </span>
           )}
         </div>
 
@@ -106,7 +138,14 @@ const Sidebar = ({ p, data }: { p: ArchiveParams; data: ArchiveData }) => {
               <li key={key}>
                 <Link
                   className={`archive-cal__month${active ? " is-active" : ""}`}
-                  href={archiveHref(p, { month: active ? undefined : key, year: active ? calendar.year : undefined }, FEED)}
+                  href={archiveHref(
+                    p,
+                    {
+                      month: active ? undefined : key,
+                      year: active ? calendar.year : undefined,
+                    },
+                    FEED,
+                  )}
                   aria-current={active ? "page" : undefined}
                   aria-label={`${monthTitle(key)}: ${articlesWord(count)}`}
                 >
@@ -136,7 +175,10 @@ const Sidebar = ({ p, data }: { p: ArchiveParams; data: ArchiveData }) => {
           {data.rubrics.map(({ tag, count }) =>
             count || p.tag === tag ? (
               <li key={tag}>
-                <Link href={archiveHref(p, { tag: p.tag === tag ? undefined : tag }, FEED)} aria-current={p.tag === tag ? "page" : undefined}>
+                <Link
+                  href={archiveHref(p, { tag: p.tag === tag ? undefined : tag }, FEED)}
+                  aria-current={p.tag === tag ? "page" : undefined}
+                >
                   {tag} <span>{count}</span>
                 </Link>
               </li>
@@ -160,7 +202,13 @@ const Sidebar = ({ p, data }: { p: ArchiveParams; data: ArchiveData }) => {
                   aria-current={p.author === a.id ? "page" : undefined}
                   className={!a.count && p.author !== a.id ? "is-empty" : undefined}
                 >
-                  {a.photo ? <img src={variantOf(a.photo, 480)} alt="" loading="lazy" /> : <span className="archive-authors__ph" />}
+                  {a.photo ? (
+                    <img src={variantOf(a.photo, 480)} alt="" loading="lazy" />
+                  ) : (
+                    <span className="archive-authors__ph" aria-hidden="true">
+                      {authorInitials(a.name)}
+                    </span>
+                  )}
                   <span>
                     <b>{a.name}</b>
                     {a.role ? `${a.role} · ` : ""}
@@ -213,22 +261,45 @@ const ListRow = ({ a }: { a: ArchiveArticle }) => (
       className="archive-row__img"
       src={a.cover.src}
       srcSet={srcSetOf(a.cover.src)}
-      sizes="(max-width: 767px) 30vw, 300px"
+      sizes="(max-width: 767px) 30vw, 400px"
       alt=""
       loading="lazy"
     />
     <div className="archive-row__body">
-      <p className="archive-row__meta">
-        {[a.tags.join(" · "), a.readTime].filter(Boolean).join(" · ")}
+      {/* Ті самі елементи, що в картці на головній: час читання, теги-пігулки, автор */}
+      <p className="archive-row__read-time">
+        <img src={bookIcon} width={16} height={16} alt="" />
+        {a.readTime}
       </p>
+      {a.tags.length > 0 && (
+        <ul className="archive-row__tags" aria-label="Теги">
+          {a.tags.map((tag) => (
+            <li key={tag}>{tag}</li>
+          ))}
+        </ul>
+      )}
       <h3 className="archive-row__title">
         <a href={articleHref(a.slug)}>{a.title}</a>
       </h3>
       {a.excerpt && <p className="archive-row__excerpt">{a.excerpt}</p>}
-      <p className="archive-row__author">
-        {a.author.name}
-        {a.author.role && `, ${a.author.role.toLowerCase()}`}
-      </p>
+      <footer className="archive-row__footer">
+        <div className="archive-row__author">
+          {a.author.photo ? (
+            <img src={variantOf(a.author.photo, 480)} alt="" loading="lazy" />
+          ) : (
+            <span className="archive-authors__ph" aria-hidden="true">
+              {authorInitials(a.author.name)}
+            </span>
+          )}
+          <div>
+            <p className="archive-row__author-name">{a.author.name}</p>
+            {a.author.role && <p className="archive-row__author-role">{a.author.role}</p>}
+          </div>
+        </div>
+        <time className="archive-row__when" dateTime={a.date}>
+          {a.dateLabel}
+        </time>
+      </footer>
     </div>
   </li>
 );
@@ -304,36 +375,79 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
   }
 
   const activeFilters = [p.q, p.tag, p.author, p.month].filter(Boolean).length;
-  const summary = [
-    p.tag && `рубрика «${p.tag}»`,
-    authorName && `автор: ${authorName}`,
-    p.q && `пошук «${p.q}»`,
-  ].filter(Boolean);
+  const summary = [p.tag && `рубрика «${p.tag}»`, authorName && `автор: ${authorName}`, p.q && `пошук «${p.q}»`].filter(
+    Boolean,
+  );
   const shown = data.articles.length;
 
   return (
     <main className="archive">
       <header className="archive-hero" data-surface="dark">
+        <img className="archive-hero__bg" src={HERO_PHOTO} srcSet={srcSetOf(HERO_PHOTO)} sizes="100vw" alt="" />
+
         <div className="container archive-hero__inner">
-          <div className="archive-hero__text">
-            <span className="archive-hero__badge">Часопис новин</span>
-            <h1 className="archive-hero__title">Хроніка життя церкви</h1>
-            <p className="archive-hero__lead">Усі новини за датами — оберіть місяць або гортайте стрічку.</p>
+          <div className="archive-hero__main">
+            <div className="archive-hero__text">
+              <span className="archive-hero__badge">Часопис новин</span>
+              <h1 className="archive-hero__title">Хроніка життя церкви</h1>
+              <p className="archive-hero__lead">
+                Служіння, події, свідчення й життя громади — усе, що відбувається в церкві, за датами.
+              </p>
+              {data.heroRubrics.length > 0 && (
+                <ul className="archive-hero__rubrics" aria-label="Популярні рубрики">
+                  {data.heroRubrics.map((tag) => (
+                    <li key={tag}>
+                      <Link href={archiveHref({}, { tag }, FEED)}>{tag}</Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {data.latest && (
+              <a className="archive-hero__latest" href={articleHref(data.latest.slug)}>
+                <img
+                  src={data.latest.cover.src}
+                  srcSet={srcSetOf(data.latest.cover.src)}
+                  sizes="(max-width: 767px) 30vw, 200px"
+                  alt=""
+                />
+                <span className="archive-hero__latest-body">
+                  <span className="archive-hero__latest-label">Свіжа стаття · {data.latest.dateLabel}</span>
+                  <span className="archive-hero__latest-title">{data.latest.title}</span>
+                  <span className="archive-hero__latest-more">
+                    Читати
+                    <Chevron dir="right" />
+                  </span>
+                </span>
+              </a>
+            )}
           </div>
-          <dl className="archive-hero__stats">
-            <div>
-              <dt>{plural(data.stats.articles, ["стаття", "статті", "статей"])}</dt>
-              <dd>{data.stats.articles}</dd>
-            </div>
-            <div>
-              <dt>{plural(data.stats.rubrics, ["рубрика", "рубрики", "рубрик"])}</dt>
-              <dd>{data.stats.rubrics}</dd>
-            </div>
-            <div>
-              <dt>{plural(data.stats.years, ["рік", "роки", "років"])}</dt>
-              <dd>{data.stats.years}</dd>
-            </div>
-          </dl>
+
+          <div className="archive-hero__bottom">
+            <dl className="archive-hero__stats">
+              <div>
+                <dt>{plural(data.stats.articles, ["стаття", "статті", "статей"])}</dt>
+                <dd>{data.stats.articles}</dd>
+              </div>
+              <div>
+                <dt>{plural(data.stats.rubrics, ["рубрика", "рубрики", "рубрик"])}</dt>
+                <dd>{data.stats.rubrics}</dd>
+              </div>
+              <div>
+                <dt>{plural(data.stats.authors, ["автор", "автори", "авторів"])}</dt>
+                <dd>{data.stats.authors}</dd>
+              </div>
+              <div>
+                <dt>{plural(data.stats.years, ["рік", "роки", "років"])} історії</dt>
+                <dd>{data.stats.years}</dd>
+              </div>
+            </dl>
+            <a className="archive-hero__scroll" href="#archive">
+              Гортати стрічку
+              <Chevron dir="down" />
+            </a>
+          </div>
         </div>
       </header>
 
@@ -351,11 +465,16 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
                       {monthTitle(data.monthNav.prev)}
                     </Link>
                   ) : (
-                    <span className="archive-chip is-disabled"><Chevron dir="left" />Раніше</span>
+                    <span className="archive-chip is-disabled">
+                      <Chevron dir="left" />
+                      Раніше
+                    </span>
                   )}
                   <span className="archive-chip is-current" aria-current="page">
                     {monthTitle(p.month)}
-                    <Link href={archiveHref(p, { month: undefined }, FEED)} aria-label="Показати всі місяці">×</Link>
+                    <Link href={archiveHref(p, { month: undefined }, FEED)} aria-label="Показати всі місяці">
+                      ×
+                    </Link>
                   </span>
                   {data.monthNav.next ? (
                     <Link className="archive-chip" href={archiveHref(p, { month: data.monthNav.next }, FEED)}>
@@ -363,7 +482,10 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
                       <Chevron dir="right" />
                     </Link>
                   ) : (
-                    <span className="archive-chip is-disabled">Пізніше<Chevron dir="right" /></span>
+                    <span className="archive-chip is-disabled">
+                      Пізніше
+                      <Chevron dir="right" />
+                    </span>
                   )}
                 </nav>
               ) : (
@@ -407,8 +529,15 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
             )}
 
             {p.month
-              ? data.monthNav.prev && <MoreLink href={archiveHref(p, { month: data.monthNav.prev }, FEED)} text={monthTitle(data.monthNav.prev)} />
-              : data.hasMore && <MoreLink href={archiveHref(p, { n: shown + PAGE_SIZE })} text="Старіші новини" keepScroll />}
+              ? data.monthNav.prev && (
+                  <MoreLink
+                    href={archiveHref(p, { month: data.monthNav.prev }, FEED)}
+                    text={monthTitle(data.monthNav.prev)}
+                  />
+                )
+              : data.hasMore && (
+                  <MoreLink href={archiveHref(p, { n: shown + PAGE_SIZE })} text="Старіші новини" keepScroll />
+                )}
           </div>
         </div>
       </FiltersSheetProvider>

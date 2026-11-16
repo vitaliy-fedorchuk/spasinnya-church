@@ -192,6 +192,24 @@ $accent: #90816a;
       width: em(40);
       height: em(40);
     }
+
+    // Автор без фото — ініціали
+    &--initials {
+      display: grid;
+      place-items: center;
+      width: em(44, 14);
+      height: em(44, 14);
+      font-size: em(14);
+      font-weight: 700;
+      color: $accent;
+      background: #eeeae4;
+      border-width: em(3, 14);
+
+      @include mobile {
+        width: em(40, 14);
+        height: em(40, 14);
+      }
+    }
   }
 
   &__author-name {
