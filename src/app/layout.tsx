@@ -25,10 +25,13 @@ const WINDOWS_SCRIPT = `if(navigator.userAgent.indexOf("Windows")>-1)document.do
 // «до» і «після» як картинки. Щоб стара й нова сторінки стали окремими картками
 // (а між ними — бежева), даємо їм різні імена: старій — у pageswap перед знімком,
 // новій — у pagereveal. Слухачі мають стояти ще до першого малювання, тож тут, у <head>.
+// --vt-sbw — ширина смуги прокрутки: знімок сторінки включає місце під нею,
+// і в картці праворуч була б зайва смуга; анімація її обрізає й центрує картки.
 const PAGE_TRANSITION_SCRIPT = `(function(){var h=document.documentElement;
-addEventListener("pageswap",function(e){if(e.viewTransition)h.classList.add("vt-leaving")});
+function sbw(){h.style.setProperty("--vt-sbw",Math.max(0,innerWidth-h.clientWidth)+"px")}
+addEventListener("pageswap",function(e){if(e.viewTransition){sbw();h.classList.add("vt-leaving")}});
 addEventListener("pageshow",function(){h.classList.remove("vt-leaving")});
-addEventListener("pagereveal",function(e){if(!e.viewTransition)return;h.classList.add("vt-entering","vt-arrived");h.dataset.vtStart=String(Date.now());
+addEventListener("pagereveal",function(e){if(!e.viewTransition)return;sbw();h.classList.add("vt-entering","vt-arrived");h.dataset.vtStart=String(Date.now());
 e.viewTransition.finished.finally(function(){h.classList.remove("vt-entering")})})})()`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
