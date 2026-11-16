@@ -1,5 +1,6 @@
 import "./Footer.scss";
 import { CHURCH_ADDRESS as ADDRESS, MAP_URL } from "../../constants";
+import { getEventsSettings, getFooterSchedule } from "@/server/events";
 import logoAsset from "../../assets/footer/logo.svg";
 import lineScheduleAsset from "../../assets/footer/line-schedule.svg";
 import lineBottomAsset from "../../assets/footer/line-bottom.svg";
@@ -26,14 +27,7 @@ const locationPin = locationPinAsset.src;
 const PHONE = "+38 067 115 0033";
 const EMAIL = "hello@spasinnya.church";
 
-const schedule = [
-  { day: "Неділя - Ранкове богослужіння", time: "10:00" },
-  { day: "Неділя - Вечірнє богослужіння", time: "17:00" },
-  { day: "Понеділок - Молодіжка", time: "19:00" },
-  { day: "Середа - Молитовне служіння", time: "19:00" },
-  { day: "Cубота - Підлітковий клуб", time: "18:00" },
-  { day: "Cубота - Дитяча школа", time: "11:00" },
-];
+// Розклад — з подій (адмінка → «Події», позначка «у розкладі у футері»)
 
 // TODO: замінити якорі на реальні id секцій
 const navigation = [
@@ -52,7 +46,9 @@ const LocationIcon = () => (
   </span>
 );
 
-const Footer = () => {
+const Footer = async () => {
+  const [schedule, settings] = await Promise.all([getFooterSchedule(), getEventsSettings()]);
+
   return (
     <footer className="footer" data-surface="dark">
       <div className="container">
@@ -85,10 +81,10 @@ const Footer = () => {
           </div>
 
           <div className="footer__column">
-            <h2 className="footer__heading">Розклад служінь</h2>
+            <h2 className="footer__heading">{settings.footerTitle}</h2>
             <ul className="footer__schedule">
               {schedule.map((item) => (
-                <li key={item.day} className="footer__schedule-item">
+                <li key={item.id} className="footer__schedule-item">
                   <span className="footer__schedule-row">
                     <span>{item.day}</span>
                     <span className="footer__schedule-time">{item.time}</span>

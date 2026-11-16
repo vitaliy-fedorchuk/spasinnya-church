@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import "./EventsCalendar.scss";
-import { ROUTE_URL } from "../../constants";
+import { CHURCH_ADDRESS } from "../../constants";
+import { srcSetOf } from "@/features/media/urls";
 import {
   addMonths,
   fromDateKey,
@@ -12,17 +13,14 @@ import {
   startOfMonth,
   toDateKey,
 } from "./calendarUtils";
+import { CALENDAR_TIME_ZONE, MONTH_NAMES, MONTH_NAMES_GENITIVE, WEEKDAY_NAMES, WEEKDAY_SHORT } from "./events";
 import {
-  CALENDAR_TIME_ZONE,
-  MONTHS_FUTURE,
-  MONTHS_PAST,
-  MONTH_NAMES,
-  MONTH_NAMES_GENITIVE,
-  WEEKDAY_NAMES,
-  WEEKDAY_SHORT,
+  FORMAT_LABEL,
   findNextEventDate,
-  getEventsForDate,
-} from "./events";
+  getOccurrences,
+  routeUrl,
+  type EventWithExceptions,
+} from "./schedule";
 import arrowIconAsset from "../../assets/events/arrow-next.svg";
 import calendarIconAsset from "../../assets/events/calendar.svg";
 import clockIconAsset from "../../assets/events/clock.svg";
@@ -42,25 +40,32 @@ const linkArrowIcon = linkArrowIconAsset.src;
 const formatFullDate = (date: Date) =>
   `${date.getDate()} ${MONTH_NAMES_GENITIVE[date.getMonth()]}, ${WEEKDAY_NAMES[mondayIndex(date)].toLowerCase()}`;
 
-const EventsCalendar = () => {
+interface Props {
+  events: EventWithExceptions[];
+  /** Скільки місяців можна гортати назад і вперед (налаштування блоку) */
+  monthsPast: number;
+  monthsFuture: number;
+}
+
+const EventsCalendar = ({ events, monthsPast, monthsFuture }: Props) => {
   const today = useMemo(() => getToday(CALENDAR_TIME_ZONE), []);
   const todayKey = toDateKey(today);
 
   // Початково — найближчий день з подіями (сьогодні, якщо подія є сьогодні)
-  const [selectedKey, setSelectedKey] = useState(() => findNextEventDate(today));
+  const [selectedKey, setSelectedKey] = useState(() => findNextEventDate(events, today));
   const [month, setMonth] = useState(() =>
     startOfMonth(selectedKey ? fromDateKey(selectedKey) : today),
   );
 
-  const minMonth = addMonths(today, -MONTHS_PAST);
-  const maxMonth = addMonths(today, MONTHS_FUTURE);
+  const minMonth = addMonths(today, -monthsPast);
+  const maxMonth = addMonths(today, monthsFuture);
   const canGoPrev = addMonths(month, -1) >= minMonth;
   const canGoNext = addMonths(month, 1) <= maxMonth;
 
   const cells = useMemo(() => getMonthCells(month), [month]);
 
   const selectedDate = selectedKey ? fromDateKey(selectedKey) : null;
-  const dayEvents = selectedDate ? getEventsForDate(selectedDate) : [];
+  const dayEvents = selectedDate ? getOccurrences(events, selectedDate) : [];
 
   return (
     <div className="events-calendar" data-surface="dark">
@@ -103,7 +108,7 @@ const EventsCalendar = () => {
             if (!date) return <span key={i} className="events-calendar__tile events-calendar__tile--empty" />;
 
             const key = toDateKey(date);
-            const count = getEventsForDate(date).length;
+            const count = getOccurrences(events, date).length;
             const isSelected = key === selectedKey;
             const status = isSelected ? "selected" : count ? "event" : "no-event";
 
@@ -156,44 +161,75 @@ const EventsCalendar = () => {
                   {formatFullDate(selectedDate)} · подій: {dayEvents.length}
                 </p>
               )}
-              {dayEvents.map((event) => (
-                <article key={event.id} className="events-calendar__event">
+              {dayEvents.map(({ event, startTime, endTime, place, cancelled, changed, note }) => (
+                <article
+                  key={event.id}
+                  className={`events-calendar__event${cancelled ? " events-calendar__event--cancelled" : ""}`}
+                >
                   <h3 className="events-calendar__event-title">{event.title}</h3>
-                  <img className="events-calendar__event-img" src={event.image} alt="" loading="lazy" />
-                  <p className="events-calendar__event-text">{event.description}</p>
+                  {(cancelled || changed) && (
+                    <p className={`events-calendar__notice events-calendar__notice--${cancelled ? "cancelled" : "changed"}`}>
+                      <b>{cancelled ? "Скасовано" : "Змінено"}</b>
+                      {note && ` · ${note}`}
+                    </p>
+                  )}
+                  {event.image && (
+                    <img
+                      className="events-calendar__event-img"
+                      src={event.image}
+                      srcSet={srcSetOf(event.image)}
+                      sizes="(max-width: 767px) 100vw, 560px"
+                      alt=""
+                      loading="lazy"
+                    />
+                  )}
+                  {event.description && <p className="events-calendar__event-text">{event.description}</p>}
 
                   <ul className="events-calendar__chips">
                     <li className="events-calendar__chip">
                       <img src={calendarIcon} alt="" />
-                      {WEEKDAY_NAMES[mondayIndex(selectedDate)]}
+                      {/* Разова подія — дата («19 листопада»), повторювана — день тижня */}
+                      {event.repeat === "ONCE"
+                        ? `${selectedDate.getDate()} ${MONTH_NAMES_GENITIVE[selectedDate.getMonth()]}`
+                        : WEEKDAY_NAMES[mondayIndex(selectedDate)]}
                     </li>
                     <li className="events-calendar__chip">
                       <img src={clockIcon} alt="" />
-                      {event.time}
+                      {endTime ? `${startTime}–${endTime}` : startTime}
                     </li>
                     {event.format && (
                       <li className="events-calendar__chip">
                         <img src={globeIcon} alt="" />
-                        {event.format}
+                        {FORMAT_LABEL[event.format]}
                       </li>
                     )}
-                    {event.place && (
+                    {place && (
                       <li className="events-calendar__chip">
                         <img src={roomIcon} alt="" />
-                        {event.place}
+                        {place}
                       </li>
                     )}
-                    <li>
-                      <a
-                        className="events-calendar__route"
-                        href={ROUTE_URL}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label="Прокласти маршрут"
-                      >
-                        <img src={linkArrowIcon} alt="" />
-                      </a>
-                    </li>
+                    {event.linkUrl && !cancelled && (
+                      <li>
+                        <a className="events-calendar__link" href={event.linkUrl} target="_blank" rel="noreferrer">
+                          {event.linkLabel || "Детальніше"} ↗
+                        </a>
+                      </li>
+                    )}
+                    {/* Маршрут — для подій наживо (не лише онлайн) */}
+                    {event.format !== "ONLINE" && (
+                      <li>
+                        <a
+                          className="events-calendar__route"
+                          href={routeUrl(event.address, CHURCH_ADDRESS)}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="Прокласти маршрут"
+                        >
+                          <img src={linkArrowIcon} alt="" />
+                        </a>
+                      </li>
+                    )}
                   </ul>
                 </article>
               ))}

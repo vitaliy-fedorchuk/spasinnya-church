@@ -10,6 +10,7 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { articleBlockSchema, type ArticleBlock } from "../src/features/blog/types";
 import { mediaUrl } from "../src/features/media/urls";
 import { processImage } from "../src/server/media/process";
+import { seedEvents } from "./seed-events";
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
 
@@ -235,7 +236,8 @@ const main = async () => {
     await db.article.upsert({ where: { slug: a.slug }, update: data, create: { slug: a.slug, ...data } });
   }
 
-  console.log(`Seed: ${Object.keys(DEMO_FILES).length} фото в медіатеці, автор, ${ARTICLES.length} статті`);
+  const events = await seedEvents(db);
+  console.log(`Seed: ${Object.keys(DEMO_FILES).length} фото в медіатеці, автор, ${ARTICLES.length} статті, нових подій: ${events}`);
 };
 
 main()

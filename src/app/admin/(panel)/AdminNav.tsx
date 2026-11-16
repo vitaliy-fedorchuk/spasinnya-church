@@ -7,6 +7,7 @@ import { Icon, type IconName } from "./icons";
 /** Розділи адмінки. Нові (події, служіння…) додаються сюди. */
 const ITEMS: { href: string; label: string; icon: IconName }[] = [
   { href: "/admin/articles", label: "Статті", icon: "articles" },
+  { href: "/admin/events", label: "Події", icon: "calendar" },
   { href: "/admin/authors", label: "Автори", icon: "users" },
   { href: "/admin/tags", label: "Теги", icon: "tag" },
   { href: "/admin/media", label: "Медіатека", icon: "media" },

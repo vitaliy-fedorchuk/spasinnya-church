@@ -1,0 +1,571 @@
+@use "../../../../styles/tools" as *;
+
+.ev-intro {
+  max-width: em(640);
+  margin-top: em(8);
+  color: var(--a-muted);
+}
+
+.ev-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(8);
+}
+
+.ev-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: em(12);
+  margin-bottom: em(16);
+
+  .articles__tabs {
+    margin: 0;
+  }
+
+  .articles__tab .a-icon {
+    width: em(16, 14);
+    height: em(16, 14);
+  }
+}
+
+.ev-count {
+  font-size: em(14);
+  color: var(--a-muted);
+}
+
+.ev-group-count {
+  margin-left: em(4, 13);
+  color: var(--a-accent-dark);
+}
+
+.ev-group-hint {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+// ---------- Список подій ----------
+.ev-list {
+  overflow: hidden;
+  list-style: none;
+  background-color: var(--a-surface);
+  border: 1px solid var(--a-line);
+  border-radius: em(18);
+}
+
+.ev-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: em(72) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: em(18);
+  padding: em(12) em(18);
+
+  & + & {
+    border-top: 1px solid var(--a-line);
+  }
+
+  &:hover {
+    background-color: rgba(144, 129, 106, 0.04);
+  }
+
+  &.is-hidden &__img,
+  &.is-hidden &__main {
+    opacity: 0.55;
+  }
+
+  @include mobile {
+    grid-template-columns: em(56) minmax(0, 1fr);
+    padding: em(12) em(14);
+
+    .ev-row__actions {
+      grid-column: 1 / -1;
+      justify-content: flex-end;
+    }
+  }
+
+  &__img {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    color: var(--a-accent-dark);
+    background-color: rgba(144, 129, 106, 0.12);
+    border-radius: em(10);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__main {
+    min-width: 0;
+  }
+
+  &__title {
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--a-accent-dark);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__when {
+    margin-top: em(2, 14);
+    font-size: em(14);
+    color: var(--a-accent-dark);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(4, 13) em(10, 13);
+    margin-top: em(6, 13);
+    font-size: em(13);
+    color: var(--a-muted);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: em(2);
+  }
+}
+
+.ev-tag {
+  padding: 0 em(8, 13);
+  font-weight: 600;
+  color: var(--a-text);
+  background-color: rgba(17, 17, 20, 0.06);
+  border-radius: em(100, 13);
+
+  &--warn {
+    color: var(--a-warning);
+    background-color: rgba(162, 112, 28, 0.12);
+  }
+}
+
+.ev-icon-btn {
+  display: grid;
+  place-items: center;
+  width: em(36);
+  height: em(36);
+  color: var(--a-muted);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: em(8);
+
+  &:hover {
+    color: var(--a-text);
+    background-color: rgba(17, 17, 20, 0.06);
+  }
+
+  &--flip .a-icon {
+    transform: scaleX(-1);
+  }
+}
+
+// ---------- Календар місяця (адмінка) ----------
+.ev-cal {
+  padding: em(16);
+  background-color: var(--a-surface);
+  border: 1px solid var(--a-line);
+  border-radius: em(18);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: em(8);
+    margin-bottom: em(14);
+  }
+
+  &__month {
+    min-width: em(200, 22);
+    font-family: Arkhip, sans-serif;
+    font-size: em(22);
+    font-weight: 400;
+    text-align: center;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: em(6);
+  }
+
+  &__wd {
+    padding: em(4) 0;
+    font-size: em(12);
+    font-weight: 700;
+    color: var(--a-muted);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  &__cell {
+    min-height: em(110);
+    padding: em(6);
+    background-color: #fafafa;
+    border: 1px solid var(--a-line);
+    border-radius: em(10);
+
+    &--empty {
+      background: none;
+      border: 0;
+    }
+
+    &.is-today {
+      border-color: var(--a-accent);
+      box-shadow: 0 0 0 1px var(--a-accent);
+    }
+
+    &.is-past {
+      opacity: 0.55;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: em(3);
+      list-style: none;
+    }
+
+    @include mobile {
+      min-height: em(60);
+      padding: em(3);
+    }
+  }
+
+  &__day {
+    display: block;
+    margin-bottom: em(4, 13);
+    font-size: em(13);
+    font-weight: 700;
+  }
+
+  &__item {
+    display: block;
+    overflow: hidden;
+    padding: em(2, 12) em(6, 12);
+    font-size: em(12);
+    line-height: 1.35;
+    color: var(--a-text);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    background-color: rgba(144, 129, 106, 0.14);
+    border-radius: em(6, 12);
+
+    &:hover {
+      background-color: rgba(144, 129, 106, 0.28);
+    }
+
+    &.is-changed {
+      background-color: rgba(162, 112, 28, 0.18);
+    }
+
+    &.is-cancelled {
+      color: var(--a-danger);
+      text-decoration: line-through;
+      background-color: rgba(180, 56, 43, 0.1);
+    }
+
+    &.is-hidden {
+      color: var(--a-muted);
+      background-color: transparent;
+      border: 1px dashed rgba(17, 17, 20, 0.2);
+    }
+
+    @include mobile {
+      // На телефоні в клітинці — лише час
+      font-size: em(10);
+      padding: em(1, 10) em(3, 10);
+    }
+  }
+
+  &__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(8);
+    margin-top: em(14);
+
+    .ev-cal__item {
+      display: inline-block;
+    }
+  }
+}
+
+// ---------- Редактор події ----------
+.ev-edit__main {
+  display: flex;
+  flex-direction: column;
+  gap: em(16);
+  min-width: 0;
+}
+
+.ev-repeat {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(8);
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__btn {
+    display: flex;
+    flex-direction: column;
+    gap: em(2);
+    padding: em(12) em(14);
+    text-align: left;
+    cursor: pointer;
+    background-color: var(--a-surface);
+    border: 1px solid rgba(17, 17, 20, 0.14);
+    border-radius: em(12);
+
+    span {
+      font-size: em(13);
+      color: var(--a-muted);
+    }
+
+    &.is-active {
+      border-color: var(--a-accent);
+      box-shadow: 0 0 0 em(2) rgba(144, 129, 106, 0.25);
+    }
+  }
+}
+
+.ev-weekdays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(6);
+
+  &__btn {
+    width: em(46);
+    height: em(42);
+    font-weight: 700;
+    color: var(--a-muted);
+    cursor: pointer;
+    background-color: var(--a-surface);
+    border: 1px solid rgba(17, 17, 20, 0.14);
+    border-radius: em(10);
+
+    &.is-on {
+      color: #ffffff;
+      background-color: var(--a-text);
+      border-color: var(--a-text);
+    }
+  }
+}
+
+.ev-segment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(4);
+  width: fit-content;
+  padding: em(4);
+  background-color: rgba(17, 17, 20, 0.05);
+  border-radius: em(12);
+
+  &__btn {
+    height: em(36, 14);
+    padding: 0 em(14, 14);
+    font-size: em(14);
+    font-weight: 600;
+    color: var(--a-muted);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: em(9, 14);
+
+    &.is-on {
+      color: var(--a-text);
+      background-color: var(--a-surface);
+      box-shadow: 0 1px em(3, 14) rgba(17, 17, 20, 0.1);
+    }
+  }
+}
+
+.ev-summary {
+  display: flex;
+  align-items: center;
+  gap: em(8, 15);
+  padding: em(10, 15) em(14, 15);
+  font-size: em(15);
+  font-weight: 600;
+  color: var(--a-accent-dark);
+  background-color: rgba(144, 129, 106, 0.1);
+  border-radius: em(10, 15);
+}
+
+// Винятки
+.ev-exceptions {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+  list-style: none;
+}
+
+.ev-exc {
+  display: grid;
+  grid-template-columns: em(200) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: em(12);
+  padding: em(6) em(6) em(6) em(14);
+  font-size: em(14);
+  border-radius: em(10, 14);
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr) auto;
+
+    .ev-exc__what {
+      grid-column: 1;
+    }
+  }
+
+  &.is-cancelled {
+    background-color: rgba(180, 56, 43, 0.07);
+
+    .ev-exc__what {
+      color: var(--a-danger);
+    }
+  }
+
+  &.is-changed {
+    background-color: rgba(162, 112, 28, 0.09);
+
+    .ev-exc__what {
+      color: var(--a-warning);
+    }
+  }
+
+  &__date {
+    font-weight: 700;
+  }
+
+  &__what {
+    font-weight: 600;
+
+    i {
+      font-weight: 500;
+      color: var(--a-muted);
+    }
+  }
+}
+
+.ev-exc-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: em(12);
+  margin-top: em(4);
+  padding: em(14);
+  background-color: rgba(17, 17, 20, 0.03);
+  border: 1px dashed rgba(17, 17, 20, 0.15);
+  border-radius: em(12);
+
+  > .ed-row,
+  > .ed-field {
+    width: 100%;
+  }
+}
+
+// Найближчі дати
+.ev-upcoming {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+  font-size: em(14);
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: em(8, 14);
+    padding: em(6, 14) em(10, 14);
+    background-color: rgba(17, 17, 20, 0.03);
+    border-radius: em(8, 14);
+
+    &.is-cancelled {
+      color: var(--a-danger);
+      text-decoration: line-through;
+    }
+
+    &.is-changed {
+      color: var(--a-warning);
+    }
+  }
+
+  .ed-link-btn {
+    font-size: em(12, 14);
+    opacity: 0;
+  }
+
+  li:hover .ed-link-btn,
+  .ed-link-btn:focus-visible {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .ed-link-btn {
+      opacity: 1;
+    }
+  }
+}
+
+// Попередній перегляд заголовка секції (налаштування)
+.ev-settings-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: em(10);
+  padding: em(28) em(20);
+  text-align: center;
+  background-color: #f5f5f5;
+  border: 1px solid var(--a-line);
+  border-radius: em(14);
+
+  &__rubric {
+    padding: em(6, 13) em(14, 13);
+    font-size: em(13);
+    font-weight: 600;
+    color: #262626;
+    border: 1px solid rgba(38, 38, 38, 0.2);
+    border-radius: em(100, 13);
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(30);
+    line-height: 1.1;
+    color: #262626;
+
+    span {
+      color: #90816a;
+    }
+  }
+
+  &__text {
+    max-width: em(520, 15);
+    font-size: em(15);
+    color: var(--a-muted);
+  }
+}

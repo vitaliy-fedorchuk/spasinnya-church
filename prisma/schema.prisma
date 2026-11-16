@@ -174,3 +174,76 @@ model MediaAlbum {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ---------- Події (календар на головній + розклад у футері) ----------
+
+enum EventRepeat {
+  /// Щотижня у вибрані дні
+  WEEKLY
+  /// Щомісяця: N-й (або останній) день тижня
+  MONTHLY
+  /// Один раз (або кілька днів поспіль: табір, конференція)
+  ONCE
+}
+
+enum EventFormat {
+  OFFLINE
+  ONLINE
+  HYBRID
+}
+
+model Event {
+  id           String           @id @default(cuid())
+  title        String
+  /// Коротка назва для розкладу у футері: «Молодіжка»
+  shortTitle   String           @default("")
+  description  String           @default("")
+  /// Фото з медіатеки
+  image        String           @default("")
+  repeat       EventRepeat      @default(WEEKLY)
+  /// Дні тижня: 0 — понеділок … 6 — неділя. MONTHLY — рівно один день.
+  weekdays     Int[]
+  /// MONTHLY: котрий за рахунком у місяці (1–4) або -1 — останній
+  monthWeek    Int?
+  /// ONCE — дата події; WEEKLY / MONTHLY — «діє з» (необовʼязково)
+  startDate    DateTime?        @db.Date
+  /// ONCE — останній день багатоденної події; WEEKLY / MONTHLY — «діє до»
+  endDate      DateTime?        @db.Date
+  /// «19:00»
+  startTime    String
+  endTime      String?
+  format       EventFormat?
+  /// Де саме: «Молодіжна кімната»
+  place        String           @default("")
+  /// Інша адреса (виїзні події); порожньо — адреса церкви
+  address      String           @default("")
+  /// Трансляція / реєстрація
+  linkUrl      String           @default("")
+  linkLabel    String           @default("")
+  showInFooter Boolean          @default(false)
+  published    Boolean          @default(true)
+  exceptions   EventException[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+/// Виняток для повторюваної події в конкретний день: скасовано або змінено час/місце
+model EventException {
+  id        String   @id @default(cuid())
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId   String
+  date      DateTime @db.Date
+  cancelled Boolean  @default(false)
+  startTime String?
+  place     String?
+  note      String   @default("")
+
+  @@unique([eventId, date])
+}
+
+/// Налаштування сайту (ключ → JSON): тексти блоків тощо
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}

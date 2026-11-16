@@ -510,6 +510,65 @@ $calendar-width: em(599.2); // 7 × 75.93 + 6 × 11.29
     font-size: em(18);
     color: $white-75;
   }
+
+  // Посилання події (трансляція, реєстрація) — світла «пігулка» поруч із чипами
+  &__link {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: em(40, 16);
+    padding: 0 em(16, 16);
+    font-size: em(16);
+    font-weight: 600;
+    color: $bg;
+    white-space: nowrap;
+    text-decoration: none;
+    background-color: #ffffff;
+    border-radius: em(135, 16);
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    @include mobile {
+      height: em(34, 14);
+      padding: 0 em(12, 14);
+      font-size: em(14);
+    }
+  }
+
+  // Виняток на цей день: скасовано / змінено час чи місце
+  &__notice {
+    margin-top: em(12, 16);
+    padding: em(10, 16) em(14, 16);
+    font-size: em(16);
+    line-height: 1.4;
+    border-radius: em(12, 16);
+
+    &--cancelled {
+      color: #f3b8ae;
+      background-color: rgba(214, 84, 66, 0.16);
+    }
+
+    &--changed {
+      color: #e9d4a8;
+      background-color: rgba(144, 129, 106, 0.28);
+    }
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  &__event--cancelled &__event-title {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  &__event--cancelled &__event-img {
+    opacity: 0.45;
+  }
 }
 
 @keyframes events-calendar-fade {
