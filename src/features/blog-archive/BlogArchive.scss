@@ -824,12 +824,48 @@ $border: rgba(17, 17, 20, 0.14);
   }
 }
 
+// «Скинути фільтри» — поруч із перемикачем вигляду, помітна, але не головна
 .archive-reset {
-  flex-basis: 100%;
-  font-size: em(14);
+  display: inline-flex;
+  align-items: center;
+  gap: em(8);
+  box-sizing: border-box;
+  height: em(50);
+  padding: 0 em(20) 0 em(16);
   font-weight: 600;
-  color: $accent;
+  color: #75674f;
   text-decoration: none;
+  white-space: nowrap;
+  background: rgba(144, 129, 106, 0.16);
+  border: 1px solid rgba(144, 129, 106, 0.45);
+  border-radius: em(100);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+    background: $accent;
+  }
+
+  svg {
+    width: em(16);
+    height: em(16);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  @include mobile {
+    height: em(46);
+    padding: 0 em(14) 0 em(12);
+
+    // На телефоні — коротко: «× Скинути»
+    span {
+      display: none;
+    }
+  }
 }
 
 // Кнопка «Фільтри» — лише коли панель ховається

@@ -455,16 +455,18 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
 
               <div className="archive-toolbar__controls">
                 <FiltersButton active={activeFilters} />
+                {activeFilters > 0 && (
+                  <Link className="archive-reset" href={archiveHref({}, {}, FEED)}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                    Скинути<span> фільтри</span>
+                  </Link>
+                )}
                 <ViewToggle view={view} />
               </div>
 
               <SearchForm p={p} className="archive-search--toolbar" />
-
-              {activeFilters > 0 && (
-                <Link className="archive-reset" href={archiveHref({}, {}, FEED)}>
-                  Скинути всі фільтри
-                </Link>
-              )}
             </div>
 
             {groups.length === 0 ? (
