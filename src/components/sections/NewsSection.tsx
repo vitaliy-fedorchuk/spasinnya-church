@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import "./NewsSection.scss";
 import Rubricator from "../ui/Rubricator";
 import BlackButton from "../buttons/BlackButton";
@@ -11,16 +12,28 @@ const newspaperIcon = newspaperIconAsset.src;
 interface NewsSectionProps {
   /** Статті для карток (сторінка бере їх з бази) */
   articles: Article[];
+  /** Підпис над заголовком (на головній — «Новини») */
+  label?: string;
+  /** Заголовок секції; акцентну частину обгортаємо в .section-title__accent */
+  title?: ReactNode;
 }
 
-const NewsSection = ({ articles: news }: NewsSectionProps) => {
+const NewsSection = ({
+  articles: news,
+  label = "Новини",
+  title = (
+    <>
+      Церковні події, <span className="section-title__accent">служіння та ініціативи</span>
+    </>
+  ),
+}: NewsSectionProps) => {
   return (
     <section id="news" className="news" aria-labelledby="news-title">
       <div className="container">
         <header className="news__header">
-          <Rubricator icon={newspaperIcon}>Новини</Rubricator>
+          <Rubricator icon={newspaperIcon}>{label}</Rubricator>
           <h2 id="news-title" className="section-title news__title">
-            Церковні події, <span className="section-title__accent">служіння та ініціативи</span>
+            {title}
           </h2>
         </header>
 

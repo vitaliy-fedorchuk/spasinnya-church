@@ -824,44 +824,58 @@ $border: rgba(17, 17, 20, 0.14);
   }
 }
 
-// «Скинути фільтри» — поруч із перемикачем вигляду, помітна, але не головна
-.archive-reset {
+// ---------- Кнопки над стрічкою: «Фільтри», «Скинути», «Список / Картки» ----------
+// Усі однакові: біла пігулка з тонкою рамкою, одна висота
+$tool-h: em(50);
+$tool-h-mobile: em(46);
+
+@mixin tool-pill {
   display: inline-flex;
   align-items: center;
   gap: em(8);
   box-sizing: border-box;
-  height: em(50);
-  padding: 0 em(20) 0 em(16);
+  height: $tool-h;
+  padding: 0 em(18);
+  font: inherit;
   font-weight: 600;
-  color: #75674f;
+  line-height: 1;
+  color: $dark;
   text-decoration: none;
   white-space: nowrap;
-  background: rgba(144, 129, 106, 0.16);
-  border: 1px solid rgba(144, 129, 106, 0.45);
+  background: #ffffff;
+  border: 1px solid $border;
   border-radius: em(100);
+  cursor: pointer;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    border-color 0.2s ease;
 
   &:hover {
-    color: #ffffff;
-    background: $accent;
+    color: $accent;
+    border-color: rgba(144, 129, 106, 0.5);
   }
 
   svg {
-    width: em(16);
-    height: em(16);
+    width: em(18);
+    height: em(18);
+    flex-shrink: 0;
     fill: none;
     stroke: currentColor;
-    stroke-width: 2;
+    stroke-width: 1.8;
     stroke-linecap: round;
   }
 
   @include mobile {
-    height: em(46);
-    padding: 0 em(14) 0 em(12);
+    height: $tool-h-mobile;
+    padding: 0 em(14);
+  }
+}
 
-    // На телефоні — коротко: «× Скинути»
+.archive-reset {
+  @include tool-pill;
+
+  // На телефоні — коротко: «× Скинути»
+  @include mobile {
     span {
       display: none;
     }
@@ -873,27 +887,7 @@ $border: rgba(17, 17, 20, 0.14);
   display: none;
 
   @include tablet {
-    display: inline-flex;
-    align-items: center;
-    gap: em(8);
-    height: em(46);
-    padding: 0 em(18);
-    font: inherit;
-    font-weight: 600;
-    color: #ffffff;
-    background: $dark;
-    border: 0;
-    border-radius: em(100);
-    cursor: pointer;
-
-    svg {
-      width: em(18);
-      height: em(18);
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-    }
+    @include tool-pill;
   }
 
   &__count {
@@ -901,15 +895,20 @@ $border: rgba(17, 17, 20, 0.14);
     place-items: center;
     min-width: em(20, 12);
     height: em(20, 12);
+    padding: 0 em(5, 12);
+    box-sizing: border-box;
     font-size: em(12);
+    color: #ffffff;
     background: $accent;
     border-radius: em(100, 12);
   }
 }
 
-// Перемикач «Список / Картки»
+// Перемикач «Список / Картки»: та сама пігулка, всередині — дві кнопки
 .archive-view {
   display: inline-flex;
+  box-sizing: border-box;
+  height: $tool-h;
   padding: em(4);
   background: #ffffff;
   border: 1px solid $border;
@@ -919,7 +918,7 @@ $border: rgba(17, 17, 20, 0.14);
     display: inline-flex;
     align-items: center;
     gap: em(8);
-    height: em(40);
+    height: 100%;
     padding: 0 em(16);
     font: inherit;
     font-weight: 600;
@@ -953,10 +952,10 @@ $border: rgba(17, 17, 20, 0.14);
 
   // На телефоні — лише іконки
   @include mobile {
-    padding: em(2);
+    height: $tool-h-mobile;
+    padding: em(3);
 
     button {
-      height: em(40);
       padding: 0 em(11);
     }
 
@@ -1399,4 +1398,10 @@ $border: rgba(17, 17, 20, 0.14);
     height: em(20);
     stroke: $dark;
   }
+}
+
+// Мітка «Часопис новин» у шапці — як інші рубрикатори сайту, але світла на фото
+.archive-hero__rubric .rubricator__icon {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }

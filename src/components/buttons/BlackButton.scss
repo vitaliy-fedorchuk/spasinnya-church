@@ -66,10 +66,14 @@ $text-line-height: 1.2;
   }
 
   &__icon {
+    display: block;
     width: em(22);
     height: em(22);
     fill: #262626;
     transform: rotate(0deg);
-    transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+    // Лише поворот (не «all»), і стрілка постійно на своєму шарі: інакше після
+    // першого ховеру браузер перемальовував її з іншим розміром і зсувом
+    transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+    will-change: transform;
   }
 }

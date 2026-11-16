@@ -92,6 +92,41 @@ export const getLatestArticles = async ({ limit = 3, excludeSlug }: { limit?: nu
 };
 
 /**
+ * «Читайте також» під статтею: спершу статті з найбільшою кількістю спільних
+ * рубрик (за рівності — того ж автора, потім свіжіші), а якщо таких
+ * не вистачає — добираємо найсвіжішими.
+ */
+export const getRelatedArticles = async (article: Article, limit = 3) => {
+  const notThis = { ...publishedWhere(), slug: { not: article.slug } };
+  const candidates = article.tags.length
+    ? await db.article.findMany({
+        where: { ...notThis, tags: { hasSome: article.tags } },
+        orderBy: { publishedAt: "desc" },
+        take: 50,
+        include: articleInclude,
+      })
+    : [];
+
+  const shared = (tags: string[]) => tags.filter((t) => article.tags.includes(t)).length;
+  const related = candidates
+    .map((row, i) => ({ row, i, score: shared(row.tags) * 10 + (row.author.name === article.author.name ? 1 : 0) }))
+    .sort((a, b) => b.score - a.score || a.i - b.i)
+    .slice(0, limit)
+    .map(({ row }) => row);
+
+  if (related.length < limit) {
+    const fill = await db.article.findMany({
+      where: { ...notThis, id: { notIn: related.map((r) => r.id) } },
+      orderBy: { publishedAt: "desc" },
+      take: limit - related.length,
+      include: articleInclude,
+    });
+    related.push(...fill);
+  }
+  return related.map(toArticle);
+};
+
+/**
  * Опублікована стаття за адресою. cache() — щоб generateMetadata і сама
  * сторінка в межах одного запиту не ходили в базу двічі.
  */

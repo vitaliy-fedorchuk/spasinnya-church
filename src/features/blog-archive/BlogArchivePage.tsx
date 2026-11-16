@@ -4,6 +4,8 @@ import Link from "next/link";
 import Form from "next/form";
 import NewsCard from "@/components/ui/NewsCard";
 import bookIconAsset from "@/assets/news/book.svg";
+import newspaperIconAsset from "@/assets/news/newspaper.svg";
+import Rubricator from "@/components/ui/Rubricator";
 import { articleHref, authorInitials } from "@/features/blog";
 import { srcSetOf, variantOf } from "@/features/media/urls";
 import type { ArchiveArticle, ArchiveData } from "@/server/blog-archive";
@@ -21,6 +23,7 @@ import {
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
 const bookIcon = bookIconAsset.src;
+const newspaperIcon = newspaperIconAsset.src;
 
 /** Фото шапки — зала, повна людей (з медіатеки) */
 const HERO_PHOTO = "/uploads/2026/01/demo-news3-1600.webp";
@@ -346,7 +349,9 @@ const BlogArchivePage = ({ params: p, data, view, authorName }: Props) => {
         <div className="container archive-hero__inner">
           <div className="archive-hero__main">
             <div className="archive-hero__text">
-              <span className="archive-hero__badge">Часопис новин</span>
+              <Rubricator icon={newspaperIcon} className="rubricator--light archive-hero__rubric">
+                Часопис новин
+              </Rubricator>
               <h1 className="archive-hero__title">Хроніка життя церкви</h1>
               <p className="archive-hero__lead">
                 Служіння, події, свідчення й життя громади — усе, що відбувається в церкві, за датами.
