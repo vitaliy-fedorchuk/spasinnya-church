@@ -11,6 +11,8 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
     <>
       <PageLoaded />
       <ScrollReveal />
+      {/* Бежева картка для переходу між сторінками (global.scss) */}
+      <div className="vt-middle" aria-hidden="true" />
       <div className="App">
         <Navbar />
         {children}

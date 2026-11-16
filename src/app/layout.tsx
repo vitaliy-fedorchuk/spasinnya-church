@@ -21,12 +21,23 @@ export const metadata: Metadata = {
 // першого малювання — інлайн-скриптом у <head>, щоб текст не «блимав».
 const WINDOWS_SCRIPT = `if(navigator.userAgent.indexOf("Windows")>-1)document.documentElement.classList.add("is-windows")`;
 
+// Перехід між сторінками (global.scss → «Перехід між сторінками»): браузер знімає
+// «до» і «після» як картинки. Щоб стара й нова сторінки стали окремими картками
+// (а між ними — бежева), даємо їм різні імена: старій — у pageswap перед знімком,
+// новій — у pagereveal. Слухачі мають стояти ще до першого малювання, тож тут, у <head>.
+const PAGE_TRANSITION_SCRIPT = `(function(){var h=document.documentElement;
+addEventListener("pageswap",function(e){if(e.viewTransition)h.classList.add("vt-leaving")});
+addEventListener("pageshow",function(){h.classList.remove("vt-leaving")});
+addEventListener("pagereveal",function(e){if(!e.viewTransition)return;h.classList.add("vt-entering","vt-arrived");h.dataset.vtStart=String(Date.now());
+e.viewTransition.finished.finally(function(){h.classList.remove("vt-entering")})})})()`;
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // Класи is-windows / is-loaded додаються в браузері — React не має на це сваритись
     <html lang="uk" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: WINDOWS_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: PAGE_TRANSITION_SCRIPT }} />
       </head>
       <body>{children}</body>
     </html>
