@@ -370,6 +370,11 @@ $border: rgba(17, 17, 20, 0.14);
     display: none;
   }
 
+  // Блоки панелі не стискаються, коли вона нижча за свій вміст
+  > * {
+    flex-shrink: 0;
+  }
+
   &__sheet-head {
     display: none;
   }
@@ -995,7 +1000,7 @@ $border: rgba(17, 17, 20, 0.14);
     justify-content: space-between;
     gap: em(16);
     padding-bottom: em(14);
-    border-bottom: 2px solid $dark;
+    border-bottom: 1px solid rgba(17, 17, 20, 0.18);
 
     @include mobile {
       flex-wrap: wrap;
@@ -1022,10 +1027,20 @@ $border: rgba(17, 17, 20, 0.14);
     }
   }
 
+  &__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: em(4) em(14);
+  }
+
   &__count {
-    margin-top: em(4, 14);
-    font-size: em(14);
+    font-size: em(15);
     color: $muted;
+
+    @include mobile {
+      font-size: em(13);
+    }
   }
 
   &__only {
@@ -1058,27 +1073,14 @@ $border: rgba(17, 17, 20, 0.14);
 .archive-row {
   position: relative;
   display: grid;
-  grid-template-columns: em(64) em(360) minmax(0, 1fr);
+  grid-template-columns: em(380) minmax(0, 1fr);
   align-items: stretch;
   gap: em(28);
   padding: em(28) 0;
   border-bottom: 1px solid $line;
 
-  &__date {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: em(13);
-    color: $muted;
-
-    b {
-      font-family: Arkhip, sans-serif;
-      font-size: em(40, 13);
-      font-weight: 400;
-      line-height: 1.1;
-      color: $dark;
-    }
+  &__media {
+    position: relative;
   }
 
   &__img {
@@ -1238,7 +1240,7 @@ $border: rgba(17, 17, 20, 0.14);
   }
 
   @include tablet {
-    grid-template-columns: em(56) em(280) minmax(0, 1fr);
+    grid-template-columns: em(300) minmax(0, 1fr);
     gap: em(20);
 
     &__img {
@@ -1246,20 +1248,34 @@ $border: rgba(17, 17, 20, 0.14);
     }
   }
 
-  // Телефон: число | час читання, теги, заголовок | квадратне фото
+  // Телефон: час читання, теги, заголовок | квадратне фото з датою
   @include mobile {
-    grid-template-columns: em(44) minmax(0, 1fr) em(100);
+    grid-template-columns: minmax(0, 1fr) em(104);
     align-items: center;
     gap: em(12);
     padding: em(16) 0;
 
-    &__date b {
-      font-size: em(26, 13);
+    &__media {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    // Маленька дата на маленькому фото
+    &__media &__badge {
+      top: em(6);
+      left: em(6);
+      min-width: em(36, 11);
+      padding: em(6, 11) em(6, 11) em(5, 11);
+      font-size: em(11);
+      border-radius: em(10, 11);
+
+      b {
+        margin-bottom: em(2, 18);
+        font-size: em(18, 11);
+      }
     }
 
     &__img {
-      grid-row: 1;
-      grid-column: 3;
       height: auto;
       min-height: 0;
       aspect-ratio: 1;

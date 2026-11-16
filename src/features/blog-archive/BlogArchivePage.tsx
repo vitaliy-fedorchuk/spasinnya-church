@@ -191,51 +191,6 @@ const Sidebar = ({ p, data }: { p: ArchiveParams; data: ArchiveData }) => {
         </ul>
       </section>
 
-      {data.authors.length > 1 || p.author ? (
-        <section className="archive-box">
-          <h2 className="archive-box__title">Автори</h2>
-          <ul className="archive-authors">
-            {data.authors.map((a) => (
-              <li key={a.id}>
-                <Link
-                  href={archiveHref(p, { author: p.author === a.id ? undefined : a.id }, FEED)}
-                  aria-current={p.author === a.id ? "page" : undefined}
-                  className={!a.count && p.author !== a.id ? "is-empty" : undefined}
-                >
-                  {a.photo ? (
-                    <img src={variantOf(a.photo, 480)} alt="" loading="lazy" />
-                  ) : (
-                    <span className="archive-authors__ph" aria-hidden="true">
-                      {authorInitials(a.name)}
-                    </span>
-                  )}
-                  <span>
-                    <b>{a.name}</b>
-                    {a.role ? `${a.role} · ` : ""}
-                    {articlesWord(a.count)}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : (
-        data.authors[0] && (
-          <section className="archive-box">
-            <h2 className="archive-box__title">Автор</h2>
-            <div className="archive-authors">
-              <span className="archive-authors__static">
-                {data.authors[0].photo && <img src={variantOf(data.authors[0].photo, 480)} alt="" loading="lazy" />}
-                <span>
-                  <b>{data.authors[0].name}</b>
-                  {data.authors[0].role}
-                </span>
-              </span>
-            </div>
-          </section>
-        )
-      )}
-
       {TELEGRAM_URL && (
         <section className="archive-box archive-box--dark" data-surface="dark">
           <b className="archive-tg__title">Новини в Telegram</b>
@@ -253,18 +208,21 @@ const Sidebar = ({ p, data }: { p: ArchiveParams; data: ArchiveData }) => {
 
 const ListRow = ({ a }: { a: ArchiveArticle }) => (
   <li className="archive-row">
-    <div className="archive-row__date">
-      <b>{a.day}</b>
-      {a.weekday}
+    <div className="archive-row__media">
+      <img
+        className="archive-row__img"
+        src={a.cover.src}
+        srcSet={srcSetOf(a.cover.src)}
+        sizes="(max-width: 767px) 30vw, 400px"
+        alt=""
+        loading="lazy"
+      />
+      {/* Число й день тижня на фото — як у вигляді «Картки» */}
+      <span className="news-card__badge archive-row__badge" aria-hidden="true">
+        <b>{a.day}</b>
+        {a.weekday}
+      </span>
     </div>
-    <img
-      className="archive-row__img"
-      src={a.cover.src}
-      srcSet={srcSetOf(a.cover.src)}
-      sizes="(max-width: 767px) 30vw, 400px"
-      alt=""
-      loading="lazy"
-    />
     <div className="archive-row__body">
       {/* Ті самі елементи, що в картці на головній: час читання, теги-пігулки, автор */}
       <p className="archive-row__read-time">
@@ -322,7 +280,7 @@ const MonthGroup = ({
   return (
     <section className="archive-month" aria-label={monthTitle(monthKey)}>
       <header className="archive-month__head">
-        <div>
+        <div className="archive-month__name">
           <h2 className="archive-month__title">
             {name} <span>{year}</span>
           </h2>

@@ -99,6 +99,11 @@ $on-light-color: #262626;
       @include visually-hidden;
     }
 
+    // На телефоні «Підтримати» лише у відкритому меню (і є у футері)
+    &:not(.navbar--menu-open) &__action {
+      display: none;
+    }
+
     &__action .black-button__link {
       // Вужча, щоб не торкатися логотипа по центру
       height: em(34, 12);
