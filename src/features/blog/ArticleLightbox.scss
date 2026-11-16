@@ -20,7 +20,8 @@
   background-color: rgba(17, 17, 20, 0.97);
   // Сторінка під фото розмита — текст статті не відволікає від підпису
   backdrop-filter: blur(6px);
-  touch-action: pan-y pinch-zoom;
+  touch-action: pinch-zoom;
+  overscroll-behavior: contain;
   user-select: none;
 
   &__stage {

@@ -29,6 +29,9 @@ interface Slide {
   ratio: number;
 }
 
+/** Клавіші, якими прокручують сторінку — поки фото відкрите, вимкнені */
+const SCROLL_KEYS = new Set([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"]);
+
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const slideOf = (el: HTMLImageElement): Slide => ({
@@ -224,6 +227,7 @@ const ArticleLightbox = () => {
       if (e.key === "Escape") close();
       else if (e.key === "ArrowRight") go(1);
       else if (e.key === "ArrowLeft") go(-1);
+      else if (SCROLL_KEYS.has(e.key) && !(e.target instanceof HTMLButtonElement && e.key === " ")) e.preventDefault();
       else if (e.key === "Tab") {
         // Фокус не виходить за межі переглядача
         const focusables = boxRef.current?.querySelectorAll<HTMLElement>("button");
@@ -239,13 +243,18 @@ const ArticleLightbox = () => {
         }
       }
     };
-    const root = document.documentElement;
-    const prevOverflow = root.style.overflow;
-    root.style.overflow = "hidden";
+    // Сторінку не прокручуємо, але й смугу прокрутки НЕ ховаємо (overflow: hidden
+    // прибирав би її — і вся сторінка стрибала б на її ширину). Просто гасимо
+    // прокрутку коліщатком і пальцем; щипок двома пальцями (зум) лишаємо.
+    const stopWheel = (e: WheelEvent) => e.preventDefault();
+    const stopTouch = (e: TouchEvent) => e.touches.length < 2 && e.preventDefault();
+    window.addEventListener("wheel", stopWheel, { passive: false });
+    window.addEventListener("touchmove", stopTouch, { passive: false });
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      root.style.overflow = prevOverflow;
+      window.removeEventListener("wheel", stopWheel);
+      window.removeEventListener("touchmove", stopTouch);
     };
   }, [isOpen, close, go]);
 
