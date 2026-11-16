@@ -1,0 +1,1024 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$accent: #90816a;
+$line: rgba(17, 17, 20, 0.12);
+$border: rgba(17, 17, 20, 0.14);
+
+// Увага: глобальний <p> — білий і 18px, тож кожному абзацу тут задаємо свої
+
+.archive-icon {
+  width: em(16);
+  height: em(16);
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// ---------- Шапка ----------
+.archive-hero {
+  margin: em(15);
+  background-color: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  // .archive-hero__inner — ще й .container, чий padding перебивав би наш
+  & &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: em(24) em(40);
+    padding-top: em(140);
+    padding-bottom: em(56);
+
+    @include mobile {
+      padding-top: em(100);
+      padding-bottom: em(24);
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: em(16);
+    max-width: em(760);
+
+    @include mobile {
+      gap: em(12);
+    }
+  }
+
+  &__badge {
+    padding: em(8, 14) em(16, 14);
+    font-size: em(14);
+    font-weight: 600;
+    line-height: 1.2;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: em(100, 14);
+  }
+
+  &__lead {
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &__stats {
+    display: flex;
+    gap: em(40);
+    margin: 0;
+
+    @include mobile {
+      gap: em(24);
+    }
+
+    div {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    dd {
+      margin: 0;
+      font-family: Arkhip, sans-serif;
+      font-size: em(44);
+      line-height: 1.2;
+      color: #ffffff;
+
+      @include mobile {
+        font-size: em(28);
+      }
+    }
+
+    dt {
+      font-size: em(14);
+      color: rgba(255, 255, 255, 0.65);
+
+      @include mobile {
+        font-size: em(12);
+      }
+    }
+  }
+}
+
+// ---------- Розкладка: фільтри ліворуч, стрічка праворуч ----------
+.archive-layout {
+  display: grid;
+  grid-template-columns: em(320) minmax(0, 1fr);
+  align-items: start;
+  gap: em(48);
+  margin-top: em(56);
+  padding-bottom: em(100);
+  // Перехід до #archive після зміни фільтра: не впритул до краю екрана
+  scroll-margin-top: em(24);
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: em(32);
+  }
+
+  @include mobile {
+    margin-top: em(16);
+    padding-bottom: em(56);
+    scroll-margin-top: em(8);
+  }
+}
+
+// ---------- Бічна панель ----------
+.archive-aside {
+  position: sticky;
+  // Нижче кнопки «Меню», що зʼявляється при скролі вгору
+  top: em(130);
+  display: flex;
+  flex-direction: column;
+  gap: em(16);
+  // Довга панель гортається сама, не виходячи за екран
+  max-height: calc(100vh - #{em(150)});
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__sheet-head {
+    display: none;
+  }
+
+  // Телефон і планшет: панель виїжджає знизу
+  @include tablet {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 210;
+    max-height: 85dvh;
+    padding: 0 em(16) em(24);
+    background: #f5f5f5;
+    border-radius: em(24) em(24) 0 0;
+    box-shadow: 0 em(-12) em(40) rgba(17, 17, 20, 0.16);
+    visibility: hidden;
+    transform: translateY(105%);
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+      visibility 0.35s;
+
+    &.is-open {
+      visibility: visible;
+      transform: none;
+    }
+
+    &__sheet-head {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: em(22) 0 em(10);
+      background: #f5f5f5;
+
+      b {
+        font-size: em(18);
+        font-weight: 700;
+      }
+    }
+
+    &__grip {
+      position: absolute;
+      top: em(8);
+      left: 50%;
+      width: em(40);
+      height: em(4);
+      background: rgba(17, 17, 20, 0.2);
+      border-radius: em(4);
+      transform: translateX(-50%);
+    }
+
+    &__close {
+      display: grid;
+      place-items: center;
+      width: em(40);
+      height: em(40);
+      padding: 0;
+      color: $dark;
+      background: #ffffff;
+      border: 1px solid $border;
+      border-radius: 50%;
+      cursor: pointer;
+
+      svg {
+        width: em(18);
+        height: em(18);
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+      }
+    }
+  }
+}
+
+.archive-sheet-backdrop {
+  display: none;
+
+  @include tablet {
+    position: fixed;
+    inset: 0;
+    z-index: 205;
+    display: block;
+    background: rgba(17, 17, 20, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+// ---------- Пошук ----------
+.archive-search {
+  display: flex;
+  align-items: center;
+  gap: em(10);
+  box-sizing: border-box;
+  height: em(52);
+  padding: 0 em(18);
+  color: #77777c;
+  background: #ffffff;
+  border: 1px solid $border;
+  border-radius: em(100);
+
+  &:focus-within {
+    border-color: $accent;
+  }
+
+  .archive-icon {
+    width: em(18);
+    height: em(18);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    font: inherit;
+    font-size: em(16);
+    color: $dark;
+    background: none;
+    border: 0;
+    outline: none;
+
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  &__clear {
+    font-size: em(22);
+    line-height: 1;
+    color: $muted;
+    text-decoration: none;
+  }
+
+  @include mobile {
+    height: em(46);
+    padding: 0 em(14);
+  }
+
+  // На десктопі пошук — у бічній панелі, на телефоні й планшеті — над стрічкою
+  &--toolbar {
+    display: none;
+
+    @include tablet {
+      display: flex;
+      flex: 1 1 100%;
+      order: -1;
+    }
+  }
+
+  &--aside {
+    @include tablet {
+      display: none;
+    }
+  }
+}
+
+// ---------- Блоки панелі ----------
+.archive-box {
+  padding: em(22);
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 20, 0.09);
+  border-radius: em(24);
+
+  @include mobile {
+    padding: em(18);
+    border-radius: em(20);
+  }
+
+  &__title {
+    margin-bottom: em(12, 13);
+    font-size: em(13);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: $muted;
+    text-transform: uppercase;
+  }
+
+  &__link {
+    display: block;
+    margin-top: em(14, 14);
+    font-size: em(14);
+    font-weight: 600;
+    color: $accent;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  &--dark {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: em(12);
+    color: #ffffff;
+    background: $dark;
+    border: 0;
+  }
+}
+
+// Календар місяців (з варіанта B3)
+.archive-cal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: em(16);
+}
+
+.archive-cal__year {
+  font-family: Arkhip, sans-serif;
+  font-size: em(28);
+  font-weight: 400;
+}
+
+.archive-round {
+  display: grid;
+  place-items: center;
+  width: em(40);
+  height: em(40);
+  color: $dark;
+  border: 1px solid $border;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: rgba(144, 129, 106, 0.12);
+  }
+
+  &.is-disabled {
+    opacity: 0.35;
+  }
+}
+
+.archive-cal {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: em(6);
+  padding: 0;
+  list-style: none;
+
+  &__month {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: em(2, 12);
+    padding: em(10, 12) em(2, 12);
+    font-size: em(12);
+    color: #75674f;
+    text-decoration: none;
+    background: rgba(144, 129, 106, 0.16);
+    border-radius: em(14, 12);
+    transition: background-color 0.2s ease;
+
+    b {
+      font-size: em(14, 12);
+      font-weight: 700;
+      color: $dark;
+    }
+
+    &:hover {
+      background: rgba(144, 129, 106, 0.28);
+    }
+
+    &.is-active {
+      color: rgba(255, 255, 255, 0.7);
+      background: $dark;
+
+      b {
+        color: #ffffff;
+      }
+    }
+
+    &.is-empty {
+      color: #a2a2a6;
+      background: none;
+      outline: 1px dashed $line;
+      outline-offset: -1px;
+
+      b {
+        color: #a2a2a6;
+      }
+    }
+  }
+}
+
+// Рубрики
+.archive-list {
+  padding: 0;
+  list-style: none;
+
+  a,
+  .is-empty {
+    display: flex;
+    justify-content: space-between;
+    padding: em(9) 0;
+    font-weight: 600;
+    color: $dark;
+    text-decoration: none;
+  }
+
+  span {
+    font-weight: 500;
+    color: $muted;
+  }
+
+  a:hover,
+  a[aria-current] {
+    color: $accent;
+  }
+
+  a[aria-current] span {
+    color: $accent;
+  }
+
+  .is-empty {
+    color: #b5b5b8;
+
+    span {
+      color: #c8c8cb;
+    }
+  }
+}
+
+// Автори
+.archive-authors {
+  display: flex;
+  flex-direction: column;
+  gap: em(4);
+  padding: 0;
+  list-style: none;
+
+  a,
+  &__static {
+    display: flex;
+    align-items: center;
+    gap: em(12);
+    margin: 0 em(-8);
+    padding: em(6) em(8);
+    font-size: em(14);
+    color: $muted;
+    text-decoration: none;
+    border-radius: em(14);
+  }
+
+  a:hover,
+  a[aria-current] {
+    background: rgba(144, 129, 106, 0.14);
+  }
+
+  a.is-empty {
+    opacity: 0.5;
+  }
+
+  img,
+  &__ph {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: em(44);
+    height: em(44);
+    object-fit: cover;
+    background: #eeeae4;
+    border: em(3) solid $accent;
+    border-radius: 50%;
+  }
+
+  b {
+    display: block;
+    font-size: em(16, 14);
+    color: $dark;
+  }
+}
+
+// Telegram
+.archive-tg {
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(24);
+    font-weight: 400;
+  }
+
+  &__text {
+    font-size: em(15);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__btn {
+    padding: em(12) em(20);
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    background: $accent;
+    border-radius: em(100);
+  }
+}
+
+// ---------- Стрічка ----------
+.archive-feed {
+  display: flex;
+  flex-direction: column;
+  gap: em(40);
+  min-width: 0;
+
+  @include mobile {
+    gap: em(28);
+  }
+}
+
+.archive-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: em(12);
+
+  &__controls {
+    display: flex;
+    gap: em(8);
+    margin-left: auto;
+  }
+}
+
+.archive-summary {
+  font-size: em(15);
+  color: $muted;
+
+  b {
+    color: $dark;
+  }
+
+  @include mobile {
+    font-size: em(14);
+  }
+}
+
+.archive-reset {
+  flex-basis: 100%;
+  font-size: em(14);
+  font-weight: 600;
+  color: $accent;
+  text-decoration: none;
+}
+
+// Кнопка «Фільтри» — лише коли панель ховається
+.archive-filters-btn {
+  display: none;
+
+  @include tablet {
+    display: inline-flex;
+    align-items: center;
+    gap: em(8);
+    height: em(46);
+    padding: 0 em(18);
+    font: inherit;
+    font-weight: 600;
+    color: #ffffff;
+    background: $dark;
+    border: 0;
+    border-radius: em(100);
+    cursor: pointer;
+
+    svg {
+      width: em(18);
+      height: em(18);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+    }
+  }
+
+  &__count {
+    display: grid;
+    place-items: center;
+    min-width: em(20, 12);
+    height: em(20, 12);
+    font-size: em(12);
+    background: $accent;
+    border-radius: em(100, 12);
+  }
+}
+
+// Перемикач «Список / Картки»
+.archive-view {
+  display: inline-flex;
+  padding: em(4);
+  background: #ffffff;
+  border: 1px solid $border;
+  border-radius: em(100);
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: em(8);
+    height: em(40);
+    padding: 0 em(16);
+    font: inherit;
+    font-weight: 600;
+    color: $dark;
+    background: none;
+    border: 0;
+    border-radius: em(100);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    &[aria-pressed="true"] {
+      color: #ffffff;
+      background: $dark;
+    }
+
+    &:hover:not([aria-pressed="true"]) {
+      color: $accent;
+    }
+  }
+
+  svg {
+    width: em(18);
+    height: em(18);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  // На телефоні — лише іконки
+  @include mobile {
+    padding: em(2);
+
+    button {
+      height: em(40);
+      padding: 0 em(11);
+    }
+
+    span {
+      @include visually-hidden;
+    }
+  }
+}
+
+// Обраний місяць: ‹ Листопад | Грудень 2025 × | Січень ›
+.archive-monthnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(8);
+}
+
+.archive-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: em(8);
+  height: em(40);
+  padding: 0 em(16);
+  font-weight: 600;
+  color: $dark;
+  text-decoration: none;
+  white-space: nowrap;
+  background: #ffffff;
+  border: 1px solid $border;
+  border-radius: em(100);
+
+  &:hover {
+    color: $accent;
+  }
+
+  &.is-current {
+    gap: em(10);
+    color: #ffffff;
+    background: $dark;
+    border-color: $dark;
+
+    a {
+      font-size: em(20);
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+
+  &.is-disabled {
+    color: #a2a2a6;
+    border-style: dashed;
+  }
+
+  @include mobile {
+    padding: 0 em(12);
+    font-size: em(14);
+  }
+}
+
+// Місяць: заголовок зверху, статті під ним
+.archive-month {
+  display: flex;
+  flex-direction: column;
+  gap: em(24);
+
+  @include mobile {
+    gap: em(8);
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: em(16);
+    padding-bottom: em(14);
+    border-bottom: 2px solid $dark;
+
+    @include mobile {
+      padding-bottom: em(10);
+    }
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    line-height: 1.1;
+    color: $dark;
+
+    span {
+      color: $accent;
+    }
+
+    @include mobile {
+      font-size: em(26);
+      white-space: nowrap;
+    }
+  }
+
+  &__count {
+    margin-top: em(4, 14);
+    font-size: em(14);
+    color: $muted;
+  }
+
+  &__only {
+    display: inline-flex;
+    align-items: center;
+    gap: em(4, 14);
+    font-size: em(14);
+    font-weight: 600;
+    color: $accent;
+    text-decoration: none;
+    white-space: nowrap;
+
+    .archive-icon {
+      width: em(16, 14);
+      height: em(16, 14);
+    }
+
+    &:hover {
+      color: $dark;
+    }
+  }
+}
+
+// Вигляд «Список»
+.archive-rows {
+  padding: 0;
+  list-style: none;
+}
+
+.archive-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: em(64) em(240) minmax(0, 1fr);
+  align-items: center;
+  gap: em(24);
+  padding: em(22) 0;
+  border-bottom: 1px solid $line;
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: em(13);
+    color: $muted;
+
+    b {
+      font-family: Arkhip, sans-serif;
+      font-size: em(36, 13);
+      font-weight: 400;
+      line-height: 1.1;
+      color: $dark;
+    }
+  }
+
+  &__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: em(20);
+    transition: transform 0.4s ease;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: em(10);
+    min-width: 0;
+  }
+
+  &__meta {
+    font-size: em(13);
+    font-weight: 600;
+    color: $accent;
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(26);
+    font-weight: 400;
+    line-height: 1.15;
+    color: $dark;
+    transition: color 0.2s ease;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      // Увесь рядок клікабельний
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+      }
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+
+  &:has(a:focus-visible) {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+    border-radius: em(8);
+  }
+
+  &:hover &__title {
+    color: $accent;
+  }
+
+  &__excerpt {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: em(16);
+    line-height: 1.55;
+    color: #55555a;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  &__author {
+    font-size: em(14);
+    color: $muted;
+  }
+
+  @include tablet {
+    grid-template-columns: em(56) em(200) minmax(0, 1fr);
+    gap: em(20);
+  }
+
+  // Телефон: число | заголовок | квадратне фото
+  @include mobile {
+    grid-template-columns: em(44) minmax(0, 1fr) em(96);
+    gap: em(12);
+    padding: em(14) 0;
+
+    &__date b {
+      font-size: em(24, 13);
+    }
+
+    &__img {
+      grid-row: 1;
+      grid-column: 3;
+      aspect-ratio: 1;
+      border-radius: em(14);
+    }
+
+    &__body {
+      gap: em(4);
+    }
+
+    &__meta {
+      font-size: em(12);
+    }
+
+    &__title {
+      font-size: em(17);
+      line-height: 1.2;
+    }
+
+    &__excerpt,
+    &__author {
+      display: none;
+    }
+  }
+}
+
+// Вигляд «Картки» — ті самі картки, що на головній (components/ui/NewsCard)
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: em(20);
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(12);
+    margin-top: em(8);
+  }
+}
+
+.archive-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: em(8);
+  padding: em(48) em(24);
+  text-align: center;
+  background: #ffffff;
+  border-radius: em(24);
+
+  p {
+    font-size: em(16);
+    color: $muted;
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(28) !important;
+    color: $dark !important;
+  }
+
+  a {
+    margin-top: em(8);
+    font-weight: 600;
+    color: $accent;
+  }
+}
+
+.archive-more {
+  .black-button__circle .archive-icon {
+    width: em(20);
+    height: em(20);
+    stroke: $dark;
+  }
+}

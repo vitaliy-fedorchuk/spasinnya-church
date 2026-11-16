@@ -26,7 +26,7 @@ const ArticlePage = ({ article }: { article: Article }) => {
         />
 
         <div className="container article-hero__inner">
-          <a className="article-hero__back" href="/#news">
+          <a className="article-hero__back" href="/blog">
             <svg viewBox="0 0 20 20" aria-hidden="true">
               <path d="M12.5 4.5 7 10l5.5 5.5" />
             </svg>

@@ -2,13 +2,11 @@ import "./NewsSection.scss";
 import Rubricator from "../ui/Rubricator";
 import BlackButton from "../buttons/BlackButton";
 import newspaperIconAsset from "../../assets/news/newspaper.svg";
-import bookIconAsset from "../../assets/news/book.svg";
-import { articleHref, type Article } from "../../features/blog";
-import { srcSetOf, variantOf } from "@/features/media/urls";
+import NewsCard from "../ui/NewsCard";
+import type { Article } from "../../features/blog";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
 const newspaperIcon = newspaperIconAsset.src;
-const bookIcon = bookIconAsset.src;
 
 interface NewsSectionProps {
   /** Статті для карток (сторінка бере їх з бази) */
@@ -28,56 +26,17 @@ const NewsSection = ({ articles: news }: NewsSectionProps) => {
 
         <ul className="news__list">
           {news.map((item) => (
-            <li key={item.slug} className="news__card">
-              <img
-                className="news__image"
-                src={item.cover.src}
-                srcSet={srcSetOf(item.cover.src)}
-                sizes="(max-width: 767px) 80vw, (max-width: 1199px) 50vw, 460px"
-                alt=""
-                loading="lazy"
-              />
-
-              <div className="news__body">
-                <p className="news__read-time">
-                  <img src={bookIcon} width={16} height={16} alt="" />
-                  {item.readTime}
-                </p>
-
-                <ul className="news__tags" aria-label="Теги">
-                  {item.tags.map((tag) => (
-                    <li key={tag} className="news__tag">
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-
-                <h3 className="news__card-title">
-                  {/* Посилання розтягнуте на всю картку (::after) */}
-                  <a className="news__link" href={articleHref(item.slug)}>
-                    {item.title}
-                  </a>
-                </h3>
-
-                <footer className="news__meta">
-                  <div className="news__author">
-                    <img className="news__avatar" src={variantOf(item.author.photo, 480)} alt="" loading="lazy" />
-                    <div>
-                      <p className="news__author-name">{item.author.name}</p>
-                      <p className="news__author-role">{item.author.role}</p>
-                    </div>
-                  </div>
-                  <time className="news__date" dateTime={item.date}>
-                    {item.dateLabel}
-                  </time>
-                </footer>
-              </div>
-            </li>
+            <NewsCard
+              key={item.slug}
+              article={item}
+              className="news__card"
+              sizes="(max-width: 767px) 80vw, (max-width: 1199px) 50vw, 460px"
+            />
           ))}
         </ul>
 
         <div className="news__more">
-          <BlackButton text="Часопис новин" href="#news" />
+          <BlackButton text="Часопис новин" href="/blog" />
         </div>
       </div>
     </section>

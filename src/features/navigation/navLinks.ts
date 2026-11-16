@@ -11,5 +11,6 @@ export const navLinks: NavLink[] = [
   { label: "Про нас", href: "/#about", current: true },
   { label: "Служіння", href: "/#services" },
   { label: "Події", href: "/#events" },
+  { label: "Новини", href: "/blog" },
   { label: "Контакти", href: "/#contact" },
 ];

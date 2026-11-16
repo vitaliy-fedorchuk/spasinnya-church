@@ -34,7 +34,7 @@ const navigation = [
   { label: "Про церкву", href: "/#about" },
   { label: "Служіння", href: "/#services" },
   { label: "Графік подій", href: "/#events" },
-  { label: "Новини", href: "/#news" },
+  { label: "Новини", href: "/blog" },
   { label: "Підтримати служіння", href: "/#contact" },
 ];
 
