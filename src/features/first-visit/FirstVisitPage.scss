@@ -1,0 +1,643 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$accent: #90816a;
+
+// Увага: глобальний <p> — білий і 18px, тож кожному абзацу тут задаємо свої
+
+.visit-icon {
+  width: em(22);
+  height: em(22);
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Своя іконка в кружку BlackButton (телефон)
+.visit .black-button__circle .visit-icon {
+  width: em(20);
+  height: em(20);
+  color: $dark;
+}
+
+// ---------- Шапка: фото храму ----------
+.visit-hero {
+  position: relative;
+  display: flex;
+  min-height: em(820);
+  margin: em(15);
+  overflow: hidden;
+  background-color: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: em(700);
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 30%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.1) 100%);
+  }
+
+  & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(56);
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(24);
+    }
+  }
+
+  &__title {
+    margin-top: em(20, 64);
+    font-size: em(64);
+
+    @include mobile {
+      margin-top: em(14, 36);
+      font-size: em(36);
+    }
+  }
+
+  &__lead {
+    max-width: em(720, 18);
+    margin-top: em(18, 18);
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.82);
+
+    @include mobile {
+      margin-top: em(12, 15);
+      font-size: em(15);
+    }
+  }
+
+  // Головне — одним поглядом: коли і де
+  &__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(12);
+    margin-top: em(32);
+
+    @include mobile {
+      flex-direction: column;
+      align-self: stretch;
+      gap: em(8);
+      margin-top: em(20);
+    }
+  }
+
+  &__fact {
+    display: flex;
+    align-items: center;
+    gap: em(14);
+    padding: em(14) em(22) em(14) em(16);
+    color: #ffffff;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: em(20);
+    backdrop-filter: blur(12px);
+
+    .visit-icon {
+      color: #d8c9b0;
+    }
+
+    span {
+      display: flex;
+      flex-direction: column;
+      gap: em(2);
+      font-size: em(15);
+      line-height: 1.3;
+    }
+
+    b {
+      font-size: em(12, 15);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.65);
+      text-transform: uppercase;
+    }
+
+    @include mobile {
+      padding: em(12) em(14);
+      border-radius: em(16);
+
+      span {
+        font-size: em(14);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(12);
+    margin-top: em(32);
+
+    @include mobile {
+      margin-top: em(20);
+    }
+  }
+}
+
+// ---------- Секції ----------
+.visit-section {
+  padding-top: em(120);
+
+  @include mobile {
+    padding-top: em(64);
+  }
+}
+
+.visit-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: em(860);
+  margin: 0 auto;
+  text-align: center;
+
+  .section-title {
+    margin-top: em(16, 48);
+
+    @include mobile {
+      margin-top: em(14, 32);
+    }
+  }
+
+  &__text {
+    margin-top: em(16, 18);
+    font-size: em(18);
+    line-height: 1.5;
+    color: $muted;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &--light {
+    --section-title-color: #ffffff;
+  }
+}
+
+// Кроки богослужіння: фото й текст по черзі ліворуч/праворуч
+.visit-steps {
+  display: flex;
+  flex-direction: column;
+  gap: em(24);
+  margin: em(56) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    gap: em(16);
+    margin-top: em(32);
+  }
+}
+
+.visit-step {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: em(56);
+  padding: em(16);
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 20, 0.09);
+  border-radius: em(30);
+
+  &:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+
+    .visit-step__photo {
+      order: 2;
+    }
+  }
+
+  &__photo {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: em(22);
+  }
+
+  &__body {
+    padding: em(24) em(32) em(24) 0;
+  }
+
+  &:nth-child(even) &__body {
+    padding: em(24) 0 em(24) em(32);
+  }
+
+  &__num {
+    font-family: Arkhip, sans-serif;
+    font-size: em(56);
+    line-height: 1;
+    color: rgba(144, 129, 106, 0.45);
+  }
+
+  &__title {
+    margin-top: em(12, 36);
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    line-height: 1.1;
+    color: $dark;
+  }
+
+  &__text {
+    margin-top: em(16, 18);
+    font-size: em(18);
+    line-height: 1.6;
+    color: #55555a;
+  }
+
+  @include tablet {
+    gap: em(32);
+  }
+
+  // Телефон: фото зверху, текст під ним
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: em(16);
+    padding: em(10);
+    border-radius: em(22);
+
+    &__photo {
+      order: 0 !important;
+      border-radius: em(16);
+    }
+
+    &__body,
+    &:nth-child(even) &__body {
+      padding: 0 em(8) em(12);
+    }
+
+    &__num {
+      font-size: em(36);
+    }
+
+    &__title {
+      font-size: em(24);
+    }
+
+    &__text {
+      font-size: em(15);
+    }
+  }
+}
+
+// ---------- Особливі служіння (темний блок) ----------
+.visit-special {
+  margin: em(120) em(15) 0;
+  padding: em(100) 0;
+  background: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    margin: em(64) em(8) 0;
+    padding: em(56) 0;
+    border-radius: em(20);
+  }
+}
+
+.visit-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(20);
+  margin: em(48) 0 0;
+  padding: 0;
+  list-style: none;
+
+  &--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(12);
+    margin-top: em(28);
+
+    &--2 {
+      margin-top: 0;
+    }
+  }
+}
+
+.visit-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: em(30);
+  background: #ffffff;
+  border: 1px solid rgba(17, 17, 20, 0.09);
+  border-radius: em(30);
+
+  @include mobile {
+    padding: em(20);
+    border-radius: em(20);
+  }
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: em(56);
+    height: em(56);
+    color: $accent;
+    background: rgba(144, 129, 106, 0.14);
+    border-radius: 50%;
+
+    .visit-icon {
+      width: em(26);
+      height: em(26);
+    }
+
+    @include mobile {
+      width: em(48);
+      height: em(48);
+    }
+  }
+
+  &__title {
+    margin-top: em(24, 24);
+    font-family: Arkhip, sans-serif;
+    font-size: em(24);
+    font-weight: 400;
+    line-height: 1.15;
+    color: $dark;
+
+    @include mobile {
+      margin-top: em(16, 20);
+      font-size: em(20);
+    }
+  }
+
+  &__text {
+    margin-top: em(12, 16);
+    font-size: em(16);
+    line-height: 1.6;
+    color: #55555a;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &__link {
+    margin-top: em(16);
+    font-weight: 600;
+    color: $accent;
+  }
+
+  &--dark {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+
+    .visit-card__icon {
+      color: #d8c9b0;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .visit-card__title {
+      color: #ffffff;
+    }
+
+    .visit-card__text {
+      color: rgba(255, 255, 255, 0.72);
+    }
+  }
+}
+
+// Практичне + розклад поруч
+.visit-know {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) em(420);
+  align-items: start;
+  gap: em(20);
+  margin-top: em(48);
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @include mobile {
+    gap: em(12);
+    margin-top: em(28);
+  }
+}
+
+.visit-schedule {
+  padding: em(30);
+  color: #ffffff;
+  background: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    padding: em(22) em(20);
+    border-radius: em(20);
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(28);
+    font-weight: 400;
+
+    @include mobile {
+      font-size: em(24);
+    }
+  }
+
+  &__list {
+    margin: em(20) 0 0;
+  }
+
+  &__day {
+    padding: em(14) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+    dt {
+      margin-bottom: em(6, 13);
+      font-size: em(13);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #d8c9b0;
+      text-transform: uppercase;
+    }
+
+    dd {
+      display: flex;
+      justify-content: space-between;
+      gap: em(12);
+      margin: 0;
+      padding: em(3) 0;
+      font-size: em(16);
+      color: rgba(255, 255, 255, 0.85);
+
+      b {
+        font-weight: 600;
+        color: #ffffff;
+      }
+    }
+  }
+
+  &__place {
+    display: flex;
+    align-items: flex-start;
+    gap: em(12);
+    margin-top: em(20);
+    color: #ffffff;
+    text-decoration: none;
+
+    .visit-icon {
+      color: #d8c9b0;
+    }
+
+    span {
+      display: flex;
+      flex-direction: column;
+      gap: em(4);
+      font-size: em(15);
+      line-height: 1.4;
+    }
+
+    small {
+      font-size: em(14, 15);
+      font-weight: 600;
+      color: #d8c9b0;
+    }
+
+    &:hover small {
+      color: #ffffff;
+    }
+  }
+}
+
+// ---------- Запрошення ----------
+.visit-cta {
+  padding-top: em(120);
+  padding-bottom: em(100);
+
+  @include mobile {
+    padding-top: em(64);
+    padding-bottom: em(56);
+  }
+
+  &__box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) em(380);
+    align-items: center;
+    gap: em(48);
+    padding: em(56);
+    background: $dark;
+    border-radius: em(30);
+
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr) em(300);
+    }
+
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: em(24);
+      padding: em(24) em(20);
+      border-radius: em(20);
+    }
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(40);
+    font-weight: 400;
+    line-height: 1.15;
+    color: #ffffff;
+
+    @include mobile {
+      font-size: em(26);
+    }
+  }
+
+  &__lead {
+    margin-top: em(16, 18);
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.72);
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &__pastor {
+    position: relative;
+    margin: 0;
+
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 545 / 586;
+      object-fit: cover;
+      border-radius: em(24);
+    }
+
+    figcaption {
+      position: absolute;
+      right: em(12);
+      bottom: em(12);
+      left: em(12);
+      display: flex;
+      flex-direction: column;
+      gap: em(2);
+      padding: em(14) em(16);
+      font-size: em(14);
+      color: rgba(255, 255, 255, 0.75);
+      background: rgba(38, 38, 38, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: em(16);
+      backdrop-filter: blur(12px);
+
+      b {
+        font-size: em(16, 14);
+        color: #ffffff;
+      }
+    }
+
+    @include mobile {
+      img {
+        aspect-ratio: 4 / 3;
+        object-position: top;
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@ interface ButtonProps {
 
 const BlackButton = ({
   text = "Я тут вперше",
-  href = "/#services",
+  href = "/ya-tut-vpershe",
   bgColor = "#262626",
   textColor = "#fff",
   circleColor = "#f5f5f5",

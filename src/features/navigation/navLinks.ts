@@ -8,6 +8,7 @@ export interface NavLink {
 // TODO: замінити якорі на реальні id секцій, коли вони з'являться
 export const navLinks: NavLink[] = [
   { label: "Головна", href: "/" },
+  { label: "Я тут вперше", href: "/ya-tut-vpershe" },
   { label: "Про нас", href: "/#about", current: true },
   { label: "Служіння", href: "/#services" },
   { label: "Події", href: "/#events" },

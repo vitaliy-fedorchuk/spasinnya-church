@@ -80,3 +80,21 @@ export const getFooterSchedule = async () => {
     .sort((a, b) => FOOTER_ORDER.indexOf(a.wd) - FOOTER_ORDER.indexOf(b.wd) || a.time.localeCompare(b.time))
     .map((x) => ({ id: x.id, day: `${WEEKDAY_NAMES[x.wd]} - ${x.label}`, time: x.time }));
 };
+
+/**
+ * Розклад тижня по днях (сторінка «Я тут вперше»): ті самі події, що у футері,
+ * згруповані за днем — «Неділя: 10:00 Ранкове, 17:00 Вечірнє».
+ */
+export const getWeeklySchedule = async () => {
+  const events = await getSiteEvents();
+  const rows = events
+    .filter((e) => e.showInFooter && e.repeat === "WEEKLY")
+    .flatMap((e) => e.weekdays.map((wd) => ({ wd, time: e.startTime, label: e.shortTitle || e.title })));
+  return FOOTER_ORDER.map((wd) => ({
+    day: WEEKDAY_NAMES[wd],
+    items: rows
+      .filter((r) => r.wd === wd)
+      .sort((a, b) => a.time.localeCompare(b.time))
+      .map(({ time, label }) => ({ time, label })),
+  })).filter((d) => d.items.length > 0);
+};

@@ -31,6 +31,7 @@ const EMAIL = "hello@spasinnya.church";
 
 // TODO: замінити якорі на реальні id секцій
 const navigation = [
+  { label: "Я тут вперше", href: "/ya-tut-vpershe" },
   { label: "Про церкву", href: "/#about" },
   { label: "Служіння", href: "/#services" },
   { label: "Графік подій", href: "/#events" },
