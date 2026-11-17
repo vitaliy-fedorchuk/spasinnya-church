@@ -48,7 +48,7 @@ const tween = (t, start, dur, from, to, ease) => {
 const at = (start, dur, from, to, ease, when) => tween(when, start, dur, from, to, ease);
 
 // ---------- Шари (час і значення — з прикладу Osmo) ----------
-// Скруглення кутів: до 1em за 0.8 с (osmo), назад у 0 з 1.6 с (osmo)
+// Скруглення кутів: до повного (--vt-radius) за 0.8 с (osmo), назад у 0 з 1.6 с (osmo)
 const radius = (t) => (t < 1.6 ? tween(t, 0, 0.8, 0, 1, osmo) : tween(t, 1.6, 0.8, 1, 0, osmo));
 
 const layers = {
@@ -83,7 +83,9 @@ const frame = ({ scale, y, r }, cut) => {
   const shift = fmt((scale * k) / 2);
   const transform = `translate(calc(var(--vt-sbw, 0px) * ${shift}), ${fmt(y, 3)}%) scale(${fmt(scale)})`;
   const right = cut ? `calc(var(--vt-sbw, 0px) * ${fmt(k)})` : "0";
-  const clip = `inset(0 ${right} 0 0 round calc(var(--size-font) * ${fmt(r)}))`;
+  // Радіус — як у першого блоку сайту (--vt-radius), поділений на масштаб:
+  // картка зменшена, і без цього її кути на екрані виглядали б меншими
+  const clip = `inset(0 ${right} 0 0 round calc(var(--vt-radius) * ${fmt(r / scale)}))`;
   return `transform: ${transform}; clip-path: ${clip};`;
 };
 
@@ -103,6 +105,14 @@ const css = `/* Згенеровано scripts/gen-page-transition.mjs — не 
 
 :root {
   --vt-duration: ${TOTAL}s;
+  /* Скруглення карток — як у першого блоку (em(30); на телефоні em(20)) */
+  --vt-radius: calc(var(--size-font) * 1.875);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --vt-radius: calc(var(--size-font) * 1.25);
+  }
 }
 
 ${keyframes("vt-leave", layers.leave, true)}
