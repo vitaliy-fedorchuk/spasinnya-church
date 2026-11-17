@@ -28,14 +28,15 @@ $accent: #90816a;
 .visit-hero {
   position: relative;
   display: flex;
-  min-height: em(820);
+  // Висота — як у шапки «Часопису новин»
+  min-height: em(760);
   margin: em(15);
   overflow: hidden;
   background-color: $dark;
   border-radius: em(30);
 
   @include mobile {
-    min-height: em(700);
+    min-height: em(640);
     margin: em(8);
     border-radius: em(20);
   }

@@ -33,7 +33,7 @@ const FullscreenMenu = ({ isOpen, onClose }: FullscreenMenuProps) => {
           >
             <a
               href={link.href}
-              className={`fullscreen-menu__link${link.current ? " fullscreen-menu__link--current" : ""}`}
+              className={`fullscreen-menu__link${link.current || link.accent ? " fullscreen-menu__link--current" : ""}`}
               aria-current={link.current ? "page" : undefined}
               onClick={onClose}
             >

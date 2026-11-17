@@ -1,17 +1,18 @@
 export interface NavLink {
   label: string;
   href: string;
-  /** Виділений пункт — коричневий колір */
+  /** Поточна сторінка — коричневий колір і aria-current */
   current?: boolean;
+  /** Акцентний пункт (коричневий), але не «поточна сторінка» */
+  accent?: boolean;
 }
 
 // TODO: замінити якорі на реальні id секцій, коли вони з'являться
 export const navLinks: NavLink[] = [
   { label: "Головна", href: "/" },
-  { label: "Я тут вперше", href: "/ya-tut-vpershe" },
-  { label: "Про нас", href: "/#about", current: true },
+  { label: "Я тут вперше", href: "/ya-tut-vpershe", accent: true },
+  { label: "Про нас", href: "/#about" },
   { label: "Служіння", href: "/#services" },
-  { label: "Події", href: "/#events" },
   { label: "Новини", href: "/blog" },
   { label: "Контакти", href: "/#contact" },
 ];
