@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { lockScroll, unlockScroll } from "@/components/layout/lenis";
 
 /**
  * Скільки триває закриття шторки меню — має збігатися з transition clip-path
@@ -65,8 +66,11 @@ export const useNavigation = () => {
     root.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
     body.style.paddingRight = `${scrollbarWidth}px`;
     body.style.overflow = "hidden";
+    // Плавна прокрутка (Lenis) крутить сторінку сама — блокуємо і її
+    lockScroll();
 
     return () => {
+      unlockScroll();
       root.style.removeProperty("--scrollbar-width");
       body.style.paddingRight = prevPaddingRight;
       body.style.overflow = prevOverflow;

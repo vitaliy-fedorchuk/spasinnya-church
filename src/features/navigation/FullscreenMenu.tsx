@@ -16,6 +16,7 @@ const FullscreenMenu = ({ isOpen, onClose }: FullscreenMenuProps) => {
     <div
       id={FULLSCREEN_MENU_ID}
       className={`fullscreen-menu${isOpen ? " fullscreen-menu--open" : ""}`}
+      data-lenis-prevent
       inert={!isOpen}
     >
       <ul className="fullscreen-menu__list">

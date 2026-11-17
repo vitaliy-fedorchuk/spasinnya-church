@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./ArticleLightbox.scss";
+import { lockScroll, unlockScroll } from "@/components/layout/lenis";
 
 /**
  * Перегляд фото статті на весь екран.
@@ -251,7 +252,10 @@ const ArticleLightbox = () => {
     window.addEventListener("wheel", stopWheel, { passive: false });
     window.addEventListener("touchmove", stopTouch, { passive: false });
     document.addEventListener("keydown", onKey);
+    // Плавна прокрутка (Lenis) теж не повинна крутити сторінку під фото
+    lockScroll();
     return () => {
+      unlockScroll();
       document.removeEventListener("keydown", onKey);
       window.removeEventListener("wheel", stopWheel);
       window.removeEventListener("touchmove", stopTouch);

@@ -90,6 +90,8 @@ export const FiltersPanel = ({ children }: { children: ReactNode }) => {
       />
       <aside
         id="archive-filters"
+        // Своя прокрутка панелі — без плавної прокрутки сторінки (Lenis)
+        data-lenis-prevent
         className={`archive-aside${open ? " is-open" : ""}`}
         aria-label="Фільтри"
         onClick={(e) => {
