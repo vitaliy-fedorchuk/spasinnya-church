@@ -208,8 +208,6 @@ $curtain-ease: cubic-bezier(0.9, 0, 0.1, 1);
 //    опускаються; 2) стара падає вниз, слідом — бежева; 3) нова розгортається.
 // Імена шарам дає скрипт у app/layout.tsx (vt-leaving / vt-entering).
 // Chrome/Edge і Safari 18+; Firefox просто відкриває сторінку.
-$vt-ease: cubic-bezier(0.625, 0.05, 0, 1); // «osmo»
-$vt-ease-scale: cubic-bezier(0.87, 0, 0.13, 1); // expo.inOut
 
 // Прийшли переходом: нова сторінка вже видна в картці, тож шторку першого
 // екрана пропускаємо (її роль грає сама картка) — текст виїжджає, як завжди
@@ -276,7 +274,9 @@ html.vt-arrived .hero {
   ::view-transition-old(page-leave),
   ::view-transition-new(page-middle),
   ::view-transition-new(page-enter) {
-    animation-duration: 2s;
+    animation-duration: var(--vt-duration, 2.4s);
+    // Криві вже «запечені» в ключових кадрах — між ними лінійно
+    animation-timing-function: linear;
     animation-fill-mode: both;
     transform-origin: 50% 50%;
     mix-blend-mode: normal;
@@ -296,68 +296,6 @@ html.vt-arrived .hero {
 }
 
 // Стара: зменшується й трохи опускається, потім падає за екран
-// Знімки старої й нової сторінки ширші за видиму частину на смугу прокрутки
-// (--vt-sbw, з app/layout.tsx): у картці її обрізаємо (inset праворуч), а всі
-// картки зсуваємо на половину смуги — тоді відступи зліва й справа однакові.
-// Бежева картка (.vt-middle, fixed) і так без смуги — її лише зсуваємо.
-$vt-cut: var(--vt-sbw, 0px);
-$vt-shift: calc(var(--vt-sbw, 0px) / 2);
-$vt-round: 1.6vw;
 
-@keyframes vt-leave {
-  0% {
-    transform: none;
-    clip-path: inset(0 0 0 0 round 0);
-    animation-timing-function: $vt-ease-scale;
-  }
-
-  45% {
-    transform: translate($vt-shift, 18%) scale(0.95);
-    clip-path: inset(0 $vt-cut 0 0 round $vt-round);
-    animation-timing-function: $vt-ease;
-  }
-
-  100% {
-    transform: translate($vt-shift, 135%) scale(0.95);
-    clip-path: inset(0 $vt-cut 0 0 round $vt-round);
-  }
-}
-
-// Бежева: зменшується сильніше, падає трохи пізніше за стару
-@keyframes vt-middle {
-  0% {
-    transform: none;
-    clip-path: inset(0 round 0);
-    animation-timing-function: $vt-ease-scale;
-  }
-
-  52% {
-    transform: translate($vt-shift, 9%) scale(0.875);
-    clip-path: inset(0 round $vt-round);
-    animation-timing-function: $vt-ease;
-  }
-
-  100% {
-    transform: translate($vt-shift, 125%) scale(0.875);
-    clip-path: inset(0 round $vt-round);
-  }
-}
-
-// Нова: чекає маленькою карткою позаду, потім розгортається на весь екран
-@keyframes vt-enter {
-  0% {
-    transform: translateX($vt-shift) scale(0.8);
-    clip-path: inset(0 $vt-cut 0 0 round $vt-round);
-  }
-
-  55% {
-    transform: translateX($vt-shift) scale(0.8);
-    clip-path: inset(0 $vt-cut 0 0 round $vt-round);
-    animation-timing-function: $vt-ease-scale;
-  }
-
-  100% {
-    transform: none;
-    clip-path: inset(0 0 0 0 round 0);
-  }
-}
+// Ключові кадри vt-leave / vt-middle / vt-enter — у page-transition.css
+// (генерує scripts/gen-page-transition.mjs за таймлайном Osmo)

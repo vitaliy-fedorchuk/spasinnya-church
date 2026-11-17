@@ -9,21 +9,28 @@ import { useEffect } from "react";
  * Таймаут — запасний варіант, якщо шрифти зависли.
  */
 /** Мс від початку переходу між сторінками, коли нова «картка» починає розгортатись */
-const VT_EXPAND_AT = 1000;
+const VT_EXPAND_AT = 1200;
 
 const PageLoaded = () => {
   useEffect(() => {
     let cancelled = false;
+    // Сторінку підготували заздалегідь (наведення на посилання, SiteSpeculation)
+    // і поки не показали — чекаємо, доки її справді відкриють
+    const shown = new Promise<void>((resolve) => {
+      if (!(document as Document & { prerendering?: boolean }).prerendering) return resolve();
+      document.addEventListener("prerenderingchange", () => requestAnimationFrame(() => resolve()), { once: true });
+    });
     const fontsOrTimeout = Promise.race([
       document.fonts.ready,
       new Promise((resolve) => setTimeout(resolve, 2000)),
     ]);
     // Прийшли переходом між сторінками (див. app/layout.tsx): нова сторінка спершу
     // чекає маленькою карткою — запускаємо появу, коли картка почне розгортатись
-    const vtStart = Number(document.documentElement.dataset.vtStart);
-    const waitTransition = new Promise((resolve) =>
-      setTimeout(resolve, vtStart ? Math.max(0, VT_EXPAND_AT - (Date.now() - vtStart)) : 0),
-    );
+    const waitTransition = shown.then(() => {
+      const vtStart = Number(document.documentElement.dataset.vtStart);
+      const left = vtStart ? Math.max(0, VT_EXPAND_AT - (Date.now() - vtStart)) : 0;
+      return new Promise((resolve) => setTimeout(resolve, left));
+    });
     Promise.all([fontsOrTimeout, waitTransition]).then(() =>
       requestAnimationFrame(() =>
         requestAnimationFrame(() => {
