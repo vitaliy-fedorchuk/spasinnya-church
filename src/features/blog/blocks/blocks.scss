@@ -595,3 +595,121 @@ $line: rgba(17, 17, 20, 0.09);
     @include visually-hidden;
   }
 }
+
+// ---------- Вступ із буквицею ----------
+.ab-lead--dropcap::first-letter {
+  float: left;
+  margin: 0.06em 0.14em 0 0;
+  font-family: Arkhip, sans-serif;
+  font-size: 3.4em;
+  line-height: 0.82;
+  color: $accent;
+}
+
+// ---------- Виділене слово (світлий акцентний блок) ----------
+// Розмір тексту — як у біблійного вірша
+.ab-word {
+  position: relative;
+  margin: 0;
+  padding: em(64) em(80);
+  overflow: hidden;
+  background-color: #eeeae4;
+  border-radius: em(30);
+
+  @include mobile {
+    padding: em(36) em(20);
+    border-radius: em(20);
+  }
+
+  &__text {
+    position: relative;
+    margin: 0;
+  }
+
+  &__text p {
+    max-width: em(760, 26);
+    font-family: Arkhip, sans-serif;
+    font-size: em(26);
+    font-weight: 400;
+    line-height: 1.35;
+    color: $dark;
+
+    @include mobile {
+      font-size: em(20);
+    }
+  }
+
+  &__caption {
+    position: relative;
+    margin-top: em(24, 14);
+    font-size: em(14);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $accent;
+    text-transform: uppercase;
+
+    @include mobile {
+      margin-top: em(16, 12);
+      font-size: em(12);
+    }
+  }
+
+  // Велика світла голубка на фоні праворуч
+  &__dove {
+    position: absolute;
+    top: 50%;
+    right: em(56);
+    width: em(130);
+    height: auto;
+    color: rgba(144, 129, 106, 0.18);
+    transform: translateY(-50%);
+
+    @include mobile {
+      top: em(16);
+      right: em(14);
+      width: em(64);
+      transform: none;
+    }
+  }
+
+  &--dove &__text p {
+    max-width: em(640, 26);
+  }
+
+  // Маленька голубка над текстом, усе по центру
+  &--emblem {
+    text-align: center;
+  }
+
+  &--emblem &__text p {
+    margin: 0 auto;
+  }
+
+  &__emblem {
+    display: block;
+    width: em(44);
+    height: auto;
+    margin: 0 auto em(24);
+    color: $accent;
+
+    @include mobile {
+      width: em(34);
+      margin-bottom: em(16);
+    }
+  }
+
+  // Лапки над текстом
+  &__quote {
+    display: block;
+    width: em(40);
+    height: em(30);
+    margin-bottom: em(24);
+    fill: $accent;
+
+    @include mobile {
+      width: em(30);
+      height: em(22);
+      margin-bottom: em(16);
+    }
+  }
+}

@@ -11,8 +11,8 @@ export interface NavLink {
 export const navLinks: NavLink[] = [
   { label: "Головна", href: "/" },
   { label: "Я тут вперше", href: "/ya-tut-vpershe", accent: true },
-  { label: "Про нас", href: "/#about" },
-  { label: "Служіння", href: "/#services" },
+  { label: "Про нас", href: "/pro-nas" },
+  { label: "Служіння", href: "/sluzhinnya" },
   { label: "Новини", href: "/blog" },
-  { label: "Контакти", href: "/#contact" },
+  { label: "Контакти", href: "/kontakty" },
 ];

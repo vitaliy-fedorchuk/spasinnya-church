@@ -60,6 +60,16 @@ $sticky-top: max(#{em(100)}, calc(50vh - #{$card-height} / 2));
     }
   }
 
+  // Кнопка — під текстом, вирівняна як текст (BlackButton сам по центру)
+  &__button {
+    justify-content: flex-start;
+    margin-top: em(32);
+
+    @include mobile {
+      margin-top: em(24);
+    }
+  }
+
   &__text {
     max-width: em(571, 18);
     margin-top: em(16, 18);

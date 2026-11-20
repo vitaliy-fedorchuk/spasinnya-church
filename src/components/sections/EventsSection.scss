@@ -1,6 +1,13 @@
 @use "../../styles/tools" as *;
 
 .events {
+  // Перехід за якорем /#events — заголовок не ховається під меню
+  scroll-margin-top: em(120);
+
+  @include mobile {
+    scroll-margin-top: em(80);
+  }
+
   // Зверху відступ дає попередня секція (100px), знизу — 74px до наступної
   padding-bottom: em(74);
 

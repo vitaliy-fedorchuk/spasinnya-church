@@ -45,6 +45,8 @@ export const createBlock = (type: BlockType): ArticleBlock => {
   switch (type) {
     case "lead":
       return { id, type, text: "" };
+    case "dropcap":
+      return { id, type, text: "" };
     case "text":
       return { id, type, paragraphs: [""] };
     case "heading":
@@ -53,6 +55,8 @@ export const createBlock = (type: BlockType): ArticleBlock => {
       return { id, type, text: "", author: "", role: "" };
     case "verse":
       return { id, type, text: "", reference: "" };
+    case "word":
+      return { id, type, text: "", caption: "", mark: "dove" };
     case "image":
       return { id, type, image: { src: "", alt: "" }, caption: "", wide: false };
     case "gallery":

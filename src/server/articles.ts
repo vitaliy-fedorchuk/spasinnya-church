@@ -34,11 +34,13 @@ const parseBlocks = (raw: Prisma.JsonValue, slug: string): ArticleBlock[] => {
 const blockText = (b: ArticleBlock): string => {
   switch (b.type) {
     case "lead":
+    case "dropcap":
     case "heading":
     case "callout":
       return b.text;
     case "quote":
     case "verse":
+    case "word":
       return b.text;
     case "text":
       return b.paragraphs.join(" ");
@@ -141,7 +143,7 @@ export const getArticleBySlug = cache(async (slug: string) => {
 
 /** Опис для пошуку й соцмереж — перший вступний або текстовий абзац без розмітки */
 export const describeArticle = (article: Article, max = 200) => {
-  const first = article.blocks.find((b) => b.type === "lead" || b.type === "text");
+  const first = article.blocks.find((b) => b.type === "lead" || b.type === "dropcap" || b.type === "text");
   const text = first ? blockText(first) : "";
   return text
     .replace(/\[(.+?)\]\(.+?\)/g, "$1")

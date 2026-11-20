@@ -1,0 +1,173 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$text: #55555a;
+$accent: #90816a;
+$line: rgba(17, 17, 20, 0.09);
+
+// ---------- Шапка: коротка, без фото (сторінка-документ) ----------
+.offer-hero {
+  position: relative;
+  display: flex;
+  min-height: em(460);
+  margin: em(15);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 130%, rgba(144, 129, 106, 0.5), transparent 60%),
+    $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: em(420);
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(100);
+    text-align: center;
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(40);
+    }
+  }
+
+  &__title {
+    margin-top: em(20, 60);
+
+    @include mobile {
+      margin-top: em(14, 36);
+    }
+  }
+
+  &__lead {
+    margin-top: em(14, 18);
+    font-size: em(18);
+    color: rgba(255, 255, 255, 0.75);
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+}
+
+// ---------- Текст документа: вузька колонка, як у статтях ----------
+.offer-body {
+  max-width: em(860);
+  padding-top: em(80);
+  padding-bottom: em(80);
+
+  @include mobile {
+    padding-top: em(40);
+    padding-bottom: em(40);
+  }
+
+  p,
+  li,
+  dd {
+    font-size: em(17);
+    line-height: 1.65;
+    color: $text;
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  ul {
+    margin: em(8) 0 0;
+    padding-left: em(22);
+  }
+
+  li + li {
+    margin-top: em(6, 17);
+  }
+}
+
+.offer-intro {
+  padding: em(28, 17) em(32, 17);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(22, 17);
+
+  @include mobile {
+    padding: em(18, 15) em(18, 15);
+  }
+}
+
+.offer-section {
+  margin-top: em(48);
+
+  @include mobile {
+    margin-top: em(32);
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(28);
+    font-weight: 400;
+    line-height: 1.15;
+    color: $dark;
+
+    span {
+      color: $accent;
+    }
+
+    @include mobile {
+      font-size: em(22);
+    }
+  }
+
+  &__body {
+    margin-top: em(16);
+
+    p + p {
+      margin-top: em(12, 17);
+    }
+  }
+}
+
+.offer-label {
+  margin-top: em(16, 17);
+  font-weight: 600;
+  color: $dark !important;
+}
+
+.offer-terms {
+  margin: 0;
+
+  dt {
+    font-size: em(17);
+    font-weight: 700;
+    color: $dark;
+
+    &:not(:first-child) {
+      margin-top: em(14, 17);
+    }
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  dd {
+    margin: em(2) 0 0;
+  }
+}
+
+.offer-updated {
+  margin-top: em(48, 14) !important;
+  font-size: em(14) !important;
+  color: $muted !important;
+}

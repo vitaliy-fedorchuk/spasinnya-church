@@ -1,0 +1,1396 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$text: #55555a;
+$accent: #90816a;
+$beige: #d8c9b0;
+$sand: #eeeae4;
+$line: rgba(17, 17, 20, 0.09);
+
+// Увага: глобальний <p> — білий і 18px, тож кожному абзацу тут задаємо свої
+
+.history-br {
+  @include mobile {
+    display: none;
+  }
+}
+
+// ---------- Шапка ----------
+.history-hero {
+  position: relative;
+  display: flex;
+  min-height: em(760);
+  margin: em(15);
+  overflow: hidden;
+  background-color: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: em(640);
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    // Шапка ширша за фото — показуємо верх кадру, щоб арка була видна цілою
+    object-position: 50% 6%;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 30%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.15) 100%);
+  }
+
+  & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // Вміст унизу, з таким самим відступом, як у першого блоку головної
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(100);
+    text-align: center;
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(40);
+    }
+  }
+
+  &__title {
+    margin-top: em(20, 60);
+
+    @include mobile {
+      margin-top: em(14, 36);
+    }
+  }
+
+  &__lead {
+    max-width: em(680, 18);
+    margin: em(18, 18) auto 0;
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.82);
+
+    @include mobile {
+      margin-top: em(12, 15);
+      font-size: em(15);
+    }
+  }
+
+  // Роки й час читання — як мета статті (іконка + текст, без «таблеток»)
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: em(24);
+    margin-top: em(24);
+    font-size: em(15);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+
+    @include mobile {
+      gap: em(16);
+      margin-top: em(18);
+      font-size: em(14);
+    }
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: em(8, 15);
+    }
+
+    img {
+      width: em(16, 15);
+      height: em(16, 15);
+      // Іконки темні — на фото робимо білими
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+  }
+}
+
+// ---------- Коротко: 4 числа ----------
+.history-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: em(10);
+  margin: em(80) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: em(8);
+    margin-top: em(48);
+  }
+}
+
+.history-fact {
+  display: flex;
+  flex-direction: column;
+  gap: em(36);
+  padding: calc(#{em(28)} - 1px);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(29);
+
+  @include mobile {
+    gap: em(20);
+    padding: em(16);
+    border-radius: em(20);
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: em(56);
+    height: em(56);
+    color: $dark;
+    background-color: #f5f5f5;
+    border-radius: em(16);
+
+    @include mobile {
+      width: em(44);
+      height: em(44);
+      border-radius: em(12);
+    }
+
+    svg {
+      width: em(26);
+      height: em(26);
+
+      @include mobile {
+        width: em(22);
+        height: em(22);
+      }
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: em(6);
+  }
+
+  b {
+    font-family: Arkhip, sans-serif;
+    font-size: em(52);
+    font-weight: 400;
+    line-height: 1;
+    color: $accent;
+
+    @include mobile {
+      font-size: em(30);
+    }
+  }
+
+  &__body > span {
+    font-size: em(15);
+    line-height: 1.35;
+    color: $dark;
+
+    @include mobile {
+      font-size: em(13);
+    }
+  }
+}
+
+// ---------- Тіло: стрічка розділів + стаття ----------
+.history-body {
+  display: grid;
+  grid-template-columns: em(240) minmax(0, 1fr);
+  gap: em(80);
+  align-items: start;
+  padding-top: em(120);
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @include mobile {
+    padding-top: em(56);
+  }
+}
+
+// Ліва стрічка: роки й розділи, лінія прогресу
+.history-rail {
+  position: sticky;
+  top: em(130);
+
+  @include tablet {
+    display: none;
+  }
+
+  &__list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: em(22);
+    margin: 0;
+    padding: 0 0 0 em(26);
+    list-style: none;
+
+    // Сіра лінія і коричнева, що росте до поточного розділу
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: em(8);
+      bottom: em(8);
+      left: em(5);
+      width: 2px;
+      background: rgba(17, 17, 20, 0.1);
+    }
+
+    &::after {
+      background: $accent;
+      transform: scaleY(var(--progress, 0));
+      transform-origin: top;
+      transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+    }
+  }
+
+  &__item {
+    position: relative;
+
+    // Точка на лінії
+    &::before {
+      content: "";
+      position: absolute;
+      top: em(4);
+      left: em(-26);
+      z-index: 1;
+      box-sizing: border-box;
+      width: em(12);
+      height: em(12);
+      background: #f5f5f5;
+      border: 2px solid rgba(17, 17, 20, 0.2);
+      border-radius: 50%;
+      transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    &.is-passed::before {
+      background: $accent;
+      border-color: $accent;
+    }
+
+    &.is-active::before {
+      background: #f5f5f5;
+      border-color: $accent;
+      transform: scale(1.35);
+    }
+
+    a {
+      display: flex;
+      flex-direction: column;
+      gap: em(2);
+      text-decoration: none;
+    }
+  }
+
+  &__year {
+    font-size: em(13);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: $muted;
+    transition: color 0.3s ease;
+  }
+
+  &__title {
+    font-size: em(16);
+    font-weight: 600;
+    line-height: 1.3;
+    color: rgba(38, 38, 38, 0.45);
+    transition: color 0.3s ease;
+  }
+
+  &__item a:hover &__title,
+  &__item.is-passed &__title {
+    color: $dark;
+  }
+
+  &__item.is-active &__year {
+    color: $accent;
+  }
+
+  &__item.is-active &__title {
+    color: $dark;
+  }
+}
+
+.history-article {
+  min-width: 0;
+}
+
+// ---------- Текст статті ----------
+.history-text {
+  // Вузька колонка тексту (~80 знаків), спецблоки — на всю ширину (як у статтях)
+  max-width: em(760, 19);
+  margin-top: em(22, 19);
+  font-size: em(19);
+  line-height: 1.65;
+  color: $text;
+
+  @include mobile {
+    margin-top: em(16, 16);
+    font-size: em(16);
+  }
+
+  b {
+    color: $dark;
+  }
+}
+
+// Вступ — той самий блок, що й у статтях («Вступ» з буквицею)
+.history-lead .ab-lead {
+  max-width: em(760, 24);
+}
+
+// Спецблоки всередині розділу (слово, галереї)
+.history-block {
+  margin-top: em(40);
+
+  @include mobile {
+    margin-top: em(28);
+  }
+}
+
+.history-nowrap {
+  white-space: nowrap;
+}
+
+// ---------- Розділ ----------
+.history-chapter {
+  padding-top: em(120);
+  // Якір не ховається під шапкою
+  scroll-margin-top: em(40);
+
+  @include mobile {
+    padding-top: em(72);
+  }
+
+  &__head {
+    display: flex;
+    flex-direction: column;
+    gap: em(14);
+  }
+
+  &__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: em(10, 14);
+    font-size: em(14);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $accent;
+    text-transform: uppercase;
+
+    &::before {
+      content: "";
+      width: em(28, 14);
+      height: 2px;
+      background: currentColor;
+    }
+
+    @include mobile {
+      font-size: em(12);
+    }
+  }
+
+  &__title {
+    max-width: none;
+  }
+}
+
+// ---------- 2. Брати ----------
+.history-people {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: em(10);
+  margin: em(36) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: em(8);
+    margin-top: em(24);
+  }
+}
+
+.history-person {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: em(12);
+  padding: em(10) em(10) em(18);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(22);
+
+  @include mobile {
+    gap: em(8);
+    padding: em(8) em(8) em(14);
+    border-radius: em(16);
+  }
+
+  &__photo {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: top;
+    background: $sand;
+    border-radius: em(14);
+
+    @include mobile {
+      border-radius: em(10);
+    }
+  }
+
+  &__name {
+    padding: 0 em(8, 17);
+    font-size: em(17);
+    font-weight: 600;
+    line-height: 1.25;
+    color: $dark;
+
+    @include mobile {
+      padding: 0 em(4, 14);
+      font-size: em(14);
+    }
+  }
+
+  &__note {
+    margin: 0 em(8, 12);
+    padding: em(4, 12) em(10, 12);
+    font-size: em(12);
+    font-weight: 600;
+    color: $accent;
+    background: rgba(144, 129, 106, 0.12);
+    border-radius: em(100);
+
+    @include mobile {
+      margin: 0 em(4, 11);
+      font-size: em(11);
+    }
+  }
+
+  // Ініціатори — темні
+  &--lead {
+    background: $dark;
+    border-color: $dark;
+  }
+
+  &--lead &__name {
+    color: #ffffff;
+  }
+
+  &--lead &__note {
+    color: $beige;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+// ---------- 3. Сходинки благословень ----------
+.history-steps {
+  --rise: #{em(36)};
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: em(10);
+  align-items: end;
+  margin: em(40) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(24);
+  }
+}
+
+.history-step {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+  // Кожна наступна сходинка вища
+  min-height: calc(#{em(190)} + var(--rise) * var(--i));
+  box-sizing: border-box;
+  padding: em(22);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(22);
+
+  @include mobile {
+    min-height: 0;
+    // На телефоні — сходинки зсуваються вправо
+    margin-left: calc(#{em(14)} * var(--i));
+    padding: em(16);
+    border-radius: em(16);
+  }
+
+  &__num {
+    font-family: Arkhip, sans-serif;
+    font-size: em(28);
+    line-height: 1;
+    color: rgba(144, 129, 106, 0.55);
+
+    @include mobile {
+      font-size: em(20);
+    }
+  }
+
+  &__who {
+    margin-top: em(10, 18);
+    font-size: em(18);
+    font-weight: 600;
+    line-height: 1.25;
+    color: $dark;
+
+    @include mobile {
+      margin-top: em(4, 16);
+      font-size: em(16);
+    }
+  }
+
+  &__where {
+    font-size: em(14);
+    line-height: 1.4;
+    color: $muted;
+  }
+
+  &__ok {
+    display: inline-flex;
+    align-items: center;
+    gap: em(6, 13);
+    margin-top: auto;
+    padding-top: em(14, 13);
+    font-size: em(13);
+    font-weight: 600;
+    color: $accent;
+
+    @include mobile {
+      padding-top: em(8, 13);
+    }
+  }
+
+  // Остання сходинка — вершина
+  &:last-child {
+    background: $accent;
+    border-color: $accent;
+  }
+
+  &:last-child &__num,
+  &:last-child &__where,
+  &:last-child &__ok {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  &:last-child &__who {
+    color: #ffffff;
+  }
+}
+
+.history-check {
+  width: em(16);
+  height: em(16);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// Довідка про реєстрацію з печаткою
+.history-doc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: em(32);
+  margin-top: em(16);
+  padding: em(32) em(40);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0, transparent em(31), rgba(144, 129, 106, 0.1) em(31), rgba(144, 129, 106, 0.1) em(32)),
+    #fbf9f5;
+  border: 1px dashed rgba(144, 129, 106, 0.5);
+  border-radius: em(22);
+
+  @include mobile {
+    // Штамп під текстом, праворуч — текст не стискається у вузьку колонку
+    flex-direction: column;
+    align-items: flex-end;
+    padding: em(20);
+    gap: em(14);
+    border-radius: em(16);
+  }
+
+  &__label {
+    font-size: em(13);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $accent;
+    text-transform: uppercase;
+  }
+
+  p {
+    max-width: em(560, 19);
+    margin-top: em(8, 19);
+    font-size: em(19);
+    line-height: 1.5;
+    color: $text;
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  b {
+    color: $dark;
+  }
+
+}
+
+.history-stamp {
+  flex-shrink: 0;
+  color: $accent;
+
+  // Прямокутний штамп із голубкою
+  &--rect {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: em(4);
+    padding: em(14) em(22);
+    border: 3px double $accent;
+    border-radius: em(8);
+    transform: rotate(-6deg);
+    // Трохи відступаємо від правого краю довідки
+    margin-right: em(48);
+
+    @include mobile {
+      margin-right: em(6);
+      padding: em(10) em(16);
+      border-width: 2px;
+    }
+
+    b {
+      font-family: Arkhip, sans-serif;
+      font-size: em(26);
+      font-weight: 400;
+      white-space: nowrap;
+
+      @include mobile {
+        font-size: em(14);
+      }
+    }
+  }
+
+  &__dove {
+    width: em(30);
+    height: auto;
+    margin-bottom: em(4);
+
+    @include mobile {
+      width: em(18);
+      margin-bottom: em(2);
+    }
+  }
+
+  &__label {
+    font-size: em(11);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    @include mobile {
+      font-size: em(7);
+    }
+  }
+}
+
+// ---------- Мозаїка фото (будівництво, посвячення) ----------
+.photo-stack__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: em(210);
+  gap: em(10);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // Перше фото — велике
+  > :first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  // 7 фото: велике + 4 малі + 2 широкі внизу
+  &[data-count="7"] > :nth-child(6),
+  &[data-count="7"] > :nth-child(7) {
+    grid-column: span 2;
+  }
+
+  @include mobile {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: em(120);
+    gap: em(6);
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+
+    &[data-count="7"] > :nth-child(6),
+    &[data-count="7"] > :nth-child(7) {
+      grid-column: auto;
+    }
+  }
+}
+
+.photo-stack__item {
+  position: relative;
+  overflow: hidden;
+  border-radius: em(20);
+
+  @include mobile {
+    border-radius: em(12);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: zoom-in;
+    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @media (hover: hover) {
+    &:hover img {
+      transform: scale(1.04);
+    }
+  }
+}
+
+// «+12 фото» поверх останнього — клік відкриває переглядач, далі гортаються всі
+.photo-stack__more {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: Arkhip, sans-serif;
+  font-size: em(30);
+  color: #ffffff;
+  background: rgba(38, 38, 38, 0.55);
+  pointer-events: none;
+
+  @include mobile {
+    font-size: em(20);
+  }
+}
+
+// Решта фото — у розмітці для переглядача, але не на сторінці
+.photo-stack__hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+// ---------- 5. Посвячення: числа ----------
+.history-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: em(10);
+  margin: em(32) 0 0;
+
+  @include mobile {
+    gap: em(8);
+    margin-top: em(24);
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: em(6);
+    min-width: em(200);
+    padding: em(20) em(26);
+    background: #ffffff;
+    border: 1px solid $line;
+    border-radius: em(22);
+
+    @include mobile {
+      flex: 1;
+      min-width: 0;
+      padding: em(14) em(16);
+      border-radius: em(16);
+    }
+  }
+
+  dd {
+    margin: 0;
+    font-family: Arkhip, sans-serif;
+    font-size: em(44);
+    line-height: 1;
+    color: $dark;
+
+    @include mobile {
+      font-size: em(28);
+    }
+  }
+
+  dt {
+    font-size: em(14);
+    color: $muted;
+
+    @include mobile {
+      font-size: em(12);
+    }
+  }
+}
+
+// ---------- 6. Що виросло: бенто ----------
+.history-bento {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(10);
+  margin: em(36) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(24);
+  }
+}
+
+.history-ministry {
+  display: flex;
+  flex-direction: column;
+  gap: em(10);
+  min-height: em(220);
+  box-sizing: border-box;
+  padding: em(28);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(24);
+
+  @include mobile {
+    min-height: 0;
+    padding: em(18);
+    border-radius: em(18);
+  }
+
+  &--wide {
+    grid-column: span 2;
+
+    @include mobile {
+      grid-column: auto;
+    }
+  }
+
+  &--dark {
+    justify-content: flex-end;
+    min-height: em(300);
+    background:
+      radial-gradient(circle at 100% 0%, rgba(144, 129, 106, 0.45), transparent 55%),
+      $dark;
+    border-color: $dark;
+
+    @include mobile {
+      min-height: em(260);
+    }
+  }
+
+  &__badge,
+  &__since {
+    align-self: flex-start;
+    margin-bottom: auto;
+    padding: em(6, 13) em(12, 13);
+    font-size: em(13);
+    font-weight: 600;
+    border-radius: em(100);
+  }
+
+  &__badge {
+    color: $dark;
+    background: $beige;
+  }
+
+  &__since {
+    color: $accent;
+    background: rgba(144, 129, 106, 0.12);
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(26);
+    font-weight: 400;
+    line-height: 1.15;
+    color: $dark;
+
+    @include mobile {
+      font-size: em(21);
+    }
+  }
+
+  &--dark &__title {
+    max-width: em(560, 34);
+    font-size: em(34);
+    color: #ffffff;
+
+    @include mobile {
+      font-size: em(24);
+    }
+  }
+
+  &__text {
+    font-size: em(16);
+    line-height: 1.55;
+    color: $text;
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  &--dark &__text {
+    max-width: em(600, 16);
+    color: rgba(255, 255, 255, 0.78);
+  }
+}
+
+// Хори: один → два → чотири
+.history-choirs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(28);
+  margin: auto 0 0;
+  padding: em(20) 0 0;
+  list-style: none;
+
+  @include mobile {
+    gap: em(14);
+  }
+
+  &__stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: em(6);
+
+    // Стрілка до наступного етапу
+    &:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: em(30);
+      right: em(-22);
+      color: $accent;
+
+      @include mobile {
+        top: em(24);
+        right: em(-12);
+        font-size: em(12);
+      }
+    }
+  }
+
+  &__when {
+    margin-bottom: em(4, 12);
+    font-size: em(12);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $muted;
+    text-transform: uppercase;
+
+    @include mobile {
+      font-size: em(10);
+    }
+  }
+
+  &__pill {
+    padding: em(10, 15) em(14, 15);
+    font-size: em(15);
+    font-weight: 600;
+    color: $dark;
+    background: $sand;
+    border-radius: em(14, 15);
+
+    @include mobile {
+      padding: em(8, 12) em(8, 12);
+      font-size: em(12);
+      border-radius: em(10, 12);
+    }
+
+    &.is-added {
+      color: #ffffff;
+      background: $accent;
+    }
+  }
+}
+
+// ---------- 7. Сьогодні ----------
+.history-today {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: em(10);
+  margin-top: em(36);
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(24);
+  }
+}
+
+.history-team {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: em(14);
+  padding: em(28);
+  background: $dark;
+  border-radius: em(24);
+
+  @include mobile {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: em(8) em(24);
+    padding: em(18);
+    border-radius: em(18);
+  }
+
+  &__label {
+    margin-bottom: auto;
+    font-size: em(13);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $beige;
+    text-transform: uppercase;
+
+    @include mobile {
+      flex-basis: 100%;
+      margin-bottom: em(4);
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: baseline;
+    gap: em(12);
+
+    b {
+      font-family: Arkhip, sans-serif;
+      font-size: em(56);
+      font-weight: 400;
+      line-height: 1;
+      color: #ffffff;
+
+      @include mobile {
+        font-size: em(40);
+      }
+    }
+
+    span {
+      font-size: em(17);
+      color: rgba(255, 255, 255, 0.75);
+
+      @include mobile {
+        font-size: em(14);
+      }
+    }
+  }
+}
+
+// Покоління: шкала, як на сторінці «Служіння та проєкти» — смуга темнішає зі зростом
+.history-subhead {
+  margin-top: em(56, 28);
+  font-family: Arkhip, sans-serif;
+  font-size: em(28);
+  font-weight: 400;
+  color: $dark;
+
+  @include mobile {
+    margin-top: em(36, 22);
+    font-size: em(22);
+  }
+}
+
+.history-gens {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(10);
+  margin: em(20) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(14);
+  }
+
+  li:nth-child(1) .history-gen {
+    border-top-color: rgba(144, 129, 106, 0.35);
+  }
+
+  li:nth-child(2) .history-gen {
+    border-top-color: rgba(144, 129, 106, 0.65);
+  }
+
+  li:nth-child(3) .history-gen {
+    border-top-color: $accent;
+  }
+}
+
+.history-gen {
+  display: flex;
+  flex-direction: column;
+  gap: em(6);
+  height: 100%;
+  box-sizing: border-box;
+  padding: em(24) em(26) em(26);
+  color: $dark;
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid $line;
+  border-top: em(6) solid $accent;
+  border-radius: em(6) em(6) em(24) em(24);
+  transition: border-color 0.3s ease;
+
+  @include mobile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label value"
+      "ages value"
+      "link link";
+    padding: em(16) em(18);
+    border-top-width: em(4);
+    border-radius: em(4) em(4) em(18) em(18);
+  }
+
+  &__label {
+    grid-area: label;
+    font-family: Arkhip, sans-serif;
+    font-size: em(26);
+    line-height: 1.1;
+
+    @include mobile {
+      font-size: em(22);
+    }
+  }
+
+  &__value {
+    grid-area: value;
+    margin-top: em(16, 72);
+    font-family: Arkhip, sans-serif;
+    font-size: em(72);
+    font-weight: 400;
+    line-height: 1;
+    color: $accent;
+
+    @include mobile {
+      align-self: center;
+      margin-top: 0;
+      font-size: em(44);
+    }
+  }
+
+  &__ages {
+    grid-area: ages;
+    font-size: em(15);
+    color: $muted;
+
+    @include mobile {
+      font-size: em(13);
+    }
+  }
+
+  &__link {
+    grid-area: link;
+    margin-top: em(14, 14);
+    font-size: em(14);
+    font-weight: 600;
+    color: $accent;
+    transition: color 0.2s ease;
+
+    @include mobile {
+      margin-top: em(8, 13);
+      font-size: em(13);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover &__link {
+      color: $dark;
+    }
+  }
+}
+
+.history-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: em(8);
+  min-height: em(240);
+  box-sizing: border-box;
+  padding: em(28);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(24);
+
+  @include mobile {
+    min-height: em(130);
+    padding: em(16);
+    border-radius: em(18);
+  }
+
+  b {
+    font-family: Arkhip, sans-serif;
+    font-size: em(88);
+    font-weight: 400;
+    line-height: 0.9;
+    color: $dark;
+
+    @include mobile {
+      font-size: em(48);
+    }
+  }
+
+  span {
+    font-size: em(16);
+    line-height: 1.4;
+    color: $muted;
+
+    @include mobile {
+      font-size: em(13);
+    }
+  }
+
+  &--main {
+    min-height: em(260);
+
+    @include mobile {
+      min-height: em(190);
+    }
+
+    background: $sand;
+    border-color: $sand;
+
+    b {
+      font-size: em(140);
+      color: $accent;
+
+      @include mobile {
+        font-size: em(80);
+      }
+    }
+  }
+
+  & &__from {
+    font-family: Arkhip, sans-serif;
+    font-size: em(28);
+    color: rgba(144, 129, 106, 0.65);
+
+    @include mobile {
+      font-size: em(20);
+    }
+  }
+}
+
+// ---------- Запрошення ----------
+.history-cta {
+  padding-top: em(120);
+  padding-bottom: em(40);
+
+  @include mobile {
+    padding-top: em(72);
+    padding-bottom: em(16);
+  }
+
+  &__box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: em(80) em(40);
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 120%, rgba(144, 129, 106, 0.5), transparent 60%),
+      $dark;
+    border-radius: em(30);
+
+    @include mobile {
+      padding: em(40) em(18);
+      border-radius: em(20);
+    }
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(52);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #ffffff;
+
+    @include mobile {
+      font-size: em(30);
+    }
+  }
+
+  &__lead {
+    margin-top: em(16, 18);
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: em(12);
+    margin-top: em(32);
+
+    @include mobile {
+      margin-top: em(22);
+    }
+  }
+}
+
+// ---------- 6. Кнопка на сторінку служінь ----------
+.history-more {
+  display: flex;
+  margin-top: em(32);
+
+  @include mobile {
+    margin-top: em(24);
+  }
+}

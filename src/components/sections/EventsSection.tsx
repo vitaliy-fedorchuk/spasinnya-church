@@ -12,7 +12,7 @@ const EventsSection = async () => {
   const [settings, events] = await Promise.all([getEventsSettings(), getSiteEvents()]);
 
   return (
-    <section className="events" aria-labelledby="events-title">
+    <section id="events" className="events" aria-labelledby="events-title">
       <div className="container">
         <header className="events__header">
           {settings.rubric && <Rubricator icon={timeIcon}>{settings.rubric}</Rubricator>}

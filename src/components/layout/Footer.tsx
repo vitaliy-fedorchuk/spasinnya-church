@@ -1,5 +1,5 @@
 import "./Footer.scss";
-import { CHURCH_ADDRESS as ADDRESS, MAP_URL } from "../../constants";
+import { CHURCH_ADDRESS as ADDRESS, MAP_URL, CHURCH_EMAIL, SOCIAL_LINKS } from "../../constants";
 import { getEventsSettings, getFooterSchedule } from "@/server/events";
 import logoAsset from "../../assets/footer/logo.svg";
 import lineScheduleAsset from "../../assets/footer/line-schedule.svg";
@@ -25,18 +25,18 @@ const locationOutline = locationOutlineAsset.src;
 const locationPin = locationPinAsset.src;
 
 const PHONE = "+38 067 115 0033";
-const EMAIL = "hello@spasinnya.church";
+const EMAIL = CHURCH_EMAIL;
 
 // Розклад — з подій (адмінка → «Події», позначка «у розкладі у футері»)
 
 // TODO: замінити якорі на реальні id секцій
 const navigation = [
   { label: "Я тут вперше", href: "/ya-tut-vpershe" },
-  { label: "Про церкву", href: "/#about" },
-  { label: "Служіння", href: "/#services" },
+  { label: "Про церкву", href: "/pro-nas" },
+  { label: "Служіння", href: "/sluzhinnya" },
   { label: "Графік подій", href: "/#events" },
   { label: "Новини", href: "/blog" },
-  { label: "Підтримати служіння", href: "/#contact" },
+  { label: "Підтримати служіння", href: "/pidtrymaty" },
 ];
 
 // Іконка локації складається з двох шарів (як у Figma)
@@ -58,23 +58,39 @@ const Footer = async () => {
             <a href="/" className="footer__logo" aria-label="Церква Спасіння — на головну">
               <img src={logo} width={180} height={58} alt="" />
             </a>
-            <p className="footer__description">
-              Частина Української Церкви Християн Віри Євангельської (УЦХВЄ)
-            </p>
-            {/* TODO: вставити реальні посилання на соцмережі */}
+            <p className="footer__description">Частина Української Церкви Християн Віри Євангельської (УЦХВЄ)</p>
+            {/* Посилання — у constants (SOCIAL_LINKS) */}
             <ul className="footer__socials">
               <li>
-                <a href="#" className="footer__social" aria-label="YouTube">
+                <a
+                  href={SOCIAL_LINKS.youtube || "#"}
+                  className="footer__social"
+                  aria-label="YouTube"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <img src={youtubeIcon} width={20} height={20} alt="" />
                 </a>
               </li>
               <li>
-                <a href="#" className="footer__social" aria-label="Instagram">
+                <a
+                  href={SOCIAL_LINKS.instagram || "#"}
+                  className="footer__social"
+                  aria-label="Instagram"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <img src={instagramIcon} width={20} height={20} alt="" />
                 </a>
               </li>
               <li>
-                <a href="#" className="footer__social" aria-label="Facebook">
+                <a
+                  href={SOCIAL_LINKS.facebook || "#"}
+                  className="footer__social"
+                  aria-label="Facebook"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <img src={facebookIcon} width={19} height={20} alt="" />
                 </a>
               </li>

@@ -118,7 +118,7 @@ const Navbar = () => {
 
             <BlackButton
               text="Підтримати"
-              href="/#contact"
+              href="/pidtrymaty"
               bgColor="#90816A"
               textColor="#f5f5f5"
               circleColor="#f5f5f5"

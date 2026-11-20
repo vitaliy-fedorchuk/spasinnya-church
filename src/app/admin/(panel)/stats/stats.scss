@@ -1,0 +1,21 @@
+.stats-page {
+  width: 100%;
+}
+
+// Усі числа в один ряд; на вужчих екранах переносяться
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+.stats-intro {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--a-muted);
+}

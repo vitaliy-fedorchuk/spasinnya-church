@@ -5,8 +5,8 @@ import type { BlockType } from "../types";
  * Новий вид блоку додається в одну з груп і в BLOCK_INFO — TypeScript підкаже.
  */
 export const BLOCK_GROUPS = [
-  { id: "text", label: "Текст", types: ["lead", "text", "heading", "list"] },
-  { id: "accent", label: "Акценти", types: ["quote", "verse", "callout"] },
+  { id: "text", label: "Текст", types: ["lead", "dropcap", "text", "heading", "list"] },
+  { id: "accent", label: "Акценти", types: ["quote", "verse", "word", "callout"] },
   { id: "photo", label: "Фото", types: ["image", "gallery"] },
   { id: "video", label: "Відео", types: ["video"] },
   { id: "other", label: "Інше", types: ["button", "divider"] },
@@ -21,6 +21,10 @@ export const BLOCK_INFO: Record<BlockType, { hint: string; when: string }> = {
   lead: {
     hint: "Збільшений перший абзац",
     when: "На самому початку статті: 1–2 речення, що коротко кажуть, про що вона.",
+  },
+  dropcap: {
+    hint: "Вступ з великою першою літерою",
+    when: "Замість звичайного вступу — для історій і розповідей: перша літера велика й коричнева, як у книжці.",
   },
   text: {
     hint: "Один або кілька абзаців",
@@ -41,6 +45,10 @@ export const BLOCK_INFO: Record<BlockType, { hint: string; when: string }> = {
   verse: {
     hint: "Біблійний вірш — темний акцентний блок",
     when: "Ключовий вірш статті. Найпомітніший блок — краще один на статтю.",
+  },
+  word: {
+    hint: "Виділене слово на теплому фоні",
+    when: "Пророче слово, гасло року, головна думка. Великим шрифтом, як біблійний вірш, але світлий. Підпис — звідки ці слова.",
   },
   callout: {
     hint: "Виділена примітка: розклад, адреса",

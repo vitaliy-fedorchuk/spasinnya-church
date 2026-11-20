@@ -15,7 +15,8 @@ import { lockScroll, unlockScroll } from "@/components/layout/lenis";
  * Які фото відкриваються — позначено в блоках атрибутом data-zoom (MediaBlocks.tsx).
  */
 
-const SELECTOR = ".article [data-zoom]";
+/** Типово — фото статті; інші сторінки передають свій селектор */
+const ARTICLE_SELECTOR = ".article [data-zoom]";
 const OPEN_MS = 480;
 const CLOSE_MS = 380;
 const EASE_OUT = "cubic-bezier(0.22, 1, 0.36, 1)";
@@ -95,7 +96,8 @@ const inView = (el: Element) => {
   return r.bottom > 0 && r.top < window.innerHeight && r.width > 0;
 };
 
-const ArticleLightbox = () => {
+const ArticleLightbox = ({ selector = ARTICLE_SELECTOR }: { selector?: string }) => {
+  const SELECTOR = selector;
   const [slides, setSlides] = useState<Slide[]>([]);
   const [index, setIndex] = useState<number | null>(null);
   const [fullLoaded, setFullLoaded] = useState<Record<string, boolean>>({});
@@ -118,7 +120,7 @@ const ArticleLightbox = () => {
     setSlides(all.map(slideOf));
     pendingOpen.current = true;
     setIndex(i);
-  }, []);
+  }, [SELECTOR]);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -141,7 +143,7 @@ const ArticleLightbox = () => {
       document.removeEventListener("click", onClick);
       document.removeEventListener("keydown", onKey);
     };
-  }, [openAt]);
+  }, [openAt, SELECTOR]);
 
   // Анімація відкриття — після того, як переглядач намалювався
   useLayoutEffect(() => {

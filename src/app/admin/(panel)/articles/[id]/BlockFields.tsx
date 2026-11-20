@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentType } from "react";
-import type { ArticleBlock, BlockType } from "@/features/blog/types";
+import type { ArticleBlock, BlockType, WordMark } from "@/features/blog/types";
 import { Checkbox, Field, ImageInput, RichTextarea, Textarea, TextInput } from "./fields";
 import { DividerFields, GalleryFields } from "./LayoutFields";
 
@@ -29,6 +29,17 @@ export const BLOCK_FIELDS: { [T in BlockType]: { component: ComponentType<Props<
   lead: {
     component: ({ block, onChange }) => (
       <RichTextarea label="Текст" value={block.text} onChange={(text) => onChange({ ...block, text })} large />
+    ),
+  },
+  dropcap: {
+    component: ({ block, onChange }) => (
+      <RichTextarea
+        label="Текст"
+        value={block.text}
+        onChange={(text) => onChange({ ...block, text })}
+        hint="Перша літера стане великою автоматично"
+        large
+      />
     ),
   },
   text: {
@@ -85,6 +96,32 @@ export const BLOCK_FIELDS: { [T in BlockType]: { component: ComponentType<Props<
           placeholder="Івана 3:16"
           onChange={(reference) => onChange({ ...block, reference })}
         />
+      </>
+    ),
+  },
+  word: {
+    component: ({ block, onChange }) => (
+      <>
+        <RichTextarea label="Текст" value={block.text} onChange={(text) => onChange({ ...block, text })} />
+        <div className="ed-row">
+          <TextInput
+            label="Підпис"
+            value={block.caption ?? ""}
+            placeholder="Пророче слово · 2016"
+            onChange={(caption) => onChange({ ...block, caption })}
+          />
+          <Field label="Знак">
+            <select
+              className="ed-input"
+              value={block.mark ?? "dove"}
+              onChange={(e) => onChange({ ...block, mark: e.target.value as WordMark })}
+            >
+              <option value="dove">Голубка на фоні</option>
+              <option value="emblem">Голубка над текстом</option>
+              <option value="quote">Лапки</option>
+            </select>
+          </Field>
+        </div>
       </>
     ),
   },

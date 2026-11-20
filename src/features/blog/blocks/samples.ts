@@ -19,6 +19,11 @@ export const SAMPLE_BLOCKS: { [T in BlockType]: Extract<ArticleBlock, { type: T 
     type: "lead",
     text: "Цієї неділі ми зібралися всією церковною родиною, щоб подякувати Богові за ще один рік вірності.",
   },
+  dropcap: {
+    id: "s-dropcap",
+    type: "dropcap",
+    text: "Церква «Спасіння» в селі Підгайці — молода громада, яка обʼєднала віруючих з різних спільнот. А почалося все з однієї думки.",
+  },
   text: {
     id: "s-text",
     type: "text",
@@ -45,6 +50,13 @@ export const SAMPLE_BLOCKS: { [T in BlockType]: Extract<ArticleBlock, { type: T 
     type: "verse",
     text: "Бо Я знаю ті думки, які думаю про вас, — говорить Господь, — думки миру, а не зла",
     reference: "Єремії 29:11",
+  },
+  word: {
+    id: "s-word",
+    type: "word",
+    text: "Думка від Мене. Я благословлю, хоча буде не легко й не просто.",
+    caption: "Пророче слово · 2016",
+    mark: "dove",
   },
   callout: {
     id: "s-callout",

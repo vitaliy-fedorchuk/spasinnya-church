@@ -10,6 +10,7 @@ const ITEMS: { href: string; label: string; icon: IconName }[] = [
   { href: "/admin/events", label: "Події", icon: "calendar" },
   { href: "/admin/authors", label: "Автори", icon: "users" },
   { href: "/admin/tags", label: "Теги", icon: "tag" },
+  { href: "/admin/stats", label: "Цифри", icon: "stats" },
   { href: "/admin/media", label: "Медіатека", icon: "media" },
   { href: "/admin/blocks", label: "Блоки", icon: "blocks" },
 ];

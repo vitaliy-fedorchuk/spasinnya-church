@@ -1,0 +1,196 @@
+@use "../../styles/tools" as *;
+
+// Мозаїка плиток із фото (варіант D сторінки «Про нас»). Зараз не використовується —
+// збережено, щоб застосувати деінде. Мобільної версії ще немає.
+
+$dark: #262626;
+$muted: #868686;
+$text: #55555a;
+$accent: #90816a;
+$beige: #d8c9b0;
+$sand: #eeeae4;
+$line: rgba(17, 17, 20, 0.09);
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+.hubv-arrow-icon {
+  display: block;
+  width: em(22);
+  height: em(22);
+  fill: currentColor;
+  transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.hubv-soon {
+  display: inline-flex;
+  align-items: center;
+  padding: em(5, 12) em(10, 12);
+  font-family: Gilroy, sans-serif;
+  font-size: em(12);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: $accent;
+  text-transform: none;
+  vertical-align: middle;
+  background: rgba(144, 129, 106, 0.12);
+  border-radius: em(100);
+}
+
+// Перемикач варіантів (тимчасовий)
+
+// =====================================================================
+// D. Мозаїка
+// =====================================================================
+.hub-d {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(3, em(330));
+  grid-template-areas:
+    "a a b c"
+    "d d e e"
+    "d d f g";
+  gap: em(10);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  $areas: a b c d e f g;
+  @for $i from 1 through 7 {
+    &__tile--#{$i} {
+      grid-area: nth($areas, $i);
+    }
+  }
+
+  &__tile {
+    display: flex;
+  }
+
+  &__link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    padding: em(26);
+    overflow: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    background: $dark;
+    border-radius: em(26);
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition:
+        transform 1s $ease,
+        filter 0.4s ease;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 55%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 30%);
+    }
+
+    &.is-soon img {
+      filter: grayscale(1) brightness(0.7);
+    }
+  }
+
+  &__top,
+  &__bottom {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .hubv-soon {
+      color: $dark;
+      background: #ffffff;
+    }
+  }
+
+  &__num {
+    font-size: em(14);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  &__arrow {
+    display: grid;
+    place-items: center;
+    width: em(52);
+    height: em(52);
+    color: $dark;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+  }
+
+  &__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: em(8);
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(32);
+    line-height: 1.1;
+  }
+
+  &__tile--4 &__title {
+    font-size: em(56);
+  }
+
+  &__text {
+    max-width: em(440, 16);
+    font-size: em(16);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  // Вузькі плитки — опис лише при наведенні
+  &__tile--2 &__text,
+  &__tile--3 &__text,
+  &__tile--6 &__text,
+  &__tile--7 &__text {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      max-height 0.5s $ease,
+      opacity 0.4s ease;
+  }
+
+  @media (hover: hover) {
+    &__link:hover img {
+      transform: scale(1.05);
+    }
+
+    &__link:hover .hub-d__text {
+      max-height: em(120);
+      opacity: 1;
+    }
+
+    a.hub-d__link:hover .hub-d__arrow {
+      color: #ffffff;
+      background: $accent;
+
+      svg {
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
+

@@ -8,6 +8,7 @@ const isWide = (block: ArticleBlock) =>
   block.type === "gallery" ||
   block.type === "video" ||
   block.type === "verse" ||
+  block.type === "word" ||
   (block.type === "image" && !!block.wide);
 
 /** Модифікатори обгортки: ширина і відступи залежать від виду блоку */

@@ -1,4 +1,6 @@
 import "./AboutSection.scss";
+import { getChurchStats } from "@/server/church-stats";
+import { plural } from "@/features/church-stats/stats";
 import Rubricator from "../ui/Rubricator";
 import infoIconAsset from "../../assets/icons/info.svg";
 import videoPosterAsset from "../../assets/about/video-poster.webp";
@@ -28,12 +30,12 @@ const avatar8 = avatar8Asset.src;
 /** TODO: посилання на відео (mp4). Поки порожнє — кнопка Play лише декоративна. */
 const VIDEO_URL = "";
 
-const MEMBERS_COUNT = 312;
-
 // Фото вже обрізані квадратом по обличчю (кадр як у Figma), 160×160 або менше
 const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5, avatar6, avatar7, avatar8];
 
-const AboutSection = () => {
+const AboutSection = async () => {
+  // Число членів — з адмінки («Цифри»)
+  const { members } = await getChurchStats();
   return (
     <section className="about" aria-labelledby="about-title">
       <div className="container">
@@ -63,9 +65,11 @@ const AboutSection = () => {
               ))}
             </ul>
             <p className="about__count">
-              <span className="about__count-number">{MEMBERS_COUNT}</span>
+              <span className="about__count-number">{members}</span>
               <span className="about__count-label">
-                членів<br />церкви
+                {plural(members, "член", "члени", "членів")}
+                <br />
+                церкви
               </span>
             </p>
           </div>

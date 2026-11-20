@@ -33,3 +33,9 @@ $color: #868686;
     line-height: 1.2;
   }
 }
+
+// На темному фоні (шапки внутрішніх сторінок) сіра іконка губиться — робимо світлою
+.rubricator--light .rubricator__icon {
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}

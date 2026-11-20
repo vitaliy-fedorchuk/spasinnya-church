@@ -42,7 +42,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: WINDOWS_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: PAGE_TRANSITION_SCRIPT }} />
       </head>
-      <body>{children}</body>
+      {/* Розширення браузера (Grammarly тощо) дописують атрибути в <body> ще до React —
+          не вважаємо це помилкою (стосується лише атрибутів самого body, не вмісту) */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

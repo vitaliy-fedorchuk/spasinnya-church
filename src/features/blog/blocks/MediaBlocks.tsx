@@ -2,23 +2,12 @@
 
 import { useState } from "react";
 import { galleryLayoutOf, type GalleryBlock, type ImageBlock, type VideoBlock } from "../types";
-import { srcSetOf, variantOf } from "@/features/media/urls";
+import { srcSetOf } from "@/features/media/urls";
+import { zoomProps } from "@/features/media/zoom";
 import playIconAsset from "../../../assets/welcome/play.svg";
 
 // Next імпортує картинки як обʼєкт { src, width, height } — беремо адресу
 const playIcon = playIconAsset.src;
-
-/**
- * Фото, яке можна відкрити на весь екран (ArticleLightbox на сторінці статті).
- * data-zoom — адреса найбільшої версії, data-zoom-caption — підпис у переглядачі.
- */
-const zoomProps = (src: string, caption: string) => ({
-  "data-zoom": variantOf(src, 2400),
-  "data-zoom-caption": caption,
-  tabIndex: 0,
-  role: "button",
-  "aria-haspopup": "dialog" as const,
-});
 
 export const Image = ({ block }: { block: ImageBlock }) => (
   <figure className={`ab-image ${block.wide ? "ab-image--wide" : ""}`.trim()}>

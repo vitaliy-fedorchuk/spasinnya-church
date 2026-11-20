@@ -1,0 +1,304 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$text: #55555a;
+$accent: #90816a;
+$line: rgba(17, 17, 20, 0.09);
+$ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+// Перенос лише на десктопі (на телефоні рядки ламаються самі)
+.hub-br {
+  @include mobile {
+    display: none;
+  }
+}
+
+// ---------- Шапка (як на інших внутрішніх сторінках) ----------
+.hub-hero {
+  position: relative;
+  display: flex;
+  min-height: em(760);
+  margin: em(15);
+  overflow: hidden;
+  background-color: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: em(640);
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 30%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.15) 100%);
+  }
+
+  & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // Вміст унизу — як на головній, в «Історії» та «Служіннях»
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(100);
+    text-align: center;
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(40);
+    }
+  }
+
+  &__title {
+    max-width: em(900, 60);
+    margin-top: em(20, 60);
+
+    @include mobile {
+      margin-top: em(14, 36);
+    }
+  }
+
+  &__lead {
+    max-width: em(640, 18);
+    margin: em(18, 18) auto 0;
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.82);
+
+    @include mobile {
+      margin-top: em(12, 15);
+      font-size: em(15);
+    }
+  }
+}
+
+.hub-section {
+  // Зверху і знизу (над футером) — однаково
+  padding: em(80) em(20);
+}
+
+// Стрілка як у кнопках на головній: заливка, той самий поворот і плавність
+.hubv-arrow-icon {
+  display: block;
+  width: em(22);
+  height: em(22);
+  fill: currentColor;
+  transform: rotate(0deg);
+  transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.hubv-soon {
+  display: inline-flex;
+  align-items: center;
+  padding: em(5, 12) em(10, 12);
+  font-family: Gilroy, sans-serif;
+  font-size: em(12);
+  font-weight: 600;
+  letter-spacing: 0;
+  color: $accent;
+  text-transform: none;
+  vertical-align: middle;
+  background: rgba(144, 129, 106, 0.12);
+  border-radius: em(100);
+}
+
+// Перемикач варіантів (тимчасовий)
+
+// ---------- Список-зміст: великі рядки, фото при наведенні ----------
+// =====================================================================
+// B. Зміст
+// =====================================================================
+.hub-b {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(17, 17, 20, 0.14);
+
+  &__row {
+    position: relative;
+    display: grid;
+    grid-template-columns: em(90) minmax(0, 1.1fr) minmax(0, 1fr) em(64);
+    gap: em(32);
+    align-items: center;
+    padding: em(34) em(8);
+    color: $dark;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(17, 17, 20, 0.14);
+    transition: padding 0.5s $ease;
+  }
+
+  &__num {
+    font-family: Arkhip, sans-serif;
+    font-size: em(22);
+    color: rgba(144, 129, 106, 0.7);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: em(16, 52);
+    font-family: Arkhip, sans-serif;
+    font-size: em(52);
+    line-height: 1.05;
+    transition: color 0.3s ease;
+
+    .hubv-soon {
+      font-size: em(12, 52);
+    }
+  }
+
+  &__text {
+    max-width: em(380, 17);
+    font-size: em(17);
+    line-height: 1.5;
+    color: $text;
+    transition: opacity 0.3s ease;
+  }
+
+  // Кружок зі стрілкою з кнопок: прозорий з коричневою обводкою — при наведенні заливається коричневим
+  &__arrow {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: em(56);
+    height: em(56);
+    color: $accent;
+    background: transparent;
+    border: 1px solid $accent;
+    border-radius: 50%;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  // Фото-прев'ю: при наведенні стає на місце опису (опис ховається)
+  &__thumb {
+    position: absolute;
+    top: 50%;
+    left: 68%;
+    z-index: 2;
+    width: em(240);
+    height: em(170);
+    object-fit: cover;
+    border-radius: em(18);
+    box-shadow: 0 em(20) em(50) rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translate(-50%, -40%) rotate(-6deg) scale(0.85);
+    transition:
+      opacity 0.35s ease,
+      transform 0.6s $ease;
+    pointer-events: none;
+  }
+
+  &__row.is-soon {
+    .hub-b__title,
+    .hub-b__text,
+    .hub-b__num {
+      opacity: 0.45;
+    }
+
+    .hub-b__arrow {
+      visibility: hidden;
+    }
+  }
+
+  @media (hover: hover) {
+    a.hub-b__row:hover {
+      padding-left: em(24);
+    }
+
+    a.hub-b__row:hover .hub-b__title {
+      color: $accent;
+    }
+
+    a.hub-b__row:hover .hub-b__text {
+      opacity: 0;
+    }
+
+    a.hub-b__row:hover .hub-b__thumb {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(4deg) scale(1);
+    }
+
+    a.hub-b__row:hover .hub-b__arrow {
+      color: #ffffff;
+      background: $accent;
+
+      svg {
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
+
+
+// ---------- Телефон: назва й опис стовпчиком, стрілка праворуч, без фото ----------
+@include mobile {
+  .hub-section {
+    padding: em(40) em(16);
+  }
+
+  .hub-b__row {
+    grid-template-columns: minmax(0, 1fr) em(44);
+    grid-template-areas:
+      "num arrow"
+      "title arrow"
+      "text arrow";
+    gap: em(6) em(16);
+    padding: em(22) 0;
+  }
+
+  .hub-b__num {
+    grid-area: num;
+    font-size: em(14);
+  }
+
+  .hub-b__title {
+    grid-area: title;
+    flex-wrap: wrap;
+    gap: em(8, 26);
+    font-size: em(26);
+
+    .hubv-soon {
+      font-size: em(11, 26);
+    }
+  }
+
+  .hub-b__text {
+    grid-area: text;
+    font-size: em(14);
+  }
+
+  .hub-b__arrow {
+    grid-area: arrow;
+    width: em(44);
+    height: em(44);
+
+    .hubv-arrow-icon {
+      width: em(18);
+      height: em(18);
+    }
+  }
+
+  .hub-b__thumb {
+    display: none;
+  }
+}

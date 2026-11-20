@@ -30,6 +30,9 @@ export const imageDataSchema = z.object({
 /** Ліде — збільшений вступний абзац */
 export const leadBlockSchema = z.object({ id, type: z.literal("lead"), text });
 
+/** Вступ з буквицею — як ліде, але з великою першою літерою (як у книжці) */
+export const dropcapBlockSchema = z.object({ id, type: z.literal("dropcap"), text });
+
 /** Звичайний текст: один або кілька абзаців */
 export const textBlockSchema = z.object({
   id,
@@ -60,6 +63,24 @@ export const verseBlockSchema = z.object({
   type: z.literal("verse"),
   text,
   reference: text,
+});
+
+/**
+ * Виділене слово: пророче слово, гасло, головна думка — великим шрифтом
+ * на теплому фоні. Знак:
+ *  dove   — велика світла голубка з логотипу на фоні (праворуч);
+ *  emblem — маленька голубка над текстом, текст по центру;
+ *  quote  — лапки над текстом.
+ */
+export const WORD_MARKS = ["dove", "emblem", "quote"] as const;
+export type WordMark = (typeof WORD_MARKS)[number];
+
+export const wordBlockSchema = z.object({
+  id,
+  type: z.literal("word"),
+  text,
+  caption: z.string().optional(),
+  mark: z.enum(WORD_MARKS).optional(),
 });
 
 /** Одне фото; wide — ширше за колонку тексту */
@@ -148,10 +169,12 @@ export const buttonBlockSchema = z.object({
 
 export const articleBlockSchema = z.discriminatedUnion("type", [
   leadBlockSchema,
+  dropcapBlockSchema,
   textBlockSchema,
   headingBlockSchema,
   quoteBlockSchema,
   verseBlockSchema,
+  wordBlockSchema,
   imageBlockSchema,
   galleryBlockSchema,
   listBlockSchema,
@@ -163,10 +186,12 @@ export const articleBlockSchema = z.discriminatedUnion("type", [
 
 export type ImageData = z.infer<typeof imageDataSchema>;
 export type LeadBlock = z.infer<typeof leadBlockSchema>;
+export type DropcapBlock = z.infer<typeof dropcapBlockSchema>;
 export type TextBlock = z.infer<typeof textBlockSchema>;
 export type HeadingBlock = z.infer<typeof headingBlockSchema>;
 export type QuoteBlock = z.infer<typeof quoteBlockSchema>;
 export type VerseBlock = z.infer<typeof verseBlockSchema>;
+export type WordBlock = z.infer<typeof wordBlockSchema>;
 export type ImageBlock = z.infer<typeof imageBlockSchema>;
 export type GalleryBlock = z.infer<typeof galleryBlockSchema>;
 export type ListBlock = z.infer<typeof listBlockSchema>;

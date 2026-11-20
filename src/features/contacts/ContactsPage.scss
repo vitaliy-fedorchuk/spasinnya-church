@@ -1,0 +1,403 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$text: #55555a;
+$accent: #90816a;
+$beige: #d8c9b0;
+$line: rgba(17, 17, 20, 0.09);
+
+// ---------- Шапка (як на інших внутрішніх сторінках) ----------
+.contacts-hero {
+  position: relative;
+  display: flex;
+  min-height: em(760);
+  margin: em(15);
+  overflow: hidden;
+  background-color: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: em(640);
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 30%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.15) 100%);
+  }
+
+  & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // Вміст унизу — як на головній та інших сторінках
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(100);
+    text-align: center;
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(40);
+    }
+  }
+
+  &__title {
+    margin-top: em(20, 60);
+
+    @include mobile {
+      margin-top: em(14, 36);
+    }
+  }
+
+  &__lead {
+    max-width: em(620, 18);
+    margin: em(18, 18) auto 0;
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.82);
+
+    @include mobile {
+      margin-top: em(12, 15);
+      font-size: em(15);
+    }
+  }
+}
+
+// ---------- Пошта + «приходьте особисто» ----------
+.contacts-section {
+  // Зверху і знизу (над футером) — однаково
+  padding: em(80) em(20);
+
+  @include mobile {
+    padding: em(40) em(16);
+  }
+}
+
+.contacts-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: em(10);
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+  }
+}
+
+.contacts-icon {
+  width: em(20);
+  height: em(20);
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.contacts-mail,
+.contacts-visit {
+  display: flex;
+  flex-direction: column;
+  min-height: em(380);
+  box-sizing: border-box;
+  padding: em(44);
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: 0;
+    padding: em(24) em(20);
+    border-radius: em(20);
+  }
+}
+
+.contacts-mail,
+.contacts-visit {
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: em(10, 14);
+    margin-bottom: auto;
+    font-size: em(14);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+}
+
+.contacts-mail {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(144, 129, 106, 0.45), transparent 55%),
+    $dark;
+
+  &__label {
+    color: $beige;
+  }
+
+  // Сама адреса — великим, клік відкриває пошту
+  &__address {
+    margin-top: em(48, 52);
+    font-family: Arkhip, sans-serif;
+    font-size: em(52);
+    line-height: 1.1;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $beige;
+    }
+
+    @include mobile {
+      margin-top: em(32, 22);
+      font-size: em(22);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: em(12) em(20);
+    margin-top: em(32);
+
+    @include mobile {
+      margin-top: em(24);
+    }
+  }
+}
+
+.contacts-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: em(8, 15);
+  padding: 0;
+  font: inherit;
+  font-size: em(15);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  svg {
+    width: em(18, 15);
+    height: em(18, 15);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.contacts-visit {
+  background: #ffffff;
+  border: 1px solid $line;
+
+  &__label {
+    color: $accent;
+  }
+
+  &__address {
+    margin-top: em(40, 28);
+    font-family: Arkhip, sans-serif;
+    font-size: em(28);
+    line-height: 1.2;
+    color: $dark;
+
+    @include mobile {
+      margin-top: em(28, 22);
+      font-size: em(22);
+    }
+  }
+
+  &__time {
+    margin-top: em(12, 17);
+    font-size: em(17);
+    color: $text;
+
+    b {
+      color: $dark;
+    }
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: em(8) em(24);
+    margin-top: em(28);
+
+    a {
+      font-size: em(15);
+      font-weight: 600;
+      color: $accent;
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $dark;
+      }
+    }
+  }
+}
+
+// ---------- Соцмережі ----------
+.contacts-subhead {
+  margin-top: em(56, 28);
+  font-family: Arkhip, sans-serif;
+  font-size: em(28);
+  font-weight: 400;
+  color: $dark;
+
+  @include mobile {
+    margin-top: em(36, 22);
+    font-size: em(22);
+  }
+}
+
+.contacts-socials {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(10);
+  margin: em(20) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(14);
+  }
+}
+
+.contacts-social {
+  display: flex;
+  align-items: center;
+  gap: em(18);
+  height: 100%;
+  box-sizing: border-box;
+  padding: em(22) em(24);
+  color: $dark;
+  text-decoration: none;
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(24);
+
+  @include mobile {
+    gap: em(14);
+    padding: em(16);
+    border-radius: em(18);
+  }
+
+  // Іконки у футері білі — тут на темному кружку
+  &__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: em(52);
+    height: em(52);
+    background: $dark;
+    border-radius: 50%;
+
+    @include mobile {
+      width: em(44);
+      height: em(44);
+    }
+
+    img {
+      width: em(20);
+      height: em(20);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: em(2);
+    min-width: 0;
+
+    b {
+      font-family: Arkhip, sans-serif;
+      font-size: em(22);
+      font-weight: 400;
+
+      @include mobile {
+        font-size: em(19);
+      }
+    }
+
+    span {
+      font-size: em(14);
+      line-height: 1.4;
+      color: $muted;
+    }
+  }
+
+  // Стрілка — як у кнопок сайту і в рядках «Про нас»
+  &__arrow {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    box-sizing: border-box;
+    width: em(44);
+    height: em(44);
+    color: $accent;
+    border: 1px solid $accent;
+    border-radius: 50%;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+
+    // Без will-change: інакше тонка стрілка повертається як розмита картинка і «смикається»
+    svg {
+      display: block;
+      width: em(18);
+      height: em(18);
+      fill: currentColor;
+      transform: rotate(0deg);
+      transform-origin: 50% 50%;
+      transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover &__arrow {
+      color: #ffffff;
+      background: $accent;
+
+      svg {
+        transform: rotate(45deg);
+      }
+    }
+  }
+}

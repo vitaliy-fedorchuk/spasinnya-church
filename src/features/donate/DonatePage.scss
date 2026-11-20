@@ -1,0 +1,423 @@
+@use "../../styles/tools" as *;
+
+$dark: #262626;
+$muted: #868686;
+$text: #55555a;
+$accent: #90816a;
+$beige: #d8c9b0;
+$line: rgba(17, 17, 20, 0.09);
+
+// ---------- Шапка (як на інших внутрішніх сторінках) ----------
+.donate-hero {
+  position: relative;
+  display: flex;
+  min-height: em(760);
+  margin: em(15);
+  overflow: hidden;
+  background-color: $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    min-height: em(640);
+    margin: em(8);
+    border-radius: em(20);
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 30%),
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.15) 100%);
+  }
+
+  & &__inner {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // Вміст унизу — як на головній та інших сторінках
+    justify-content: flex-end;
+    width: 100%;
+    padding-top: em(160);
+    padding-bottom: em(100);
+    text-align: center;
+
+    @include mobile {
+      padding-top: em(110);
+      padding-bottom: em(40);
+    }
+  }
+
+  &__title {
+    margin-top: em(20, 60);
+
+    @include mobile {
+      margin-top: em(14, 36);
+    }
+  }
+
+  &__lead {
+    max-width: em(640, 18);
+    margin: em(18, 18) auto 0;
+    font-size: em(18);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.82);
+
+    @include mobile {
+      margin-top: em(12, 15);
+      font-size: em(15);
+    }
+  }
+}
+
+.donate-section {
+  // Зверху і знизу (над футером) — однаково
+  padding: em(80) em(20);
+
+  @include mobile {
+    padding: em(40) em(16);
+  }
+}
+
+// Іконка в квадратику — як у «Основі нашої спільноти» на головній
+@mixin icon-box {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: em(56);
+  height: em(56);
+  border-radius: em(16);
+
+  svg {
+    width: em(26);
+    height: em(26);
+  }
+
+  @include mobile {
+    width: em(48);
+    height: em(48);
+    border-radius: em(14);
+
+    svg {
+      width: em(22);
+      height: em(22);
+    }
+  }
+}
+
+// Кнопка, поки посилання LiqPay ще немає
+.donate-soon {
+  display: inline-flex;
+  align-items: center;
+  height: em(53, 15);
+  padding: 0 em(24, 15);
+  font-size: em(15);
+  font-weight: 600;
+  color: $muted;
+  border: 1px dashed rgba(17, 17, 20, 0.2);
+  border-radius: em(100, 15);
+
+  &--light {
+    color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// ---------- Загальна пожертва — головна темна картка ----------
+.donate-main {
+  display: flex;
+  align-items: center;
+  gap: em(32);
+  padding: em(44);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(144, 129, 106, 0.45), transparent 55%),
+    $dark;
+  border-radius: em(30);
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: em(20);
+    padding: em(24) em(20);
+    border-radius: em(20);
+  }
+
+  &__icon {
+    @include icon-box;
+    color: $dark;
+    background: $beige;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(36);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #ffffff;
+
+    @include mobile {
+      font-size: em(26);
+    }
+  }
+
+  &__text {
+    max-width: em(620, 17);
+    margin-top: em(10, 17);
+    font-size: em(17);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.78);
+
+    @include mobile {
+      font-size: em(15);
+    }
+  }
+}
+
+.donate-subhead {
+  margin-top: em(56, 28);
+  font-family: Arkhip, sans-serif;
+  font-size: em(28);
+  font-weight: 400;
+  color: $dark;
+
+  @include mobile {
+    margin-top: em(36, 22);
+    font-size: em(22);
+  }
+}
+
+// ---------- Окремі напрями ----------
+.donate-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: em(10);
+  margin: em(20) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(14);
+  }
+}
+
+.donate-card {
+  display: flex;
+  flex-direction: column;
+  gap: em(10);
+  padding: em(28);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(29);
+
+  @include mobile {
+    padding: em(20);
+    border-radius: em(20);
+  }
+
+  &__icon {
+    @include icon-box;
+    margin-bottom: em(18);
+    color: $dark;
+    background: #f5f5f5;
+
+    @include mobile {
+      margin-bottom: em(8);
+    }
+  }
+
+  &__title {
+    font-family: Arkhip, sans-serif;
+    font-size: em(26);
+    font-weight: 400;
+    line-height: 1.15;
+    color: $dark;
+
+    @include mobile {
+      font-size: em(22);
+    }
+  }
+
+  &__text {
+    font-size: em(16);
+    line-height: 1.55;
+    color: $text;
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  &__action {
+    display: flex;
+    margin-top: auto;
+    padding-top: em(18);
+  }
+}
+
+// ---------- Інші способи: Приват24 і QR-коди ----------
+.donate-other {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: em(10);
+  margin-top: em(20);
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: em(8);
+    margin-top: em(14);
+  }
+}
+
+.donate-privat,
+.donate-qr {
+  display: flex;
+  flex-direction: column;
+  padding: em(28);
+  background: #ffffff;
+  border: 1px solid $line;
+  border-radius: em(29);
+
+  @include mobile {
+    padding: em(20);
+    border-radius: em(20);
+  }
+}
+
+.donate-privat {
+  &__label {
+    font-size: em(13);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: $accent;
+    text-transform: uppercase;
+  }
+
+  &__text {
+    max-width: em(380, 16);
+    margin-top: em(14, 16);
+    font-size: em(16);
+    line-height: 1.55;
+    color: $text;
+
+    @include mobile {
+      font-size: em(14);
+    }
+  }
+
+  &__action {
+    display: flex;
+    margin-top: auto;
+    padding-top: em(24);
+  }
+}
+
+.donate-qr {
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: em(20);
+    margin: em(20) 0 0;
+    padding: 0;
+    list-style: none;
+
+    @include mobile {
+      gap: em(12);
+      margin-top: em(14);
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: em(4);
+    text-align: center;
+
+    b {
+      margin-top: em(10, 17);
+      font-size: em(17);
+      font-weight: 600;
+      color: $dark;
+    }
+  }
+
+  &__code {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    max-width: em(180);
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    padding: em(10);
+    background: #ffffff;
+    border: 1px solid $line;
+    border-radius: em(18);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    // Поки QR-коду немає — пунктирна заглушка
+    > span {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      font-size: em(14);
+      color: $muted;
+      border: 1px dashed rgba(17, 17, 20, 0.2);
+      border-radius: em(10);
+    }
+  }
+
+  &__hint {
+    font-size: em(13);
+    color: $muted;
+  }
+}
+
+.donate-note {
+  max-width: em(760, 15);
+  margin-top: em(18, 15);
+  font-size: em(15);
+  line-height: 1.55;
+  color: $muted;
+
+  a {
+    color: $accent;
+  }
+
+  @include mobile {
+    font-size: em(13);
+  }
+}
+
+// Біблійний вірш — той самий блок, що в статтях
+.donate-verse {
+  margin-top: em(56);
+
+  @include mobile {
+    margin-top: em(36);
+  }
+}

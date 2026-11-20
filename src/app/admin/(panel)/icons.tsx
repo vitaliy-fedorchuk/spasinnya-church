@@ -223,6 +223,12 @@ const PATHS = {
       <path d="M12 4v16" />
     </>
   ),
+  dropcap: (
+    <>
+      <path d="M3 13V4h7v3M6.5 4v9" />
+      <path d="M13 5h8M13 10h8M3 16h18M3 20h12" />
+    </>
+  ),
   text: <path d="M17 6.1H3M21 12.1H3M15.1 18H3" />,
   heading: <path d="M6 12h12M6 20V4M18 20V4" />,
   list: (
@@ -241,6 +247,18 @@ const PATHS = {
     <>
       <path d="M12 7v14" />
       <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+    </>
+  ),
+  stats: (
+    <>
+      <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+      <path d="M18 17V9M13 17V5M8 17v-3" />
+    </>
+  ),
+  word: (
+    <>
+      <path d="M12 3.5 13.9 8l4.6.4-3.5 3 1.1 4.6L12 13.6 7.9 16l1.1-4.6-3.5-3 4.6-.4z" />
+      <path d="M5 20h14" />
     </>
   ),
   callout: (
@@ -290,11 +308,13 @@ export type IconName = keyof typeof PATHS;
 // TypeScript перевіряє, що кожен вид блоку має іконку
 const _blockIcons: Record<BlockType, IconName> = {
   lead: "lead",
+  dropcap: "dropcap",
   text: "text",
   heading: "heading",
   list: "list",
   quote: "quote",
   verse: "verse",
+  word: "word",
   callout: "callout",
   image: "image",
   gallery: "gallery",

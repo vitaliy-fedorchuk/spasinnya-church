@@ -1,9 +1,15 @@
-import type { DividerBlock, HeadingBlock, LeadBlock, ListBlock, TextBlock } from "../types";
+import type { DividerBlock, DropcapBlock, HeadingBlock, LeadBlock, ListBlock, TextBlock } from "../types";
 import LogoMark from "@/components/ui/LogoMark";
 import InlineText from "./InlineText";
 
 export const Lead = ({ block }: { block: LeadBlock }) => (
   <p className="ab-lead">
+    <InlineText text={block.text} />
+  </p>
+);
+
+export const Dropcap = ({ block }: { block: DropcapBlock }) => (
+  <p className="ab-lead ab-lead--dropcap">
     <InlineText text={block.text} />
   </p>
 );
